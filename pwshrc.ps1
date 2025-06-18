@@ -1,4 +1,4 @@
-oh-my-posh init pwsh --config ~\Documents\PowerShell\emodipt-custom\emodipt-custom.omp.json | Invoke-Expression
+oh-my-posh init pwsh --config F:\Dev\emodipt-custom\emodipt-custom.omp.json | Invoke-Expression
 
 function rm {
     param([string]$Path)
