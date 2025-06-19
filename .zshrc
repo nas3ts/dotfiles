@@ -37,6 +37,7 @@ autoload -Uz tetriscurses
 alias tetris="tetriscurses"
 alias c="clear"
 alias x="exit"
+alias ff="fastfetch"
 
 # Conditional alias for Neovim (v)
 if command -v nvim >/dev/null 2>&1; then
