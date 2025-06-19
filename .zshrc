@@ -79,9 +79,10 @@ fi
 
 # Check if lsd is installed
 if command -v lsd >/dev/null 2>&1; then
-    alias ls="lsd -a"
-    alias l="lsd -l"
-    alias ll="lsd -la"
+    alias ls="lsd"
+    alias la="lsd -a"
+    alias l="lsd -la"
+    alias ll="lsd -l"
     alias lt="lsd --tree"
 else
     # Alias ls to the default ls if lsd is not installed
