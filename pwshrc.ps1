@@ -9,10 +9,12 @@ function c { Clear-Host }
 function x { exit }
 function v { nvim @args }
 function sudo { gsudo @args }
-function ll { lsd -l }
-function ls { lsd -a }
-function la { lsd -la }
-function lt { lsd --tree }
+function ls { lsd -h @args }
+function l { lsd -la @args }
+function ll { lsd -l @args }
+function ls { lsd -a @args }
+function la { lsd -la @args }
+function lt { lsd --tree @args }
 function ff { fastfetch }
 function nerdfont {
   & ([scriptblock]::Create((iwr 'https://raw.githubusercontent.com/jpawlowski/nerd-fonts-installer-PS/main/Invoke-NerdFontInstaller.ps1')))
