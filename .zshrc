@@ -80,16 +80,10 @@ fi
 # Check if lsd is installed
 if command -v lsd >/dev/null 2>&1; then
     alias ls="lsd -a"
+    alias l="lsd -l"
+    alias ll="lsd -la"
+    alias lt="lsd --tree"
 else
-    # Print the installation message if lsd is not installed
-    if [[ -z "$DISABLE_LSD_MESSAGE" ]]; then
-        echo "lsd is not installed. To install lsd, run:"
-        echo "  sudo apt install lsd   # Debian/Ubuntu"
-        echo "  sudo pacman -S lsd     # Arch/Manjaro"
-        echo "  or visit https://github.com/Peltoche/lsd"
-        echo "To disable this message, set the DISABLE_LSD_MESSAGE environment variable."
-    fi
-
     # Alias ls to the default ls if lsd is not installed
     alias ls="ls --color=auto"
 fi

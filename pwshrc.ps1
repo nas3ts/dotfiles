@@ -9,9 +9,9 @@ function c { Clear-Host }
 function x { exit }
 function v { nvim @args }
 function sudo { gsudo @args }
-function l { lsd -l }
-function la { lsd -a }
-function lla { lsd -la }
+function ll { lsd -l }
+function ls { lsd -a }
+function la { lsd -la }
 function lt { lsd --tree }
 function ff { fastfetch }
 function nerdfont {
