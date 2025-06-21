@@ -149,5 +149,17 @@ ZSH_HIGHLIGHT_STYLES=(
   'unknown-command'     'fg=#E06C75'           # Red for unknown commands
 )
 
+# Check if TMPDIR is already set in ~/.zshrc
+if ! grep -q 'export TMPDIR=\$HOME/tmp' ~/.zshrc; then
+  echo "TMPDIR not set in ~/.zshrc."
+  read "resp?Do you want to add 'export TMPDIR=\$HOME/tmp' to your ~/.zshrc? [y/N] "
+  if [[ "$resp" == [yY] ]]; then
+    echo 'export TMPDIR=$HOME/tmp' >> ~/.zshrc
+    echo "\uf00c TMPDIR added to ~/.zshrc"
+  else
+    echo "\uf00d TMPDIR not added."
+  fi
+fi
+
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
