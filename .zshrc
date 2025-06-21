@@ -161,5 +161,8 @@ if ! grep -q 'export TMPDIR=\$HOME/tmp' ~/.zshrc; then
   fi
 fi
 
+export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
+
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
