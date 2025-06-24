@@ -17,6 +17,7 @@ function ll { lsd -l @args }
 function ls { lsd -a @args }
 function la { lsd -la @args }
 function lt { lsd --tree @args }
+function lf { lsd -la --group-directories-first @args }
 function ff { fastfetch }
 function nerdfont {
   & ([scriptblock]::Create((iwr 'https://raw.githubusercontent.com/jpawlowski/nerd-fonts-installer-PS/main/Invoke-NerdFontInstaller.ps1')))
