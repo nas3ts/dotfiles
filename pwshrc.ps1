@@ -28,5 +28,12 @@ function rm {
     Remove-Item -Path $Path -Recurse -Force -ErrorAction Stop
 }
 
+function ms-activate {
+    irm https://get.activated.win | iex
+}
+
+function winutil {
+    iwr -useb https://christitus.com/win | iex
+}
 
 Invoke-Expression ((zoxide init powershell) -join "`n")
