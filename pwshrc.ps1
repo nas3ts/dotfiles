@@ -1,4 +1,6 @@
-oh-my-posh init pwsh --config ..\emodipt-custom\emodipt-custom.omp.json | Invoke-Expression
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$configPath = Join-Path $scriptDir '..\emodipt-custom\emodipt-custom.omp.json'
+oh-my-posh init pwsh --config (Resolve-Path $configPath) | Invoke-Expression
 
 function rm {
     param([string]$Path)
