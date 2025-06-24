@@ -128,7 +128,7 @@ alias zl="zoxide query --list"
 
 eval "$(zoxide init zsh)"
 
-eval "$(oh-my-posh init zsh --config ~/Dev/emodipt-custom/emodipt-custom.omp.json)"
+eval "$(oh-my-posh init zsh --config ../emodipt-custom/emodipt-custom.omp.json)"
 export GOPROXY=https://proxy.golang.org,direct
 
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
