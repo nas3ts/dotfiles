@@ -128,7 +128,8 @@ alias zl="zoxide query --list"
 
 eval "$(zoxide init zsh)"
 
-eval "$(oh-my-posh init zsh --config ../emodipt-custom/emodipt-custom.omp.json)"
+DOTFILES_DIR="$(dirname ${(%):-%N})"
+eval "$(oh-my-posh init zsh --config "$DOTFILES_DIR/../emodipt-custom/emodipt-custom.omp.json")"
 export GOPROXY=https://proxy.golang.org,direct
 
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
