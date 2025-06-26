@@ -36,4 +36,8 @@ function winutil {
     iwr -useb https://christitus.com/win | iex
 }
 
+function steambrew-install {
+    iwr -useb "https://steambrew.app/install.ps1" | iex
+}
+
 Invoke-Expression ((zoxide init powershell) -join "`n")
