@@ -7,6 +7,7 @@ function rm {
     Remove-Item -Path $Path -Recurse -Force
 }
 
+function zsh { wsl }
 function c { Clear-Host }
 function x { exit }
 function v { nvim @args }
