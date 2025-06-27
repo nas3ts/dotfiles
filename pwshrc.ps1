@@ -1,3 +1,5 @@
+$global:autoInstallAll = $false
+
 function Ensure-App {
     param(
         [string]$CommandName,
@@ -7,12 +9,22 @@ function Ensure-App {
     if (-not (Get-Command $CommandName -ErrorAction SilentlyContinue)) {
         Write-Warning "`"$CommandName`" not found."
 
-        $choice = Read-Host "Install $CommandName via winget now? [y/N]"
-        if ($choice -match '^(y|yes)$') {
-            winget install --id $WingetId -e --accept-source-agreements --accept-package-agreements
-        } else {
-            Write-Warning "Skipping $CommandName setup."
+        if (-not $global:autoInstallAll) {
+            $choice = Read-Host "Install $CommandName? (y)es / (n)o / (a)ll"
+            switch ($choice.ToLower()) {
+                'y' { }  # continue to install
+                'a' {
+                    $global:autoInstallAll = $true
+                }
+                default {
+                    Write-Host "skipping $CommandName"
+                    return
+                }
+            }
         }
+
+        Write-Host "installing $CommandName via winget..."
+        winget install --id $WingetId -e --accept-source-agreements --accept-package-agreements
     }
 }
 
