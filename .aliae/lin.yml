@@ -1,4 +1,7 @@
-
+- name: x
+  value: exit
+  type: command
+  if. eq .OS "linux"
 
 # yay aliases
 - name: ys
