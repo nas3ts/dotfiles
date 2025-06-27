@@ -1,9 +1,6 @@
 # Cross-platform aliases
 - name: c
   value: '{{ if eq .Shell "pwsh"}}Clear-Host{{ else }}clear{{ end }}'
-- name: x
-  value: exit
-  type: function
 - name: v
   value: nvim
 - name: ff
