@@ -1,5 +1,12 @@
+export DISABLE_ADVCP_MESSAGE=1
+export DISABLE_LSD_MESSAGE=1
+export DISABLE_BAT_MESSAGE=1
+export DISABLE_WINE_MESSAGE=1
+export DISABLE_NVIM_MESSAGE=1
+export DISABLE_DYSK_MESSAGE=1
+
 # Lines configured by zsh-newuser-install
-#
+
 # History file location and limits
 HISTFILE=~/.histfile
 HISTSIZE=10000
@@ -24,85 +31,76 @@ zstyle :compinstall filename '/home/nasets/.zshrc'
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
+autoload -Uz tetriscurses
 
-# Check and prompt to install tools (y/n/a)
-#
-auto_install_all=false
+# aliases
+alias tetris="tetriscurses"
+alias c="clear"
+alias x="exit"
+alias ff="fastfetch"
 
-function ensure_tool() {
-  local cmd="$1"
-  local pkg="$2"
-  if ! command -v "$cmd" >/dev/null 2>&1; then
-    echo "$cmd not found."
-    if [ "$auto_install_all" = false ]; then
-      read "choice?Install $cmd? (y)es / (n)o / (a)ll: "
-      case "$choice" in
-        a|A) auto_install_all=true ;;
-        y|Y) ;;
-        *) echo "Skipping $cmd"; return ;;
-      esac
+# Conditional alias for Neovim (v)
+if command -v nvim >/dev/null 2>&1; then
+    alias v="nvim"
+else
+    alias v="nano"
+    if [[ -z "$DISABLE_NVIM_MESSAGE" ]]; then
+        echo "nvim is not installed. Using 'nano' as fallback."
+        echo "To disable this message, set the DISABLE_NVIM_MESSAGE environment variable."
     fi
-    echo "Installing $cmd with pacman..."
-    yay -S "$pkg"
-  fi
-}
-
-ensure_tool "oh-my-posh" "oh-my-posh"
-ensure_tool "aliae" "aliae"
-ensure_tool "zoxide" "zoxide"
-ensure_tool "lsd" "lsd"
-
-# --- Paths and Inits ---
-#
-DOTFILES_DIR="$(dirname ${(%):-%N})"  # <- references where this dotfile is
-
-# Conditional Inits
-if command -v oh-my-posh >/dev/null 2>&1; then		# <- custom shell theme
-	export OMP_CONFIG="$DOTFILES_DIR/../emodipt-custom/emodipt-custom.omp.json"
-	eval "$(oh-my-posh init zsh --config $OMP_CONFIG)"
-else
-	echo "oh-my-posh is not installed. Skipping oh-my-posh init."
 fi
 
-if command -v aliae >/dev/null 2>&1; then		# <- custom alias config	
-	export ALIAE_CONFIG="$DOTFILES_DIR/.aliae.yml"
-	eval "$(aliae init zsh)"
+# Conditional alias for Dysk (df)
+if command -v dysk >/dev/null 2>&1; then
+    alias df="dysk"
 else
-	echo "aliae is not installed. Skipping alias init."
+    alias df="df -h"
+    if [[ -z "$DISABLE_DYSK_MESSAGE" ]]; then
+        echo "dysk is not installed. Using 'df -h' as fallback."
+        echo "To disable this message, set the DISABLE_DYSK_MESSAGE environment variable."
+    fi
 fi
 
-
-if command -v zoxide >/dev/null 2>&1; then		# <- cooler cd command
-	eval "$(zoxide init zsh)"
+if command -v advcp >/dev/null 2>&1 && command -v advmv >/dev/null 2>&1; then
+  # Use safe wrappers to avoid replacing system cp/mv
+  alias cpg='advcp -g'
+  alias mvg='advmv -g'
+  # Optionally override cp/mv (use with caution)
+  alias cp='advcp -g'
+  alias mv='advmv -g'
 else
-	echo "zoxide is not installed. Skipping zoxide init."
-fi
-
-if ! grep -q 'export TMPDIR=\$HOME/tmp' ~/.zshrc; then		# <- TMPDIR init
-  echo "TMPDIR not set in ~/.zshrc."
-  read "resp?Do you want to add 'export TMPDIR=\$HOME/tmp' to your ~/.zshrc? [y/N] "
-  if [[ "$resp" == [yY] ]]; then
-    echo 'export TMPDIR=$HOME/tmp' >> ~/.zshrc
-    echo "\uf00c TMPDIR added to ~/.zshrc"
-  else
-    echo "\uf00d TMPDIR not added."
+  # Fallbacks
+  alias cp='cp -v'
+  alias mv='mv -v'
+  if [[ -z "$DISABLE_ADVCP_MESSAGE" ]]; then
+    echo "advcpmv not found; using default cp/mv. Install from https://github.com/jarun/advcpmv"
+    echo "Set DISABLE_ADVCP_MESSAGE=1 to silence."
   fi
 fi
 
+# Check if bat is installed
+if command -v bat >/dev/null 2>&1; then
+    alias cat="bat --color=always"
+else
+    # Print the installation message if bat is not installed
+    if [[ -z "$DISABLE_BAT_MESSAGE" ]]; then
+        echo "bat is not installed. To install bat, run:"
+        echo "  sudo apt install bat     # Debian/Ubuntu"
+        echo "  sudo pacman -S bat       # Arch/Manjaro"
+        echo "  or visit https://github.com/sharkdp/bat"
+        echo "To disable this message, set the DISABLE_BAT_MESSAGE environment variable."
+    fi
 
+    # Alias cat to default cat if bat is not installed
+    alias cat="cat"
+fi
 
-# --- Exports ---
-#
 export GOPROXY=https://proxy.golang.org,direct
-export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/go/bin:$PATH"
 
-# --- zsh syntax highlighting and autosuggestion configs ---
-#
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 fpath=(~/.zsh/zsh-completions /usr/local/share/zsh/site-functions /usr/share/zsh/site-functions /usr/share/zsh/functions/Calendar /usr/share/zsh/functions/Chpwd /usr/share/zsh/functions/Completion /usr/share/zsh/functions/Completion/Base /usr/share/zsh/functions/Completion/Linux /usr/share/zsh/functions/Completion/Unix /usr/share/zsh/functions/Completion/X /usr/share/zsh/functions/Completion/Zsh /usr/share/zsh/functions/Exceptions /usr/share/zsh/functions/MIME /usr/share/zsh/functions/Math /usr/share/zsh/functions/Misc /usr/share/zsh/functions/Newuser /usr/share/zsh/functions/Prompts /usr/share/zsh/functions/TCP /usr/share/zsh/functions/VCS_Info /usr/share/zsh/functions/VCS_Info/Backends /usr/share/zsh/functions/Zftp /usr/share/zsh/functions/Zle)
 
-
+# Customize syntax highlighting colors to match the terminal theme
 typeset -A ZSH_HIGHLIGHT_STYLES
 
 ZSH_HIGHLIGHT_STYLES=(
@@ -116,4 +114,11 @@ ZSH_HIGHLIGHT_STYLES=(
   'error'               'fg=#E06C75,bold'      # Bold red for unrecognized input (errors)
   'unknown-command'     'fg=#E06C75'           # Red for unknown commands
 )
+
+
+
+export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
+
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
