@@ -1,4 +1,4 @@
-#general aliases
+# Cross-platform aliases
 - name: c
   value: '{{ if eq .Shell "pwsh"}}Clear-Host{{ else }}clear{{ end }}'
 - name: x
@@ -6,7 +6,10 @@
   type: function
 - name: v
   value: nvim
-- name: ls
+- name: ff
+  value: fastfetch
+
+- name: ls    # <- lsd aliases
   value: lsd -h
 - name: l
   value: lsd -la
@@ -18,8 +21,9 @@
   value: lsd --tree
 - name: lf
   value: lsd -la --group-directories-first
-- name: ff
-  value: fastfetch
+
+- name: zl
+  value: zoxide query --list
 
 #windows aliases
 - name: zsh
@@ -52,3 +56,9 @@
     & ([scriptblock]::Create((iwr 'https://raw.githubusercontent.com/jpawlowski/nerd-fonts-installer-PS/main/Invoke-NerdFontInstaller.ps1')))
   type: function
   if: eq .OS "windows"
+
+# Linux aliases
+# zsh
+- name: tetris
+  value: tetriscurses
+  if: eq .Shell "zsh"
