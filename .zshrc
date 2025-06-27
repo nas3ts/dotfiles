@@ -39,6 +39,26 @@ alias c="clear"
 alias x="exit"
 alias ff="fastfetch"
 
+# yay aliases group
+if command -v yay >/dev/null 2>&1; then
+  if [[ -z "$DISABLE_YAY_ALIASES" ]]; then
+    alias ys="yay -S"       # Install package
+    alias yss="yay -Ss"     # Search package (remote)
+    alias yq="yay -Qs"      # Query package (local)
+    alias yi="yay -Si"      # Show package info
+    alias yu="yay -Syu"    # Full system upgrade
+    alias yua="yay -Sua"    # Upgrade AUR packages only
+    alias yr="yay -R"       # Remove package
+    alias yrc="yay -Rcs"    # Remove with dependencies
+    alias ycl="yay -Sc"     # Clean cache (keep installed)
+    alias yclr="yay -Scc"   # Clean all cache
+    alias ycf="yay -Cf"     # Check file conflicts
+    alias yown="yay -Qi | grep -i packager"  # Non-repo packages
+  fi
+else
+  echo "yay is not installed. To disable this message, set DISABLE_YAY_ALIASES=1"
+fi
+
 # Conditional alias for Neovim (v)
 if command -v nvim >/dev/null 2>&1; then
     alias v="nvim"
