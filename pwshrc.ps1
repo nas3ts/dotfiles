@@ -1,3 +1,26 @@
+function Ensure-App {
+    param(
+        [string]$CommandName,
+        [string]$WingetId
+    )
+
+    if (-not (Get-Command $CommandName -ErrorAction SilentlyContinue)) {
+        Write-Warning "`"$CommandName`" not found."
+
+        $choice = Read-Host "Install $CommandName via winget now? [y/N]"
+        if ($choice -match '^(y|yes)$') {
+            winget install --id $WingetId -e --accept-source-agreements --accept-package-agreements
+        } else {
+            Write-Warning "Skipping $CommandName setup."
+        }
+    }
+}
+
+# --- Required Tools Check ---
+Ensure-App -CommandName 'oh-my-posh' -WingetId 'JanDeDobbeleer.OhMyPosh'
+Ensure-App -CommandName 'aliae'      -WingetId 'aliae.aliae'
+Ensure-App -CommandName 'zoxide'     -WingetId 'ajeetdsouza.zoxide'
+
 # --- Paths and Init ---
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
