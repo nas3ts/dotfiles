@@ -1,6 +1,8 @@
+# Check and prompt to install tools (y/n/a)
+
 $global:autoInstallAll = $false
 
-function Ensure-App {
+function Ensure-Tool {
     param(
         [string]$CommandName,
         [string]$WingetId
@@ -28,20 +30,32 @@ function Ensure-App {
     }
 }
 
-# --- Required Tools Check ---
-Ensure-App -CommandName 'oh-my-posh' -WingetId 'JanDeDobbeleer.OhMyPosh'
-Ensure-App -CommandName 'aliae'      -WingetId 'aliae.aliae'
-Ensure-App -CommandName 'zoxide'     -WingetId 'ajeetdsouza.zoxide'
+Ensure-Tool -CommandName 'oh-my-posh' -WingetId 'JanDeDobbeleer.OhMyPosh'
+Ensure-Tool -CommandName 'aliae'      -WingetId 'aliae.aliae'
+Ensure-Tool -CommandName 'zoxide'     -WingetId 'ajeetdsouza.zoxide'
 
-# --- Paths and Init ---
+# --- Paths and Inits ---
 
-$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$dotfilesDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# Initializations
-$ompConfigPath = Join-Path $scriptDir '..\emodipt-custom\emodipt-custom.omp.json'	# <- custom shell theme
-oh-my-posh init pwsh --config (Resolve-Path $ompConfigPath) | Invoke-Expression
+# Conditional Inits
 
-$aliaeConfigPath = Join-Path $scriptDir '.aliae.yml' 		# <- all aliases here
-aliae init pwsh --config (Resolve-Path $aliaeConfigPath) | Invoke-Expression
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+    $ompConfigPath = Join-Path $dotfilesDir '..\emodipt-custom\emodipt-custom.omp.json'		# <- custom shell theme
+    oh-my-posh init pwsh --config (Resolve-Path $ompConfigPath) | Invoke-Expression
+} else {
+    Write-Warning "oh-my-posh not installed, skipping initialization."
+}
 
-(zoxide init powershell) -join "`n" | Invoke-Expression
+if (Get-Command aliae -ErrorAction SilentlyContinue) {
+    $aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'		# <- custom alias config
+    aliae init pwsh --config (Resolve-Path $aliaeConfigPath) | Invoke-Expression
+} else {
+    Write-Warning "aliae not installed, skipping initialization."
+}
+
+if (Get-Command zoxide -ErrorAction SilentlyContinue) {
+    (zoxide init powershell) -join "`n" | Invoke-Expression		# <- cooler cd command
+} else {
+    Write-Warning "zoxide not installed, skipping initialization."
+}
