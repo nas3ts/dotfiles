@@ -1,0 +1,54 @@
+#general aliases
+- name: c
+  value: '{{ if eq .Shell "pwsh"}}Clear-Host{{ else }}clear{{ end }}'
+- name: x
+  value: exit
+  type: function
+- name: v
+  value: nvim
+- name: ls
+  value: lsd -h
+- name: l
+  value: lsd -la
+- name: ll
+  value: lsd -l
+- name: la
+  value: lsd -a
+- name: lt
+  value: lsd --tree
+- name: lf
+  value: lsd -la --group-directories-first
+- name: ff
+  value: fastfetch
+
+#windows aliases
+- name: zsh
+  value: '{{ if eq .OS "windows"}}wsl{{ end }}'
+
+- name: rm    # <- better rm
+  value: |
+    param([string[]]$Path)
+    Remove-Item -Path $Path -Recurse -Force -ErrorAction Stop
+  type: function
+  if: eq .Shell "pwsh"
+
+- name: ms-activate   # <- microsoft activation scripts
+  value: irm https://get.activated.win | iex
+  type: function
+  if: eq .OS "windows"
+
+- name: winutil   # <- Windows Toolbox
+  value: iwr -useb https://christitus.com/win | iex
+  type: function
+  if: eq .OS "windows"
+
+- name: sb-install   # <- Millennium/Steambrew install script
+  value: iwr -useb "https://steambrew.app/install.ps1" | iex
+  type: function
+  if: eq .OS "windows"
+
+- name: nf-install
+  value: |
+    & ([scriptblock]::Create((iwr 'https://raw.githubusercontent.com/jpawlowski/nerd-fonts-installer-PS/main/Invoke-NerdFontInstaller.ps1')))
+  type: function
+  if: eq .OS "windows"
