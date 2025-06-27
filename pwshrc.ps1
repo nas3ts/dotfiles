@@ -7,6 +7,7 @@ function rm {
     Remove-Item -Path $Path -Recurse -Force
 }
 
+function zsh { wsl }
 function c { Clear-Host }
 function x { exit }
 function v { nvim @args }
@@ -34,6 +35,10 @@ function ms-activate {
 
 function winutil {
     iwr -useb https://christitus.com/win | iex
+}
+
+function steambrew-install {
+    iwr -useb "https://steambrew.app/install.ps1" | iex
 }
 
 Invoke-Expression ((zoxide init powershell) -join "`n")
