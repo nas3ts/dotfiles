@@ -33,6 +33,7 @@ function Ensure-Tool {
 Ensure-Tool -CommandName 'oh-my-posh' -WingetId 'JanDeDobbeleer.OhMyPosh'
 Ensure-Tool -CommandName 'aliae'      -WingetId 'aliae.aliae'
 Ensure-Tool -CommandName 'zoxide'     -WingetId 'ajeetdsouza.zoxide'
+Ensure-Tool -CommandName 'lsd'	      -WingetId 'lsd-rs.lsd'
 
 # --- Paths and Inits ---
 
