@@ -1,0 +1,28 @@
+
+
+# yay aliases
+- name: ys
+  value: yay -S         # Install a package
+- name: yss
+  value: yay -Ss        # Search packages in remote repos
+- name: yq
+  value: yay -Qs        # Query installed (local) packages
+- name: yi
+  value: yay -Si        # Show info for a specific package
+- name: yu
+  value: yay -Syu       # Full system upgrade (repo + AUR)
+- name: yua
+  value: yay -Sua       # Upgrade AUR packages only
+- name: yr
+  value: yay -R         # Remove a package
+- name: yrc
+  value: yay -Rcs       # Remove package + unused deps
+- name: ycl
+  value: yay -Sc        # Clean uninstalled package cache
+- name: yclr
+  value: yay -Scc       # Clean all cache (careful!)
+- name: ycf
+  value: yay -Cf        # Check file conflicts
+- name: yown
+  value: yay -Qi | grep -i packager  # Show non-repo packages
+
