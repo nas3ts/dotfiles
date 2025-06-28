@@ -1,9 +1,4 @@
 #windows aliases
-- name: x
-  value: exit
-  type: function
-  if: eq .OS "windows"
-
 - name: zsh
   value: '{{ if eq .OS "windows"}}wsl{{ end }}'
 
