@@ -1,8 +1,14 @@
 #linux aliases
 - name: x
-  value: exit
+  value: |
+    {{ if eq .Shell "pwsh" }}
+      exit
+    {{ else if eq .Shell "zsh" }}
+    {
+      exit
+    }
+    {{ end }}
   type: function
-  # if: eq .OS "linux"
 
 # yay aliases
 - name: ys
