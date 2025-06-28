@@ -15,6 +15,14 @@
     }
     {{ end }}
   type: function
+- name: top
+  value: |
+    {{ if eq .OS "windows"}}
+      ntop
+    {{ else if eq .OS "linux"}}
+      htop
+    {{ end }}
+
 - name: ls    # <- lsd aliases
   value: lsd -h
 - name: l
