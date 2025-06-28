@@ -1,14 +1,5 @@
 #linux aliases
-- name: x
-  value: |
-    {{ if eq .Shell "pwsh" }}
-      exit
-    {{ else if eq .Shell "zsh" }}
-    {
-      exit
-    }
-    {{ end }}
-  type: function
+
 
 # yay aliases
 - name: ys

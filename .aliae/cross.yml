@@ -5,7 +5,16 @@
   value: nvim
 - name: ff
   value: fastfetch
-
+- name: x
+  value: |
+    {{ if eq .Shell "pwsh" }}
+      exit
+    {{ else if eq .Shell "zsh" }}
+    {
+      exit
+    }
+    {{ end }}
+  type: function
 - name: ls    # <- lsd aliases
   value: lsd -h
 - name: l
