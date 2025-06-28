@@ -26,11 +26,11 @@
 - name: ls    # <- lsd aliases
   value: lsd -h
 - name: l
-  value: lsd -la
+  value: lsd -a
 - name: ll
   value: lsd -l
 - name: la
-  value: lsd -a
+  value: lsd -la
 - name: lt
   value: lsd --tree
 - name: lf
