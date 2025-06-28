@@ -17,13 +17,13 @@ setopt share_history           # Share command history between terminal sessions
 setopt autocd beep extendedglob nomatch
 bindkey -e
 # End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
+
 zstyle :compinstall filename '/home/nasets/.zshrc'
 
 #autoloads
+autoload -Uz tetriscurses
 autoload -Uz compinit
 compinit
-# End of lines added by compinstall
 
 # Check and prompt to install tools (y/n/a)
 #
