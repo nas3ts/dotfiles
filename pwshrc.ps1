@@ -54,7 +54,6 @@ if (Get-Command aliae -ErrorAction SilentlyContinue) {
 } else {
     Write-Warning "aliae not installed, skipping initialization."
 }
-# function x { exit }
 
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
     (zoxide init powershell) -join "`n" | Invoke-Expression		# <- cooler cd command
