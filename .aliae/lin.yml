@@ -1,5 +1,9 @@
 #linux aliases
 
+# zsh
+- name: tt
+  value: tetriscurses
+  if: eq .Shell "zsh"
 
 # yay aliases
 - name: ys
