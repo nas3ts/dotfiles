@@ -31,7 +31,4 @@
 - name: zl
   value: zoxide query --list
 
-# zsh
-- name: tetris
-  value: tetriscurses
-  if: eq .Shell "zsh"
+
