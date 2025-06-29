@@ -62,7 +62,7 @@ function Initialize-Tool {
                 Write-Warning "$Command init output is empty. Skipping execution."
             }
         } catch {
-            Write-Warning "Error initializing $Command: $_"
+            Write-Warning "Error initializing $Command: ${_}"
         }
     } else {
         Write-Warning "$Command not installed, skipping initialization."
@@ -83,7 +83,7 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue) {
             Write-Warning "zoxide init output is empty. Skipping execution."
         }
     } catch {
-        Write-Warning "Error initializing zoxide: $_"
+        Write-Warning "Error initializing zoxide: ${_}"
     }
 } else {
     Write-Warning "zoxide not installed, skipping initialization."
