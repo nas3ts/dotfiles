@@ -40,42 +40,25 @@ $dotfilesDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ompConfigPath = Join-Path $dotfilesDir '..\emodipt-custom\emodipt-custom.omp.json'
 $aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'
 
-# --- Initialize tools safely ---
-function Initialize-Tool {
-    param (
-        [string]$Command,
-        [string]$ConfigPath = $null,
-        [string]$Shell = 'pwsh'
-    )
-
-    if (Get-Command $Command -ErrorAction SilentlyContinue) {
-        if ($ConfigPath) {
-            $resolvedPath = Resolve-Path $ConfigPath
-            & $Command init $Shell --config $resolvedPath | Invoke-Expression
-        } else {
-            & $Command init $Shell | Invoke-Expression
-        }
-    } else {
-        Write-Warning "$Command not installed, skipping initialization."
-    }
+# --- Initialize tools ---
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+    $ompConfigPath = Join-Path $dotfilesDir '..\emodipt-custom\emodipt-custom.omp.json'  # <- custom shell theme
+    $resolvedPath = Resolve-Path $ompConfigPath
+    & oh-my-posh init pwsh --config $resolvedPath | Invoke-Expression
+} else {
+    Write-Warning "oh-my-posh not installed, skipping initialization."
 }
 
-# --- Initialize tools ---
-Initialize-Tool -Command 'oh-my-posh' -ConfigPath $ompConfigPath
-Initialize-Tool -Command 'aliae' -ConfigPath $aliaeConfigPath
+if (Get-Command aliae -ErrorAction SilentlyContinue) {
+    $aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'  # <- custom alias config
+    $resolvedPath = Resolve-Path $aliaeConfigPath
+    & aliae init pwsh --config $resolvedPath | Invoke-Expression
+} else {
+    Write-Warning "aliae not installed, skipping initialization."
+}
 
-# zoxide is special — doesn't support config param
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
-    try {
-        $zoxideInit = (zoxide init powershell) -join "`n"
-        if (-not [string]::IsNullOrWhiteSpace($zoxideInit)) {
-            Invoke-Expression $zoxideInit
-        } else {
-            Write-Warning "zoxide init output is empty. Skipping execution."
-        }
-    } catch {
-        Write-Warning "Error initializing zoxide: ${_}"
-    }
+    (zoxide init powershell) -join "`n" | Invoke-Expression  # <- cooler cd command
 } else {
     Write-Warning "zoxide not installed, skipping initialization."
 }
