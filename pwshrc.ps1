@@ -62,7 +62,7 @@ function Initialize-Tool {
                 Write-Warning "$Command init output is empty. Skipping execution."
             }
         } catch {
-            Write-Warning ("Error initializing $Command: " + $_)
+            Write-Warning ("Error initializing " + $Command + ": " + $_)
         }
     } else {
         Write-Warning "$Command not installed, skipping initialization."
