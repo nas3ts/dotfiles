@@ -41,23 +41,36 @@ Ensure-Tool -CommandName 'gsudo'      -WingetId 'gerardog.gsudo'
 $dotfilesDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Conditional Inits
+function Initialize-Tool {
+    param (
+        [string]$Command,
+        [string]$ConfigPath = $null,
+        [string]$Shell = 'pwsh'
+    )
 
-if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-    $ompConfigPath = Join-Path $dotfilesDir '..\emodipt-custom\emodipt-custom.omp.json'		# <- custom shell theme
-    oh-my-posh init pwsh --config (Resolve-Path $ompConfigPath) | Invoke-Expression
-} else {
-    Write-Warning "oh-my-posh not installed, skipping initialization."
+    if (Get-Command $Command -ErrorAction SilentlyContinue) {
+        if ($ConfigPath) {
+            $resolvedPath = Resolve-Path $ConfigPath
+            Invoke-Expression "$Command init $Shell --config $resolvedPath"
+        } else {
+            Invoke-Expression "$Command init $Shell"
+        }
+    } else {
+        Write-Warning "$Command not installed, skipping initialization."
+    }
 }
 
-if (Get-Command aliae -ErrorAction SilentlyContinue) {
-    $aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'		# <- custom alias config
-    aliae init pwsh --config (Resolve-Path $aliaeConfigPath) | Invoke-Expression
-} else {
-    Write-Warning "aliae not installed, skipping initialization."
-}
+# Define config paths
+$ompConfigPath = Join-Path $dotfilesDir '..\emodipt-custom\emodipt-custom.omp.json'
+$aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'
 
+# Initialize tools
+Initialize-Tool -Command 'oh-my-posh' -ConfigPath $ompConfigPath
+Initialize-Tool -Command 'aliae' -ConfigPath $aliaeConfigPath
+
+# zoxide is special — it returns a script block instead of taking a config
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
-    (zoxide init powershell) -join "`n" | Invoke-Expression		# <- cooler cd command
+    (zoxide init powershell) -join "`n" | Invoke-Expression
 } else {
     Write-Warning "zoxide not installed, skipping initialization."
 }
