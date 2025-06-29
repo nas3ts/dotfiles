@@ -51,9 +51,9 @@ function Initialize-Tool {
     if (Get-Command $Command -ErrorAction SilentlyContinue) {
         if ($ConfigPath) {
             $resolvedPath = Resolve-Path $ConfigPath
-            Invoke-Expression "$Command init $Shell --config $resolvedPath"
+            & $Command init $Shell --config $resolvedPath | Invoke-Expression
         } else {
-            Invoke-Expression "$Command init $Shell"
+            & $Command init $Shell | Invoke-Expression
         }
     } else {
         Write-Warning "$Command not installed, skipping initialization."
