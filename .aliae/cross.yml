@@ -23,6 +23,15 @@
       htop
     {{ end }}
 
+- name: disks
+  value: |
+    {{ if eq .Shell "pwsh" }}
+      Get-Volume | Format-Table -AutoSize
+    {{ else }}
+      lsblk --output NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL --tree --ascii
+    {{ end }}
+
+    
 - name: ls    # <- lsd aliases
   value: lsd -h
 - name: l
