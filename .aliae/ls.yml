@@ -1,53 +1,128 @@
-- name: l.
-  value: lsd -dlhF .* | grep -v "^d"  # List hidden files only (not directories)
-- name: l
-  value: lsd -lFh                     # Long list, show type indicator, human-readable sizes
-- name: l1
-  value: lsd -1                       # List one file per line
-- name: la
-  value: lsd -lAFh                    # List all (incl. hidden), long format, human-readable
-- name: labc
-  value: lsd -lap                     # List all files with type indicators, sorted alphabetically
-- name: lc
-  value: wc -l                        # Count number of lines in a file
-- name: lct
-  value: lsd -lcrh                    # Sort by creation time, newest first
-- name: ld
-  value: lsd -ltrh                    # Sort by date, oldest first
-- name: ldir
-  value: lsd -l | egrep '^d'         # List directories only
+# Hidden files only (no filtering on Windows PowerShell)
 - name: ldot
-  value: lsd -dlhF .* | grep -v "^d"  # Same as `l.` — hidden files only
+  value: |
+    {{ if match .Shell "pwsh" }}
+    lsd -dlhF .*
+    {{ else }}
+    lsd -dlhF .* | grep -v "^d"
+    {{ end }}
+
+# Long list with type indicators & human-readable sizes
+- name: l
+  value: lsd -lFh
+
+# One file per line
+- name: l1
+  value: lsd -1
+
+# All files (inc. hidden), long format
+- name: la
+  value: lsd -lAFh
+
+# All files alphabetically (with type info)
+- name: labc
+  value: lsd -lap
+
+# Count lines in file (unix tool)
+- name: lc
+  value: wc -l
+
+# Sort by creation time (newest first)
+- name: lct
+  value: lsd -lcrh
+
+# Sort by modification date (oldest first)
+- name: ld
+  value: lsd -ltrh
+
+# Directories only (grouping on PowerShell)
+- name: ldir
+  value: |
+    {{ if match .Shell "pwsh" }}
+    lsd -l --group-directories-first
+    {{ else }}
+    lsd -l | egrep '^d'
+    {{ end }}
+
+# Recent first / last
 - name: left
-  value: lsd -t -1                    # List files by modified time, oldest first
+  value: lsd -t -1
 - name: right
-  value: lsd -t -1r                   # List files by modified time, newest first
+  value: lsd -t -1r
+
+# Files only (no directories)
 - name: lf
-  value: lsd -l | egrep -v '^d'       # List regular files only (no dirs)
+  value: |
+    {{ if match .Shell "pwsh" }}
+    lsd -l --only-files
+    {{ else }}
+    lsd -l | egrep -v '^d'
+    {{ end }}
+
+# Sort by size, largest first
 - name: lk
-  value: lsd -lSrh                    # Sort by size, largest first
+  value: lsd -lSrh
+
+# Shortcut for full long listing
 - name: ll
-  value: lsd -lAFh                    # Long list with type indicator, all files, human-readable
+  value: lsd -lAFh
+
+# Show full path of items in current dir
 - name: lla
-  value: lsd -l -d $PWD/*             # Show full path of all files in current directory
+  value: lsd -l -d $PWD/*
+
+# List available UTF-8 locales (Unix only)
 - name: locale
-  value: locale -a | grep UTF-8       # List available UTF-8 locales
+  value: |
+    {{ if or (match .OS "linux") (match .OS "darwin") }}
+    locale -a | grep UTF-8
+    {{ else }}
+    # unsupported on Windows
+    {{ end }}
+
+# List open network ports
 - name: lp
-  value: sudo lsof -i -T -n           # List open network ports
+  value: |
+    {{ if match .Shell "pwsh" }}
+    Get-NetTCPConnection
+    {{ else }}
+    sudo lsof -i -T -n
+    {{ end }}
+
+# Recursive list, human-readable
 - name: lr
-  value: lsd -lRh                     # Recursive list, human-readable
+  value: lsd -lRh
+
+# Default `ls` alias with color
 - name: ls
-  value: lsd --color=auto             # Default lsd with color
+  value: lsd --color=auto
+
+# Sort by size & time
 - name: lS
-  value: lsd -1FSsh                   # List by size, show type, human-readable
+  value: lsd -1FSsh
+
+# Tree view of directory
 - name: lt
-  value: lsd --tree                   # Tree view of current directory
+  value: lsd --tree
+
+# Access time, oldest first
 - name: lu
-  value: lsd -lurh                    # Sort by access time, oldest first
+  value: lsd -lurh
+
+# Wide listing, almost all files
 - name: lw
-  value: lsd -xAh                     # Wide view, show almost all files (excluding . and ..)
+  value: lsd -xAh
+
+# Sort by extension
 - name: lx
-  value: lsd | sort -k 1,1 -t .       # Sort files by extension
+  value: |
+    {{ if match .Shell "pwsh" }}
+    lsd | Sort-Object Extension
+    {{ else }}
+    lsd | sort -k 1,1 -t .
+    {{ end }}
+
+# Sort by size, smallest first
 - name: lz
-  value: lsd -lSr                     # Sort by size, smallest first
+  value: lsd -lSr
 
