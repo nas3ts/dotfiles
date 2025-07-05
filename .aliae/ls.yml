@@ -81,13 +81,13 @@
     {{ end }}
 
 # List open network ports
-- name: lp
-  value: |
-    {{ if match .Shell "pwsh" }}
-    Get-NetTCPConnection
-    {{ else }}
-    sudo lsof -i -T -n
-    {{ end }}
+# - name: lp
+#  value: |
+#    {{ if match .Shell "pwsh" }}
+#    Get-NetTCPConnection
+#    {{ else }}
+#    sudo lsof -i -T -n
+#    {{ end }}
 
 # Recursive list, human-readable
 - name: lr

@@ -1,0 +1,41 @@
+# Go up directories
+- name: _
+  value: cd -
+  type: function
+- name: ..
+  value: cd ..
+  type: function
+- name: ...
+  value: cd ../..
+  type: function
+- name: ....
+  value: cd ../../..
+  type: function
+- name: .....
+  value: cd ../../../..
+  type: function
+
+# Go to common folders
+- name: dot
+  value: z dotfiles
+- name: dev
+  value: z Dev
+- name: doc
+  value: z $HOME/Documents
+  type: function
+- name: vid
+  value: z $HOME/Videos
+  type: function
+- name: pic
+  value: z $HOME/Pictures
+  type: function
+- name: dow
+  value: z $HOME/Downloads
+  type: function
+- name: des
+  value: z $HOME/Desktop
+  type: function
+- name: mus
+  value: z $HOME/Music
+  type: function
+
