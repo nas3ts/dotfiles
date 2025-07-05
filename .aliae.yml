@@ -1,6 +1,6 @@
 alias:
   - !include ".aliae/cross.yml"
-  - !include ".aliae/win.yml"
-  - !include ".aliae/lin.yml"
+  - !include ".aliae/windows/base.yml"
+  - !include ".aliae/unix/base.yml"
 env:
   - !include ".aliae/env.yml"
