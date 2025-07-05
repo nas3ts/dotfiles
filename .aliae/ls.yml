@@ -1,9 +1,9 @@
 # Hidden files only (no filtering on Windows PowerShell)
 - name: ldot
   value: |
-    {{ if eq .Shell "pwsh" }}
+    {{ if match .Shell "pwsh" }}
     lsd -dlhF .*
-    {{ else if eq .Shell "zsh" }}
+    {{ else }}
     lsd -dlhF .* | grep -v "^d"
     {{ end }}
 
