@@ -1,5 +1,5 @@
 # Hidden files only (no filtering on Windows PowerShell)
-- name: l.
+- name: ldot
   value: |
     {{ if eq .Shell "pwsh" }}
     lsd -dlhF .*
