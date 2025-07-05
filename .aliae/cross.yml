@@ -31,20 +31,6 @@
       lsblk --output NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL --tree --ascii
     {{ end }}
 
-    
-- name: ls    # <- lsd aliases
-  value: lsd -h
-- name: l
-  value: lsd -a
-- name: ll
-  value: lsd -l
-- name: la
-  value: lsd -la
-- name: lt
-  value: lsd --tree
-- name: lf
-  value: lsd -la --group-directories-first
-
 - name: zl
   value: zoxide query --list
 
