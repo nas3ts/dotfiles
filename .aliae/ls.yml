@@ -1,0 +1,53 @@
+- name: l.
+  value: lsd -dlhF .* | grep -v "^d"  # List hidden files only (not directories)
+- name: l
+  value: lsd -lFh                     # Long list, show type indicator, human-readable sizes
+- name: l1
+  value: lsd -1                       # List one file per line
+- name: la
+  value: lsd -lAFh                    # List all (incl. hidden), long format, human-readable
+- name: labc
+  value: lsd -lap                     # List all files with type indicators, sorted alphabetically
+- name: lc
+  value: wc -l                        # Count number of lines in a file
+- name: lct
+  value: lsd -lcrh                    # Sort by creation time, newest first
+- name: ld
+  value: lsd -ltrh                    # Sort by date, oldest first
+- name: ldir
+  value: lsd -l | egrep '^d'         # List directories only
+- name: ldot
+  value: lsd -dlhF .* | grep -v "^d"  # Same as `l.` — hidden files only
+- name: left
+  value: lsd -t -1                    # List files by modified time, oldest first
+- name: right
+  value: lsd -t -1r                   # List files by modified time, newest first
+- name: lf
+  value: lsd -l | egrep -v '^d'       # List regular files only (no dirs)
+- name: lk
+  value: lsd -lSrh                    # Sort by size, largest first
+- name: ll
+  value: lsd -lAFh                    # Long list with type indicator, all files, human-readable
+- name: lla
+  value: lsd -l -d $PWD/*             # Show full path of all files in current directory
+- name: locale
+  value: locale -a | grep UTF-8       # List available UTF-8 locales
+- name: lp
+  value: sudo lsof -i -T -n           # List open network ports
+- name: lr
+  value: lsd -lRh                     # Recursive list, human-readable
+- name: ls
+  value: lsd --color=auto             # Default lsd with color
+- name: lS
+  value: lsd -1FSsh                   # List by size, show type, human-readable
+- name: lt
+  value: lsd --tree                   # Tree view of current directory
+- name: lu
+  value: lsd -lurh                    # Sort by access time, oldest first
+- name: lw
+  value: lsd -xAh                     # Wide view, show almost all files (excluding . and ..)
+- name: lx
+  value: lsd | sort -k 1,1 -t .       # Sort files by extension
+- name: lz
+  value: lsd -lSr                     # Sort by size, smallest first
+
