@@ -1,5 +1,5 @@
 # Hidden files only (no filtering on Windows PowerShell)
-- name: ldot
+- name: l.
   value: |
     {{ if match .Shell "pwsh" }}
     lsd -dlhF .*
@@ -9,7 +9,7 @@
 
 # Long list with type indicators & human-readable sizes
 - name: l
-  value: lsd -lFh
+  value: lsd -lAFh
 
 # One file per line
 - name: l1
