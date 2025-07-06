@@ -1,0 +1,69 @@
+- name: androidignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Android.gitignore
+- name: angularignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Angular.gitignore
+- name: bazelignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Bazel.gitignore
+- name: blenderignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Blender.gitignore
+- name: csharpignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/C%23.gitignore
+- name: cppignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/C%2B%2B.gitignore
+- name: clionignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/CLion.gitignore
+- name: clojureignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Clojure.gitignore
+- name: djangoignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Django.gitignore
+- name: dotnetignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/.NET.gitignore
+- name: electronignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Electron.gitignore
+- name: eclipseignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Eclipse.gitignore
+- name: flaskignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Flask.gitignore
+- name: flutterignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Flutter.gitignore
+- name: gatsbyignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Gatsby.gitignore
+- name: goignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Go.gitignore
+- name: gradleignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Gradle.gitignore
+- name: hadoopignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Hadoop.gitignore
+- name: haxeignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Haxe.gitignore
+- name: javaignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Java.gitignore
+- name: kotlinignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Kotlin.gitignore
+- name: laravelignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Laravel.gitignore
+- name: llvmignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/LLVM.gitignore
+- name: nodeignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
+- name: phpignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/PHP.gitignore
+- name: pyignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore
+- name: reactignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/React.gitignore
+- name: rustignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Rust.gitignore
+- name: swiftignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Swift.gitignore
+- name: swiftpmignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/SwiftPM.gitignore
+- name: terraformignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Terraform.gitignore
+- name: unityignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Unity.gitignore
+- name: vscodeignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/VisualStudioCode.gitignore
+- name: wordpressignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/WordPress.gitignore
+

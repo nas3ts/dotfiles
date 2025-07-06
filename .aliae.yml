@@ -2,6 +2,8 @@ alias:
   - !include ".aliae/cross.yml"
   - !include ".aliae/nav.yml"
   - !include ".aliae/ls.yml"
+  - !include ".aliae/git.yml"
+  - !include ".aliae/gitignore.yml"
   - !include ".aliae/windows/base.yml"
   - !include ".aliae/unix/base.yml"
 env:
