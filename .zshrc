@@ -55,17 +55,17 @@ ensure_tool "lsd" "lsd"
 # --- Paths and Inits ---
 #
 DOTFILES_DIR="$(dirname ${(%):-%N})"  # <- references where this dotfile is
+OMP_CONFIG="$DOTFILES_DIR/../emodipt-custom/emodipt-custom.omp.yaml"
+ALIAE_CONFIG="$DOTFILES_DIR/.aliae.yml"
 
 # Conditional Inits
 if command -v oh-my-posh >/dev/null 2>&1; then		# <- custom shell theme
-	export OMP_CONFIG="$DOTFILES_DIR/../emodipt-custom/emodipt-custom.omp.json"
 	eval "$(oh-my-posh init zsh --config $OMP_CONFIG)"
 else
 	echo "oh-my-posh is not installed. Skipping oh-my-posh init."
 fi
 
 if command -v aliae >/dev/null 2>&1; then		# <- custom alias config	
-	export ALIAE_CONFIG="$DOTFILES_DIR/.aliae.yml"
 	eval "$(aliae init zsh)"
 else
 	echo "aliae is not installed. Skipping alias init."

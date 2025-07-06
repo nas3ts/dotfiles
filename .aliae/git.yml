@@ -71,10 +71,8 @@
   value: git switch -c
 
 # Collaborate
-- name: sync
-  value: "!git fetch origin; git rebase origin/main"
-- name: gf
-  value: git fetch
+# - name: sync
+#   value: "!git fetch origin; git rebase origin/main"
 - name: gi
   value: git init
 - name: gpll
@@ -107,8 +105,6 @@
 # Show the working tree status
 - name: gst
   value: git status
-- name: gstrmu
-  value: git status -su | cut -d' ' -f2- | tr '\n' '\0' | xargs -0 rm
 - name: gsts
   value: git status --short
 - name: gstsb
