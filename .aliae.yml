@@ -10,3 +10,6 @@ env:
   - !include ".aliae/env.yml"
 script:
   - !include ".aliae/scripts.yml"
+path:
+#  - !include ".aliae/windows/path.yml"
+  - !include ".aliae/unix/path.yml"

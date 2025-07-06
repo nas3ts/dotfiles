@@ -1,0 +1,5 @@
+- value: |
+    {{ .Home }}/bin/
+    {{ .Home }}/go/bin/
+    {{ .Home }}/.cargo/bin/
+  if: eq .OS "linux"
