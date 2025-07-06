@@ -1,0 +1,24 @@
+- value: |
+    if grep -qi microsoft /proc/version && ! grep -q '^export WINUSER=' "$PROFILE"; then
+      case "$SHELL" in
+        */zsh) PROFILE="$HOME/.zshrc" ;;
+        */bash) PROFILE="$HOME/.bashrc" ;;
+        */fish) PROFILE="$HOME/.config/fish/config.fish" ;;
+        *) PROFILE="$HOME/.profile" ;;
+      esac
+
+      echo 'Detected WSL. Set your Windows username as $WINUSER? y/n'
+      read -r answer
+
+      if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+        sed -i '/export WINUSER=/d' "$PROFILE"
+        WINUSER=$(cmd.exe /c "echo %USERNAME%" | tr -d '\r')
+        echo -e "\n# Set Windows username from WSL\nexport WINUSER=\"$WINUSER\"" >> "$PROFILE"
+        export WINUSER="$WINUSER"
+        echo "WINUSER=\"$WINUSER\" set and saved in $PROFILE"
+      else
+        echo "Skipped setting WINUSER"
+      fi
+    fi
+  if: match .OS "linux"
+
