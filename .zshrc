@@ -96,6 +96,7 @@ fi
 export GOPROXY=https://proxy.golang.org,direct
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # --- zsh syntax highlighting and autosuggestion configs ---
 #
