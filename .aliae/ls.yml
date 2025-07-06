@@ -103,8 +103,22 @@
 
 # Tree view of directory
 - name: lt
-  value: lsd --tree
-
+  value: |
+    lsd -a --tree \
+    --ignore-glob "node_modules" \
+    --ignore-glob "dist" \
+    --ignore-glob "build" \
+    --ignore-glob ".next" \
+    --ignore-glob ".cache" \
+    --ignore-glob "coverage" \
+    --ignore-glob ".git" \
+    --ignore-glob ".svn" \
+    --ignore-glob ".DS_Store" \
+    --ignore-glob "*.lock" \
+    --ignore-glob "*.log" \
+    --ignore-glob "*.tmp" \
+    --ignore-glob "__pycache__"
+  
 # Access time, oldest first
 - name: lu
   value: lsd -lurh
