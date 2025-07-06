@@ -42,15 +42,13 @@ $aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'
 
 # --- Initialize tools ---
 if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-    $ompConfigPath = Join-Path $dotfilesDir '..\emodipt-custom\emodipt-custom.omp.json'  # <- custom shell theme
-    $resolvedPath = Resolve-Path $ompConfigPath
+        $resolvedPath = Resolve-Path $ompConfigPath
     & oh-my-posh init pwsh --config $resolvedPath | Invoke-Expression
 } else {
     Write-Warning "oh-my-posh not installed, skipping initialization."
 }
 
 if (Get-Command aliae -ErrorAction SilentlyContinue) {
-    $aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'  # <- custom alias config
     $resolvedPath = Resolve-Path $aliaeConfigPath
     & aliae init pwsh --config $resolvedPath | Invoke-Expression
 } else {
