@@ -77,9 +77,9 @@
   value: git fetch
 - name: gi
   value: git init
-- name: gpl
+- name: gpll
   value: git pull
-- name: gps
+- name: gpsh
   value: git push
 
 # Revert some existing commits
