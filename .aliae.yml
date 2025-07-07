@@ -4,7 +4,7 @@ alias:
   - !include ".aliae/platforms/windows/base.yml"
   - !include ".aliae/modules/nav.yml"
   - !include ".aliae/modules/ls.yml"
-#  - !include ".aliae/modules/git.yml"
+  - !include ".aliae/modules/git.yml"
   - !include ".aliae/modules/gitignore.yml"
 env:
   - !include ".aliae/modules/env.yml"
