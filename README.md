@@ -20,10 +20,13 @@ git clone --recurse-submodules https://github.com/nas3ts/dotfiles.git
 ### 🔁 Updating Later
 
 To pull updates from both this repo **and** the terminal themes:
-
 ```bash
 git pull --recurse-submodules
 git submodule update --remote
+```
+Or use the builtin `alias`
+```bash
+gupdate # does exactly what the commands above do, just easier to remember
 ```
 
 > 🔄 Use this to stay synced with any theme updates.
