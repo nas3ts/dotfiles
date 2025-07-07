@@ -9,7 +9,7 @@
   value: |
     {{ if eq .Shell "pwsh" }}
       exit
-    {{ else if eq .Shell "zsh" }}
+    {{ else if eq .Shell "zsh" "bash" }}
     {
       exit
     }
