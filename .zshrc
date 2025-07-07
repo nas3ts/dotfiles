@@ -68,6 +68,7 @@ fi
 
 if command -v aliae >/dev/null 2>&1; then		# <- custom alias config	
 	eval "$(aliae init zsh)"
+	source $ALIAE_COMP_CONFIG
 
 else
 	echo "aliae is not installed. Skipping alias init."
@@ -76,7 +77,6 @@ fi
 
 if command -v zoxide >/dev/null 2>&1; then		# <- cooler cd command
 	eval "$(zoxide init zsh)"
-	source $ALIAE_COMP_CONFIG
 else
 	echo "zoxide is not installed. Skipping zoxide init."
 fi
