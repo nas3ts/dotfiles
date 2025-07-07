@@ -57,7 +57,7 @@ ensure_tool "lsd" "lsd"
 DOTFILES_DIR="$(dirname $(dirname ${(%):-%N}))"  # <- references where this dotfile is
 OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
 export ALIAE_CONFIG="$DOTFILES_DIR/.aliae.yml"
-ALIAE_COMP_CONFIG="$DOTFILES_DIR/.aliae/.completion/zsh"
+ALIAE_COMP_CONFIG="$DOTFILES_DIR/.aliae/completions/zsh"
 
 # Conditional Inits
 if command -v oh-my-posh >/dev/null 2>&1; then		# <- custom shell theme
