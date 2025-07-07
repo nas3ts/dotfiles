@@ -54,8 +54,8 @@ ensure_tool "lsd" "lsd"
 
 # --- Paths and Inits ---
 #
-DOTFILES_DIR="$(dirname ${(%):-%N})"  # <- references where this dotfile is
-OMP_CONFIG="$DOTFILES_DIR/../emodipt-custom/emodipt-custom.omp.yaml"
+DOTFILES_DIR="$(dirname $(dirname ${(%):-%N}))"  # <- references where this dotfile is
+OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
 export ALIAE_CONFIG="$DOTFILES_DIR/.aliae.yml"
 ALIAE_COMP_CONFIG="$DOTFILES_DIR/.aliae/.completion/zsh"
 
