@@ -57,6 +57,7 @@ ensure_tool "lsd" "lsd"
 DOTFILES_DIR="$(dirname ${(%):-%N})"  # <- references where this dotfile is
 OMP_CONFIG="$DOTFILES_DIR/../emodipt-custom/emodipt-custom.omp.yaml"
 export ALIAE_CONFIG="$DOTFILES_DIR/.aliae.yml"
+ALIAE_COMP_CONFIG="$DOTFILES_DIR/.aliae/.completion/zsh"
 
 # Conditional Inits
 if command -v oh-my-posh >/dev/null 2>&1; then		# <- custom shell theme
@@ -67,6 +68,7 @@ fi
 
 if command -v aliae >/dev/null 2>&1; then		# <- custom alias config	
 	eval "$(aliae init zsh)"
+
 else
 	echo "aliae is not installed. Skipping alias init."
 fi
@@ -74,6 +76,7 @@ fi
 
 if command -v zoxide >/dev/null 2>&1; then		# <- cooler cd command
 	eval "$(zoxide init zsh)"
+	source $ALIAE_COMP_CONFIG
 else
 	echo "zoxide is not installed. Skipping zoxide init."
 fi
