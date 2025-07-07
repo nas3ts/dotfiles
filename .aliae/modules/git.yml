@@ -2,4 +2,4 @@
   value: | 
     git pull --recurse-submodules `
     && git submodule update --remote
-  type: git
+  type: function
