@@ -36,10 +36,10 @@ Ensure-Tool -CommandName 'lsd'        -WingetId 'lsd-rs.lsd'
 Ensure-Tool -CommandName 'gsudo'      -WingetId 'gerardog.gsudo'
 
 # --- Paths ---
-$dotfilesDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ompConfigPath = Join-Path $dotfilesDir '..\emodipt-custom\emodipt-custom.omp.yaml'
+$dotfilesDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
+$ompConfigPath = Join-Path $dotfilesDir 'themes\terminal\emodipt-custom.omp.yaml'
 $aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'
-$aliaeCompletionPath = Join-Path $dotfilesDir '.aliae\.completion\pwsh.ps1'
+$aliaeCompletionPath = Join-Path $dotfilesDir '.aliae\completions\pwsh.ps1'
 
 # --- Initialize tools ---
 if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
