@@ -39,6 +39,7 @@ Ensure-Tool -CommandName 'gsudo'      -WingetId 'gerardog.gsudo'
 $dotfilesDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ompConfigPath = Join-Path $dotfilesDir '..\emodipt-custom\emodipt-custom.omp.yaml'
 $aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'
+$aliaeCompletionPath = Join-Path $dotfilesDir '.aliae\.completion\pwsh.ps1'
 
 # --- Initialize tools ---
 if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
@@ -49,8 +50,11 @@ if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
 }
 
 if (Get-Command aliae -ErrorAction SilentlyContinue) {
-    $resolvedPath = Resolve-Path $aliaeConfigPath
-    & aliae init pwsh --config $resolvedPath | Invoke-Expression
+    $resolvedConfPath = Resolve-Path $aliaeConfigPath
+    $resolvedCompPath = Resolve-Path $aliaeCompletionPath
+
+    & aliae init pwsh --config $resolvedConfPath | Invoke-Expression
+    . $resolvedCompPath
 } else {
     Write-Warning "aliae not installed, skipping initialization."
 }
