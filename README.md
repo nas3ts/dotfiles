@@ -3,7 +3,7 @@ My dotfiles
 
 ## 🧩 Using Submodules (Terminal Themes)
 
-This repo uses a **Git submodule** to include the terminal themes.
+This repo uses a **Git submodule** to include the [terminal themes](https://github.com/nas3ts/terminal-themes).
 
 ### 🛠 First Time Setup
 
