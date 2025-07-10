@@ -38,7 +38,7 @@ Ensure-Tool -CommandName 'gsudo'      -WingetId 'gerardog.gsudo'
 # --- Paths ---
 $dotfilesDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $ompConfigPath = Join-Path $dotfilesDir 'themes\terminal\emodipt-custom.omp.yaml'
-$aliaeConfigPath = Join-Path $dotfilesDir '.aliae.yml'
+$aliaeConfigPath = Join-Path $dotfilesDir 'configs\.aliae.yml'
 $aliaeCompletionPath = Join-Path $dotfilesDir '.aliae\completions\pwsh.ps1'
 
 # --- Initialize tools ---
