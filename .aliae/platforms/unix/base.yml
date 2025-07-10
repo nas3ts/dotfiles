@@ -16,6 +16,8 @@
   value: yay -Si        # Show info for a specific package
 - name: yu
   value: yay -Syu       # Full system upgrade (repo + AUR)
+- name: yy
+  value: yay -Syy
 - name: yua
   value: yay -Sua       # Upgrade AUR packages only
 - name: yr
