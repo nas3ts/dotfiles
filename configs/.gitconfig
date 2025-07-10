@@ -1,0 +1,12 @@
+[user]
+	name = nas3ts
+	email = nkisowile@gmail.com
+[alias]
+	grs = git reset
+	gsw = git switch
+	git-update = git pull --recurse-submodules `\n&& git submodule update --remote\n
+	gupdate = git pull --recurse-submodules `\n&& git submodule update --remote\n
+[init]
+	defaultBranch = main
+[push]
+	autoSetupRemote = true
