@@ -117,7 +117,8 @@
     --ignore-glob "*.lock" \
     --ignore-glob "*.log" \
     --ignore-glob "*.tmp" \
-    --ignore-glob "__pycache__"
+    --ignore-glob "__pycache__" \
+    --ignore-glob "Subs"
   if: eq .OS "linux"
 
 - name: lt
@@ -135,7 +136,8 @@
     --ignore-glob "*.lock" `
     --ignore-glob "*.log" `
     --ignore-glob "*.tmp" `
-    --ignore-glob "__pycache__"
+    --ignore-glob "__pycache__" `
+    --ignore-glob "Subs"
   if: eq .Shell "pwsh"
   
 # Access time, oldest first
