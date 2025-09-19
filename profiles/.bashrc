@@ -38,7 +38,7 @@ ensure_tool "lsd" "lsd"
 # --- Paths ---
 DOTFILES_DIR="$(dirname "$(dirname "${BASH_SOURCE[0]}")")"
 export OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
-export ALIAE_CONFIG="$DOTFILES_DIR/.aliae.yml"
+export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae.yml"
 # export ALIAE_COMP_CONFIG="$DOTFILES_DIR/.aliae/completions/bash"
 
 # --- Conditional Inits ---
