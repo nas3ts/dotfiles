@@ -81,9 +81,9 @@ else
 	echo "zoxide is not installed. Skipping zoxide init."
 fi
 
-if ! grep -q 'export TMPDIR=\$HOME/tmp' ~/.zshrc; then		# <- TMPDIR init
+if ! grep -q 'export TMPDIR=\$HOME/.tmp' ~/.zshrc; then		# <- TMPDIR init
   echo "TMPDIR not set in ~/.zshrc."
-  read "resp?Do you want to add 'export TMPDIR=\$HOME/tmp' to your ~/.zshrc? [y/N] "
+  read "resp?Do you want to add 'export TMPDIR=\$HOME/.tmp' to your ~/.zshrc? [y/N] "
   if [[ "$resp" == [yY] ]]; then
     echo 'export TMPDIR=$HOME/tmp' >> ~/.zshrc
     echo "\uf00c TMPDIR added to ~/.zshrc"
