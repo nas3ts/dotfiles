@@ -2,6 +2,8 @@
 - name: c
   value: '{{ if eq .Shell "pwsh"}}Clear-Host{{ else }}clear{{ end }}'
 - name: v
+  value: vim
+- name: n
   value: nvim
 - name: ff
   value: fastfetch
