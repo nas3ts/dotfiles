@@ -22,7 +22,7 @@
     {{ if eq .OS "windows"}}
       ntop
     {{ else if eq .OS "linux"}}
-      htop
+      btop
     {{ end }}
 
 - name: disks
