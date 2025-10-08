@@ -52,6 +52,7 @@ ensure_tool "aliae" "aliae"
 ensure_tool "zoxide" "zoxide"
 ensure_tool "lsd" "lsd"
 ensure_tool "zellij" "zellij"
+ensure_tool "fzf" "fzf"
 
 # --- Paths and Inits ---
 #
@@ -105,6 +106,11 @@ if ! grep -q 'export TMPDIR=\$HOME/.tmp' ~/.zshrc; then		# <- TMPDIR init
   fi
 fi
 
+if command -v fzf >/dev/null 2>&1; then			# <- fuzzy finder
+	eval "$(fzf --zsh)"
+else
+	echo "fzf is not installed. Skipping fzf init."
+fi
 
 
 # --- Exports ---
