@@ -3,22 +3,30 @@
 # History file location and limits
 HISTFILE=~/.histfile
 HISTSIZE=10000
-SAVEHIST=10000
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
 
 # History behavior settings
 setopt hist_ignore_dups        # Don't record duplicate consecutive commands
 setopt hist_ignore_all_dups    # Remove older duplicates as new ones are added
+setopt hist_save_no_dups
+setopt hist_find_no_dups
 setopt hist_ignore_space       # Don't record commands that start with a space
 setopt hist_reduce_blanks      # Remove superfluous blanks before saving
 setopt hist_verify             # Don't execute from history without confirmation
-setopt inc_append_history      # Add commands to history immediately, not at shell exit
-setopt share_history           # Share command history between terminal sessions
+setopt appendhistory           # Add commands to history immediately, not at shell exit
+setopt sharehistory            # Share command history between terminal sessions
 
 setopt autocd beep extendedglob nomatch
 bindkey -e
+bindkey '^w' history-search-backward
+bindkey '^s' history-search-forward
 # End of lines configured by zsh-newuser-install
 
+# Styling
 zstyle :compinstall filename '/home/nasets/.zshrc'
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 #autoloads
 autoload -Uz tetriscurses
@@ -118,8 +126,9 @@ fi
 #
 export GOPROXY=https://proxy.golang.org,direct
 
-# --- zsh syntax highlighting and autosuggestion configs ---
+# --- zsh plugins ---
 #
+
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 fpath=(~/.zsh/zsh-completions /usr/local/share/zsh/site-functions /usr/share/zsh/site-functions /usr/share/zsh/functions/Calendar /usr/share/zsh/functions/Chpwd /usr/share/zsh/functions/Completion /usr/share/zsh/functions/Completion/Base /usr/share/zsh/functions/Completion/Linux /usr/share/zsh/functions/Completion/Unix /usr/share/zsh/functions/Completion/X /usr/share/zsh/functions/Completion/Zsh /usr/share/zsh/functions/Exceptions /usr/share/zsh/functions/MIME /usr/share/zsh/functions/Math /usr/share/zsh/functions/Misc /usr/share/zsh/functions/Newuser /usr/share/zsh/functions/Prompts /usr/share/zsh/functions/TCP /usr/share/zsh/functions/VCS_Info /usr/share/zsh/functions/VCS_Info/Backends /usr/share/zsh/functions/Zftp /usr/share/zsh/functions/Zle)
 
