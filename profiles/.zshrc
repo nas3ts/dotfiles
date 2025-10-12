@@ -165,3 +165,5 @@ ZSH_HIGHLIGHT_STYLES=(
   'unknown-command'     'fg=#E06C75'           # Red for unknown commands
 )
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+
