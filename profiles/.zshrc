@@ -40,10 +40,28 @@ auto_install_all=false
 function ensure_tool() {
   local cmd="$1"
   local pkg="$2"
+
+  # Ensure yay (AUR helper) exists
+  if ! command -v yay >/dev/null 2>&1; then
+    read "choice?Yay is not installed. It’s required for installing AUR packages. Install yay? (y)es | (n)o: "
+    case "$choice" in
+      y|Y)
+        echo "Installing yay..."
+        sudo pacman -S --needed --noconfirm base-devel git || return 1
+        git clone https://aur.archlinux.org/yay.git /tmp/yay || return 1
+        (cd /tmp/yay && makepkg -si --noconfirm) || return 1
+        ;;
+      *)
+        echo "Cannot continue without yay. Skipping."
+        return 1
+        ;;
+    esac
+  fi
+
   if ! command -v "$cmd" >/dev/null 2>&1; then
     echo "$cmd not found."
     if [ "$auto_install_all" = false ]; then
-      read "choice?Install $cmd? (y)es / (n)o / (a)ll: "
+      read "choice?Install $cmd? (y)es | (n)o | (a)ll: "
       case "$choice" in
         a|A) auto_install_all=true ;;
         y|Y) ;;
