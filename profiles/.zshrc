@@ -59,7 +59,7 @@ ensure_tool "oh-my-posh" "oh-my-posh"
 ensure_tool "aliae" "aliae"
 ensure_tool "zoxide" "zoxide"
 ensure_tool "lsd" "lsd"
-##ensure_tool "zellij" "zellij"
+ensure_tool "zellij" "zellij"
 ensure_tool "fzf" "fzf"
 
 # --- Paths and Inits ---
@@ -67,7 +67,7 @@ ensure_tool "fzf" "fzf"
 DOTFILES_DIR="$(dirname $(dirname ${(%):-%N}))"  # <- references where this dotfile is
 OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-minimal.omp.yaml"
 export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae.yml"
-ALIAE_COMP_CONFIG="$DOTFILES_DIR/.aliae/completions/zsh"
+# ALIAE_COMP_CONFIG="$DOTFILES_DIR/.aliae/completions/zsh"
 
 # Conditional Inits
 if command -v oh-my-posh >/dev/null 2>&1; then		# <- custom shell theme
@@ -78,25 +78,25 @@ fi
 
 if command -v aliae >/dev/null 2>&1; then		# <- custom alias config	
 	eval "$(aliae init zsh)"
-	source $ALIAE_COMP_CONFIG
+#	source $ALIAE_COMP_CONFIG
 
 else
 	echo "aliae is not installed. Skipping alias init."
 fi
 
 
-##if command -v zellij >/dev/null 2>&1; then		# <- terminal multiplexer
-##	eval "$(zellij setup --generate-auto-start zsh)"
-##	
-##	LINK="/tmp/custom.kdl"
-##	TARGET="$ZELLIJ_CONFIG_DIR/layout.kdl"
-##
-##	if [[ ! -e "$LINK" ]]; then
-##		ln -s "$TARGET" "$LINK"
-##	fi
-##else
-##	echo "zellij is not installed. Skipping zellij init."
-##fi
+if command -v zellij >/dev/null 2>&1; then		# <- terminal multiplexer
+	eval "$(zellij setup --generate-auto-start zsh)"
+	
+	LINK="/tmp/custom.kdl"
+	TARGET="$ZELLIJ_CONFIG_DIR/layout.kdl"
+
+	if [[ ! -e "$LINK" ]]; then
+		ln -s "$TARGET" "$LINK"
+	fi
+else
+	echo "zellij is not installed. Skipping zellij init."
+fi
 
 if command -v zoxide >/dev/null 2>&1; then		# <- cooler cd command
 	eval "$(zoxide init zsh)"
