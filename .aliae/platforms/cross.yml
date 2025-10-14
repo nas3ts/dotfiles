@@ -7,6 +7,10 @@
   value: nvim
 - name: ff
   value: fastfetch
+- name: cf
+  value: cpufetch
+- name: rf
+  value: ramfetch
 - name: x
   value: |
     {{ if eq .Shell "pwsh" }}
@@ -25,7 +29,7 @@
       btop
     {{ end }}
 
-- name: disks
+- name: dsks
   value: |
     {{ if eq .Shell "pwsh" }}
       Get-Volume | Format-Table -AutoSize
