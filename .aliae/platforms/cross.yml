@@ -5,6 +5,9 @@
   value: vim
 - name: n
   value: nvim
+- name: g
+  value: glow
+
 - name: ff
   value: fastfetch
 - name: cf
