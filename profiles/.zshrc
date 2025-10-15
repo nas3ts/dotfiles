@@ -79,6 +79,7 @@ ensure_tool "zoxide" "zoxide"
 ensure_tool "lsd" "lsd"
 ensure_tool "zellij" "zellij"
 ensure_tool "fzf" "fzf"
+ensure_tool "glow" "glow"
 
 # --- Paths and Inits ---
 #
