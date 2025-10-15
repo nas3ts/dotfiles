@@ -84,8 +84,8 @@ ensure_tool "glow" "glow"
 # --- Paths and Inits ---
 #
 DOTFILES_DIR="$(dirname $(dirname ${(%):-%N}))"  # <- references where this dotfile is
-OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
-# OMP_CONFIG="~/Dev/terminal-themes/emodipt-minimal02.omp.yaml"
+# OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
+OMP_CONFIG="~/Dev/terminal-themes/emodipt-custom.omp.yaml"  # <- trial theme config
 export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae.yml"
 # ALIAE_COMP_CONFIG="$DOTFILES_DIR/.aliae/completions/zsh"
 
