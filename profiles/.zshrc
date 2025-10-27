@@ -24,7 +24,7 @@ bindkey '^s' history-search-forward
 # End of lines configured by zsh-newuser-install
 
 # Styling
-zstyle :compinstall filename '/home/nasets/.zshrc'
+zstyle :compinstall filename "$HOME/.zshrc"
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
