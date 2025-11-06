@@ -8,6 +8,8 @@
 - name: g
   value: glow
 
+- name: fzf
+  value: fzf -e
 - name: ff
   value: fastfetch
 - name: cf
