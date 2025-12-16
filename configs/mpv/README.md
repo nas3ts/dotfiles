@@ -48,6 +48,32 @@ Please note that many of these scripts have been slightly modified from their in
 
 ## Updates
 
+### 2025-12-13
+
+- FEAT: add screenshotting to clipboard, based on code from https://github.com/ObserverOfTime/mpv-scripts/blob/master/clipshot.lua in `screenshotfolder.lua`
+- FIX: screenshot text showing up on the UI even if `show_message` is false in `screenshotfolder.lua`
+
+### 2025-12-10
+
+- FIX: fix `autolyrics.lua` crashing if no lyrics are found
+
+### 2025-12-07
+
+- FIX: fix pictures directory on linux
+
+### 2025-11-30
+
+- FIX: improve downloading in `autolyrics.lua` by using lrclib.net
+
+### 2025-11-20
+
+- FIX: move the mpv folder from `~~desktop` to `~/Pictures`
+- FIX: add more crf options to `mpvcut.lua`
+
+### 2025-11-17
+
+- FIX: improve `livechat.lua`
+
 ### 2025-11-08
 
 - FIX: add `unc2url.lua` and make various changes to playing network files
