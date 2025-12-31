@@ -77,7 +77,7 @@ ensure_tool "oh-my-posh" "oh-my-posh"
 ensure_tool "aliae" "aliae"
 ensure_tool "zoxide" "zoxide"
 ensure_tool "lsd" "lsd"
-ensure_tool "zellij" "zellij"
+# ensure_tool "zellij" "zellij"
 ensure_tool "fzf" "fzf"
 ensure_tool "glow" "glow"
 
@@ -105,18 +105,18 @@ else
 fi
 
 
-if command -v zellij >/dev/null 2>&1; then		# <- terminal multiplexer
-	eval "$(zellij setup --generate-auto-start zsh)"
-	
-	LINK="/tmp/custom.kdl"
-	TARGET="$ZELLIJ_CONFIG_DIR/layout.kdl"
-
-	if [[ ! -e "$LINK" ]]; then
-		ln -s "$TARGET" "$LINK"
-	fi
-else
-	echo "zellij is not installed. Skipping zellij init."
-fi
+# if command -v zellij >/dev/null 2>&1; then		# <- terminal multiplexer
+# 	eval "$(zellij setup --generate-auto-start zsh)"
+# 	
+# 	LINK="/tmp/custom.kdl"
+# 	TARGET="$ZELLIJ_CONFIG_DIR/layout.kdl"
+# 
+# 	if [[ ! -e "$LINK" ]]; then
+# 		ln -s "$TARGET" "$LINK"
+# 	fi
+# else
+# 	echo "zellij is not installed. Skipping zellij init."
+# fi
 
 if command -v zoxide >/dev/null 2>&1; then		# <- cooler cd command
 	eval "$(zoxide init zsh)"
