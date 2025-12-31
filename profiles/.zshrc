@@ -128,7 +128,7 @@ if ! grep -q 'export TMPDIR=\$HOME/.tmp' ~/.zshrc; then		# <- TMPDIR init
   echo "TMPDIR not set in ~/.zshrc."
   read "resp?Do you want to add 'export TMPDIR=\$HOME/.tmp' to your ~/.zshrc? [y/N] "
   if [[ "$resp" == [yY] ]]; then
-    echo 'export TMPDIR=$HOME/tmp' >> ~/.zshrc
+    echo 'export TMPDIR=$HOME/.tmp' >> ~/.zshrc
     echo "\uf00c TMPDIR added to ~/.zshrc"
   else
     echo "\uf00d TMPDIR not added."
