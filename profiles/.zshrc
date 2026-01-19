@@ -142,6 +142,17 @@ else
 fi
 
 
+# --- Custom functions/aliae ---
+#
+function ytm() {
+	local url="$1"
+
+	yt-dlp $1 -x --audio-format mp3 --audio-quality 0 -f bestaudio -o "%(title)s.%(ext)s" --embed-thumbnail --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" --add-metadata --embed-metadata --parse-metadata "playlist_index:%(track_number)s" --windows-filenames --verbose $1 --download-archive archive.txt --no-overwrites
+
+}
+
+
+
 # --- Exports ---
 #
 export GOPROXY=https://proxy.golang.org,direct
