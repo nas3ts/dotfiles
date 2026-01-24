@@ -1,5 +1,5 @@
 --[[
-    modernx.lua by zydezu
+    modernx.lua v0.4.5 by zydezu
     (https://github.com/zydezu/ModernX)
 
     This script is a result of the original mpv-osc-modern by maoiscat
@@ -78,7 +78,7 @@ local user_opts = {
     layout_option = "original",             -- use the original/reduced layout
     idle_screen = true,                     -- show mpv logo when idle
     key_bindings = true,                    -- register additional key bindings, such as chapter scrubbing, pinning the window
-    window_top_bar = "no",                -- show OSC window top bar: "auto", "yes", or "no" (borderless/fullscreen)
+    window_top_bar = "auto",                -- show OSC window top bar: "auto", "yes", or "no" (borderless/fullscreen)
     show_windowed = true,                   -- show OSC when windowed
     show_fullscreen = true,                 -- show OSC when fullscreen
     show_on_pause = true,                   -- show OSC when paused
@@ -160,7 +160,7 @@ local user_opts = {
                                             -- https://mpv.io/manual/master/#command-interface-screenshot-%3Cflags%3E
 
     download_button = true,                 -- show download button on web videos (requires yt-dlp and ffmpeg)
-    download_path = "~/Pictures/mpv/downloads", -- default download directory for videos (https://mpv.io/manual/master/#paths)
+    download_path = "~/Pictures/mpv/",      -- default download directory for videos (https://mpv.io/manual/master/#paths)
 
     loop_button = false,                    -- show loop button
     loop_in_pause = true,                   -- enable looping by right-clicking pause
@@ -226,10 +226,10 @@ local user_opts = {
     title_youtube_stats = true,             -- update the window/OSC title bar with YouTube video stats (views, comments, likes)
     ytdl_format = "",                       -- optional parameteres for yt-dlp downloading, eg: '-f bestvideo+bestaudio/best'
 
-    -- sponsorblock features need https://github.com/zydezu/mpvconfig/blob/main/scripts/sponsorblock.lua to work!
-    show_sponsorblock_segments = true,      -- show sponsorblock segments on the progress bar
-    add_sponsorblock_chapters = false,      -- add sponsorblock chapters to the chapter list
-    sponsorblock_seek_range_alpha = 75,     -- transparency of sponsorblock segments
+    -- SponsorBlock - these SponsorBlock features need https://github.com/zydezu/mpvconfig/blob/main/scripts/sponsorblock.lua to function
+    show_sponsorblock_segments = true,      -- show SponsorBlock segments on the progress bar
+    add_sponsorblock_chapters = false,      -- add SponsorBlock chapters to the chapter list
+    sponsorblock_seek_range_alpha = 75,     -- transparency of SponsorBlock segments
     sponsor_types = {                       -- what categories to show in the progress bar
         "sponsor",                          -- all categories: sponsor, intro, outro,
         "intro",                            -- interaction, selfpromo, preview, music_offtopic, filler
@@ -251,12 +251,11 @@ local user_opts = {
 
     -- Experimental
     show_youtube_comments = false,          -- EXPERIMENTAL - show youtube comments
-    comments_download_path = "~~Pictures/mpv/downloads/comments", -- EXPERIMENTAL - the download path for the comment JSON file
+    comments_download_path = "~/Pictures/mpv/downloads/comments", -- EXPERIMENTAL - the download path for the comment JSON file
     FORCE_fix_not_ontop = true,             -- EXPERIMENTAL - try and mitigate https://github.com/zydezu/ModernX/issues/30, https://github.com/akiirui/mpv-handler/issues/48
 }
 -- read options from config and command-line
 require("mp.options").read_options(user_opts, 'modernx', function(list) update_options(list) end)
-
 mp.observe_property("osc", "bool", function(name, value) if value == true then mp.set_property("osc", "no") end end)
 
 local osc_param = {                         -- calculated by osc_init()
@@ -271,6 +270,7 @@ local icons = {
     play = "\238\166\143",
     pause = "\238\163\140",
     replay = "\238\189\191",
+
     previous = "\239\152\167",
     next = "\239\149\168",
     rewind = "\238\168\158",
@@ -278,19 +278,28 @@ local icons = {
 
     audio = "\238\175\139",
     subtitle = "\238\175\141",
-    volume_mute = "\238\173\138",
-    volume_quiet = "\238\172\184",
-    volume_low = "\238\172\189",
-    volume_high = "\238\173\130",
+
+    volume = {
+        mute = "\238\173\138",
+        quiet = "\238\172\184",
+        low = "\238\172\189",
+        high = "\238\173\130",
+    },
 
     download = "\239\133\144",
-    downloading = "\239\140\174",
+    download_initiated = "\239\140\174",
+
     loop_off = "\239\133\178",
     loop_on = "\239\133\181",
+
     info = "\239\146\164",
-    ontop_on = "\238\165\190",
-    ontop_off = "\238\166\129",
+
+    pinned_off = "\238\166\129",
+    pinned_on = "\238\165\190",
+
     screenshot = "\239\154\142",
+    playlist = "\238\161\159", -- currently unused
+
     fullscreen = "\239\133\160",
     fullscreen_exit = "\239\133\166",
 
@@ -301,19 +310,24 @@ local icons = {
         default = {"\238\172\138", "\238\172\138"}, -- second icon is mirrored in layout()
     },
 
+    window = {
+        maximize = "\238\132\147",
+        unmaximize = "\238\132\148",
+        minimize = "\238\132\146",
+        close = "\238\132\149",
+    },
+
     emoticon = {
         view = "👁️",
         comment = "💬",
-        like = "👍"
+        like = "👍",
     },
-
-    playlist = "\238\161\159", -- unused rn
 }
 
 -- Localization
 local language = {
     ['en'] = {
-        welcome = 'Drop files or URLs here to play',  -- this text appears when mpv starts
+        welcome = 'Drop files or URLs here to play',    -- appears on mpv startup
         off = 'OFF',
         na = 'Not available',
         none = 'None available',
@@ -340,8 +354,6 @@ local language = {
         downloaded = "Already downloaded",
     }
 }
-
--- apply lang opts
 local texts = language[user_opts.language] or language["en"]
 
 local function contains(list, item)
@@ -360,20 +372,6 @@ local function contains(list, item)
         end
     end
     return false
-end
-
--- debug function
-local function dumptable(o)
-    if type(o) == 'table' then
-       local s = '{ '
-       for k,v in pairs(o) do
-          if type(k) ~= 'number' then k = '"'..k..'"' end
-          s = s .. '['..k..'] = ' .. dumptable(v) .. ','
-       end
-       return s .. '} '
-    else
-       return tostring(o)
-    end
 end
 
 local thumbfast = {
@@ -401,7 +399,7 @@ local window_control_box_width = 138
 local max_descsize = 200
 local comments_per_page = 25
 local is_december = os.date("*t").month == 12
-local UNICODE_MINUS = string.char(0xe2, 0x88, 0x92)  -- UTF-8 for U+2212 MINUS SIGN
+local unicode_minus_symbol = string.char(0xe2, 0x88, 0x92)  -- UTF-8 for U+2212 MINUS SIGN
 local iconfont = 'fluent-system-icons'
 
 local function osc_color_convert(color)
@@ -429,7 +427,7 @@ local osc_styles = {
     tooltip = "{\\blur1\\bord0.5\\1c&HFFFFFF&\\3c&H000000&\\fs" .. user_opts.time_font_size .. "\\fn" .. user_opts.font .. "}",
     volumebar_bg = "{\\blur0\\bord0\\1c&H999999&}",
     volumebar_fg = "{\\blur1\\bord1\\1c&H" .. osc_color_convert(user_opts.side_buttons_color) .. "&}",
-    window_control = "{\\blur1\\bord0.5\\1c&H" .. osc_color_convert(user_opts.window_controls_color) .. "&\\3c&H0&\\fs18\\fnmpv-osd-symbols}",
+    window_control = "{\\blur0\\bord0\\1c&H" .. osc_color_convert(user_opts.window_controls_color) .. "&\\3c&H0&\\fs18\\fn" .. user_opts.font .. "}",
     window_title = "{\\blur1\\bord0.5\\1c&H" .. osc_color_convert(user_opts.window_title_color) .. "&\\3c&H0&\\fs19\\q2\\fn" .. user_opts.font .. "}",
     description = '{\\blur1\\bord0.5\\1c&HFFFFFF&\\3c&H000000&\\fs'.. user_opts.description_font_size ..'\\q2\\fn' .. user_opts.font .. '}',
 }
@@ -1671,18 +1669,22 @@ function check_path_url()
     if is_url(path) and path or nil then
         state.is_URL = true
         state.url_path = path
-        mp.msg.info("URL detected.")
+        print("URL detected.")
 
-        if not (path:match("https?://(www%.youtube%.com/watch%?v=.+)") or path:match("https?://youtu%.be/.+")) then
+        if path:match("https?://[^/]*youtube%.com/") or path:match("https?://youtu%.be/") then
+            if path:match("/watch%?v=") or path:match("/shorts/") then
+                state.is_youtube = true
+            else
+                state.is_youtube = false
+            end
+        else
             user_opts.download_button = false
             user_opts.show_youtube_comments = false
-            user_opts.is_youtube = false
-        else
-            user_opts.is_youtube = true
+            state.is_youtube = false
         end
 
         if user_opts.download_button then
-            mp.msg.info("Fetching file size...")
+            print("Fetching web video file size...")
             local command = {
                 "yt-dlp",
                 "--no-download",
@@ -1694,15 +1696,17 @@ function check_path_url()
         end
 
         if user_opts.show_description then
-            if not user_opts.is_youtube then
+            if not state.is_youtube then
                 local file_size = mp.get_property_native("file-size")
-                file_size = mp.utils.format_bytes_humanized(file_size)
-                state.videoDescription = "Size: " .. file_size
+                if file_size then
+                    file_size = mp.utils.format_bytes_humanized(file_size)
+                    state.videoDescription = "Size: " .. file_size
+                end
                 state.descriptionLoaded = true
                 return
             end
 
-            mp.msg.info("[WEB] Loading video description...")
+            print("Loading web video description...")
             local command = {
                 "yt-dlp",
                 "--no-download",
@@ -1713,7 +1717,7 @@ function check_path_url()
         end
 
         if user_opts.show_youtube_comments then
-            mp.msg.info("[WEB] Downloading comments...")
+            print("Downloading YouTube comments...")
             check_comments()
         end
     end
@@ -1749,7 +1753,7 @@ function check_comments()
         capture_stderr = true
     }, function(success, result, error)
         if not success then
-            print("[WEB] Couldn't write youtube comments: " .. error)
+            print("Failed to write YouTube comments: " .. error)
             return
         end
 
@@ -1757,8 +1761,8 @@ function check_comments()
         local file_prop = mp.get_property("filename")
         local comments_path = user_opts.comments_download_path or ""
 
-        if file_prop then            
-            mp.msg.info("[WEB] Downloaded comments")
+        if file_prop then
+            print("Downloaded YouTube comments")
 
             -- clean file name
             local clean_name = file_prop:gsub("watch%?v=", "")
@@ -1767,16 +1771,16 @@ function check_comments()
             -- create the file path
             local base_path = mp.command_native({"expand-path", comments_path .. '/'}) or ""
             filename = base_path .. clean_name .. ".info.json"        else
-            mp.msg.info("[WEB] Comments failed to download...")
+            print("YouTube comments failed to download...")
             return
         end
 
         if file_exists(filename) then
-            mp.msg.info("[WEB] Reading comments file...")
+            print("Reading YouTube comments file...")
             local lines = lines_from(filename)
             state.jsoncomments = mp.utils.parse_json(lines[1]).comments
         else
-            mp.msg.info("[WEB] Error opening comments file")
+            print("Error opening YouTube comments file")
             return
         end
         state.maxCommentPages = math.ceil(#state.jsoncomments / comments_per_page)
@@ -1788,7 +1792,7 @@ function check_comments()
         if state.showingDescription then
             show_description(state.localDescriptionClick)
         end
-        mp.msg.info("[WEB] Read and parsed comments")
+        print("Read and parsed YouTube comments")
     end )
 end
 
@@ -1857,7 +1861,7 @@ end
 
 function process_filesize(success, result, error)
     if not success then
-        print("[WEB] Couldn't fetch video filesize: " .. error)
+        print("Couldn't fetch web video filesize: " .. error)
         return
     end
 
@@ -1866,15 +1870,14 @@ function process_filesize(success, result, error)
 
     if state.file_size_bytes then
         state.file_size_normalized = mp.utils.format_bytes_humanized(state.file_size_bytes)
-        mp.msg.info("[WEB] Download size: " .. state.file_size_normalized)
     else
         local fs_prop = mp.get_property_osd("file-size")
         if fs_prop and fs_prop ~= "" then
             state.file_size_normalized = fs_prop
-            mp.msg.info(fs_prop)
+            print(fs_prop)
         else
             state.file_size_normalized = "Unknown"
-            mp.msg.info("[WEB] Unable to retrieve file size")
+            print("Unable to retrieve web video file size")
         end
     end
 
@@ -1883,12 +1886,12 @@ end
 
 local function download_done(success, result, error)
     if success then
-        show_message("{\\an9}[WEB] Download saved to " .. mp.command_native({"expand-path", user_opts.download_path}))
+        show_message("{\\an9}Download saved to " .. mp.command_native({"expand-path", user_opts.download_path}))
         state.downloaded_once = true
-        mp.msg.info("[WEB] Download completed")
+        print("Web video download completed")
     else
-        show_message("{\\an9}[WEB] Download failed - " .. (error or "Unknown error"))
-        mp.msg.info("[WEB] Download failed")
+        show_message("{\\an9}Download failed - " .. (error or "Unknown error"))
+        print("Web video download failed")
     end
     state.downloading = false
 end
@@ -1944,7 +1947,7 @@ end
 
 function process_vid_stats(success, result, error)
     if not success then
-        print("[WEB] Couldn't fetch video stats: " .. error)
+        print("Couldn't fetch web video stats: " .. error)
         return
     end
 
@@ -1982,7 +1985,7 @@ function process_vid_stats(success, result, error)
     if state.showingDescription then
         show_description(state.localDescriptionClick)
     end
-    mp.msg.info("[WEB] Loaded video description")
+    print("Loaded web video description")
 end
 
 function add_commas_to_number(number)
@@ -2086,15 +2089,17 @@ local function make_sponsorblock_segments()
                     end
                 end
                 if string.find(chapter.title, ("end"):gsub("[%[%]]", "%%%1")) then
-                    if temp_segment[current_category]["is_start_added"] then
-                        temp_segment[current_category]["end"] = chapter.time / duration * 100
-                        if state.sponsor_segments ~= 2 then
-                            temp_segment[current_category]["is_start_added"] = nil
-                            -- table.sort(temp_segment[current_category], function(a, b) return a.time < b.time end)
-                            table.insert(state.sponsor_segments[current_category], temp_segment[current_category])
+                    if temp_segment[current_category] then
+                        if temp_segment[current_category]["is_start_added"] then
+                            temp_segment[current_category]["end"] = chapter.time / duration * 100
+                            if state.sponsor_segments ~= 2 then
+                                temp_segment[current_category]["is_start_added"] = nil
+                                -- table.sort(temp_segment[current_category], function(a, b) return a.time < b.time end)
+                                table.insert(state.sponsor_segments[current_category], temp_segment[current_category])
+                            end
+                            temp_segment[current_category] = {}
+                            is_start_added = false
                         end
-                        temp_segment[current_category] = {}
-                        is_start_added = false
                     end
                 end
             end
@@ -2447,9 +2452,9 @@ function window_controls()
     -- default font, even if another font with them is available.
 
     if user_opts.window_controls then
-        -- Close: 🗙
+        -- Close
         ne = new_element('close', 'button')
-        ne.content = '\238\132\149'
+        ne.content = icons.window.close
         ne.eventresponder['mbtn_left_up'] =
             function () mp.commandv('quit') end
         lo = add_layout('close')
@@ -2457,9 +2462,9 @@ function window_controls()
         lo.style = osc_styles.window_control
         lo.button.hoverstyle = "{\\c&H" .. osc_color_convert(user_opts.window_controls_close_hover) .. "&}"
 
-        -- Minimize: 🗕
+        -- Minimize
         ne = new_element('minimize', 'button')
-        ne.content = '\238\132\146'
+        ne.content = icons.window.minimize
         ne.eventresponder['mbtn_left_up'] =
             function () mp.commandv('cycle', 'window-minimized') end
         lo = add_layout('minimize')
@@ -2467,12 +2472,12 @@ function window_controls()
         lo.style = osc_styles.window_control
         lo.button.hoverstyle = "{\\c&H" .. osc_color_convert(user_opts.window_controls_minmax_hover) .. "&}"
 
-        -- Maximize: 🗖/🗗
+        -- Maximize
         ne = new_element('maximize', 'button')
         if state.maximized or state.fullscreen then
-            ne.content = '\238\132\148'
+            ne.content = icons.window.unmaximize
         else
-            ne.content = '\238\132\147'
+            ne.content = icons.window.maximize
         end
         ne.eventresponder['mbtn_left_up'] =
             function ()
@@ -3425,14 +3430,14 @@ local function osc_init()
     ne.content = function ()
         local volume = mp.get_property_number("volume", 0)
         if state.mute then
-            return icons.volume_mute
+            return icons.volume.mute
         else
             if volume >= 75 then
-                return icons.volume_high
+                return icons.volume.high
             elseif volume >= 25 then
-                return icons.volume_low
+                return icons.volume.low
             else
-                return icons.volume_quiet
+                return icons.volume.quiet
             end
         end
     end
@@ -3484,7 +3489,7 @@ local function osc_init()
 
     --download
     ne = new_element("download", "button")
-    ne.content = function () return state.downloading and icons.downloading or icons.download end
+    ne.content = function () return state.downloading and icons.download_initiated or icons.download end
     ne.visible = (osc_param.playresx >= 1100 - outeroffset - (user_opts.loop_button and 0 or 100) - (user_opts.ontop_button and 0 or 100) - (user_opts.info_button and 0 or 100) - (user_opts.screenshot_button and 0 or 100)) and state.is_URL
     ne.tooltip_style = osc_styles.tooltip
     ne.tooltipF = function () return state.downloading and (texts.downloading .. "...") or (texts.download .. " (" .. state.file_size_normalized .. ")") end
@@ -3549,9 +3554,9 @@ local function osc_init()
     ne = new_element('tog_ontop', 'button')
     ne.content = function ()
         if mp.get_property('ontop') == 'no' then
-            return (icons.ontop_on)
+            return (icons.pinned_on)
         else
-            return (icons.ontop_off)
+            return (icons.pinned_off)
         end
     end
     ne.tooltip_style = osc_styles.tooltip
@@ -3876,7 +3881,7 @@ local function osc_init()
 
         local time_to_display = state.tc_right_rem and mp.get_property_number("playtime-remaining", 0) or duration
         if time_to_display < 0 then time_to_display = 0 end
-        local prefix = state.tc_right_rem and (user_opts.unicode_minus and UNICODE_MINUS or "-") or ""
+        local prefix = state.tc_right_rem and (user_opts.unicode_minus and unicode_minus_symbol or "-") or ""
 
         return prefix .. format_time(time_to_display) .. (state.is_live and " • LIVE" or "")
     end
