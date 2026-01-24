@@ -48,6 +48,30 @@ Please note that many of these scripts have been slightly modified from their in
 
 ## Updates
 
+### 2026-01-20
+
+- FIX: fix https://github.com/zydezu/ModernX/issues/76
+- FIX: remove `screenshot-sw` from `mpv.conf`
+- FIX: rename some variables in `modernX.lua`
+
+### 2026-01-12
+
+- FEAT: add a new option: `show_skip_message`, to `sponsorblock.lua`
+
+### 2026-01-02
+
+- FIX: fixed YouTube shorts breaking `modernx.lua`
+- FIX: fix comments download path in `modernx.lua`
+
+### 2025-12-26
+
+- FIX: use `table.unpack()` instead of `unpack()` in `screenshotfolder.lua`
+
+### 2025-12-25
+
+- FIX: add watch-later-options-remove=sub-pos to mpv.conf
+- FIX: add version numbers to modernx.lua
+
 ### 2025-12-13
 
 - FEAT: add screenshotting to clipboard, based on code from https://github.com/ObserverOfTime/mpv-scripts/blob/master/clipshot.lua in `screenshotfolder.lua`
@@ -109,7 +133,7 @@ Please note that many of these scripts have been slightly modified from their in
 ### 2025-09-04
 
 - FIX: change autocreate-playlist to same
-- FIX: https://github.com/zydezu/mpvconfig/issues/23
+- FIX: fix https://github.com/zydezu/mpvconfig/issues/23
 
 ### 2025-09-08
 
