@@ -129,7 +129,7 @@ local user_opts = {
     date_format = "%Y-%m-%d",               -- how dates should be formatted, when read from metadata (uses standard lua date formatting)
 
     -- Title bar settings
-    window_title = true,                    -- show window title in borderless/fullscreen mode
+    window_title = false,                    -- show window title in borderless/fullscreen mode
     window_controls = true,                 -- show window controls (close, minimize, maximize) in borderless/fullscreen
     window_controls_title = "${media-title}", -- same as title but for window_controls
 
