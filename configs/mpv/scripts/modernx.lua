@@ -78,7 +78,7 @@ local user_opts = {
     layout_option = "original",             -- use the original/reduced layout
     idle_screen = true,                     -- show mpv logo when idle
     key_bindings = true,                    -- register additional key bindings, such as chapter scrubbing, pinning the window
-    window_top_bar = "auto",                -- show OSC window top bar: "auto", "yes", or "no" (borderless/fullscreen)
+    window_top_bar = "no",                -- show OSC window top bar: "auto", "yes", or "no" (borderless/fullscreen)
     show_windowed = true,                   -- show OSC when windowed
     show_fullscreen = true,                 -- show OSC when fullscreen
     show_on_pause = true,                   -- show OSC when paused
@@ -130,7 +130,7 @@ local user_opts = {
 
     -- Title bar settings
     window_title = false,                    -- show window title in borderless/fullscreen mode
-    window_controls = true,                 -- show window controls (close, minimize, maximize) in borderless/fullscreen
+    window_controls = false,                 -- show window controls (close, minimize, maximize) in borderless/fullscreen
     window_controls_title = "${media-title}", -- same as title but for window_controls
 
     -- Subtitle display settings
