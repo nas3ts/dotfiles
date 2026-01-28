@@ -80,6 +80,7 @@ ensure_tool "lsd" "lsd"
 # ensure_tool "zellij" "zellij"
 ensure_tool "fzf" "fzf"
 ensure_tool "glow" "glow"
+ensure-tool "mpv-mpris" "mpv-mpris"
 
 # --- Paths and Inits ---
 #
