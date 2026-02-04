@@ -7,6 +7,10 @@
   value: nvim
 - name: g
   value: glow
+- name: jellyfin
+  value: jfsh
+- name: jlfn
+  value: jfsh
 
 - name: fzf
   value: fzf -e
