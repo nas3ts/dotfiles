@@ -92,6 +92,7 @@ OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
 # --- Exports ---
 export GOPROXY=https://proxy.golang.org,direct
 export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae.yml"
+export TMPDIR=$HOME/.tmp
 
 # --- Zsh Modules ---
 source $DOTFILES_DIR/.zsh/inits.zsh
