@@ -88,14 +88,14 @@ DOTFILES_DIR="$(dirname ${(%):-%N})"  # <- references where this dotfile is
 OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
 # OMP_CONFIG="~/Dev/terminal-themes/emodipt-custom.omp.yaml"  # <- trial theme config
 
+# --- Exports ---
+export GOPROXY=https://proxy.golang.org,direct
+export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae.yml"
+
 # --- Zsh Modules ---
 source $DOTFILES_DIR/.zsh/inits.zsh
 source $DOTFILES_DIR/.zsh/plugins.zsh
 source $DOTFILES_DIR/.zsh/functions.zsh
-
-# --- Exports ---
-export GOPROXY=https://proxy.golang.org,direct
-export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae.yml"
 
 
 
