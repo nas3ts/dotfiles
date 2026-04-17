@@ -87,31 +87,15 @@ ensure_tool "glow" "glow"
 DOTFILES_DIR="$(dirname ${(%):-%N})"  # <- references where this dotfile is
 OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
 # OMP_CONFIG="~/Dev/terminal-themes/emodipt-custom.omp.yaml"  # <- trial theme config
-export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae.yml"
-# ALIAE_COMP_CONFIG="$DOTFILES_DIR/.aliae/completions/zsh"
 
-
-# --- Inits ---
+# --- Zsh Modules ---
 source $DOTFILES_DIR/.zsh/inits.zsh
-
-# --- Custom functions/aliae ---
-#
-function ytm() {
-	local url="$1"
-
-	yt-dlp $1 -x --audio-format mp3 --audio-quality 0 -f bestaudio -o "%(title)s.%(ext)s" --embed-thumbnail --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" --add-metadata --embed-metadata --parse-metadata "playlist_index:%(track_number)s" --windows-filenames --verbose $1 --download-archive archive.txt --no-overwrites
-
-}
-
-
+source $DOTFILES_DIR/.zsh/plugins.zsh
+source $DOTFILES_DIR/.zsh/functions.zsh
 
 # --- Exports ---
-#
 export GOPROXY=https://proxy.golang.org,direct
-
-# --- Zsh Plugins ---
-source $DOTFILES_DIR/.zsh/plugins.zsh
-
+export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae.yml"
 
 
 
