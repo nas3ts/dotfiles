@@ -1,6 +1,6 @@
 # --- Zsh Plugins ---
 
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+zinit light zsh-users/zsh-autosuggestions
 fpath=(~/.zsh/zsh-completions /usr/local/share/zsh/site-functions /usr/share/zsh/site-functions /usr/share/zsh/functions/Calendar /usr/share/zsh/functions/Chpwd /usr/share/zsh/functions/Completion /usr/share/zsh/functions/Completion/Base /usr/share/zsh/functions/Completion/Linux /usr/share/zsh/functions/Completion/Unix /usr/share/zsh/functions/Completion/X /usr/share/zsh/functions/Completion/Zsh /usr/share/zsh/functions/Exceptions /usr/share/zsh/functions/MIME /usr/share/zsh/functions/Math /usr/share/zsh/functions/Misc /usr/share/zsh/functions/Newuser /usr/share/zsh/functions/Prompts /usr/share/zsh/functions/TCP /usr/share/zsh/functions/VCS_Info /usr/share/zsh/functions/VCS_Info/Backends /usr/share/zsh/functions/Zftp /usr/share/zsh/functions/Zle)
 
 
@@ -17,4 +17,5 @@ ZSH_HIGHLIGHT_STYLES=(
   'error'               'fg=#E06C75,bold'      # Bold red for unrecognized input (errors)
   'unknown-command'     'fg=#E06C75'           # Red for unknown commands
 )
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+zinit light zsh-users/zsh-syntax-highlighting
