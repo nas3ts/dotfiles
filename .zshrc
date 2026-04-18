@@ -32,11 +32,11 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 #autoloads
 autoload -Uz tetriscurses
 autoload -Uz compinit
-compinit
+compinit -C
 
 # Check and prompt to install tools (y/n/a)
 #
-auto_install_all=true
+auto_install_all=false
 
 function ensure_tool() {
   local cmd="$1"
