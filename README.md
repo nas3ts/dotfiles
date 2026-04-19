@@ -10,7 +10,7 @@ This repo uses a **Git submodule** to include the [terminal themes](https://gith
 If you're cloning this repo for the first time:
 
 ```bash
-git clone --recurse-submodules https://github.com/nas3ts/dotfiles.git
+git clone --recurse-submodules https://github.com/nas3ts/dotfiles.git ~/.dotfiles
 ```
 
 > ✅ This grabs both the main repo and the themes inside `themes/terminal`.

@@ -1,0 +1,21 @@
+theme: kuroi
+
+radarr:
+  - name: Local
+    host: 192.168.1.160
+    port: 7878
+    api_token: 46d20b16dcf84b2e9e488060a56a0b36
+
+  - name: Remote
+    uri: http://zimaos:7878
+    api_token: 46d20b16dcf84b2e9e488060a56a0b36
+
+sonarr:
+  - name: Local
+    host: 192.168.1.160
+    port: 8989
+    api_token: 80f5586a25bc47dd9a2d25e77c6aac4b
+
+  - name: Remote
+    uri: http://zimaos:8989
+    api_token: 80f5586a25bc47dd9a2d25e77c6aac4b
