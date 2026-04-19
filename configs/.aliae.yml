@@ -1,15 +1,11 @@
 alias:
-  - !include "../.aliae/platforms/cross.yml"
-  - !include "../.aliae/platforms/unix/base.yml"
-  - !include "../.aliae/platforms/windows/base.yml"
-  - !include "../.aliae/modules/nav.yml"
-  - !include "../.aliae/modules/ls.yml"
-  - !include "../.aliae/modules/git.yml"
-  - !include "../.aliae/modules/gitignore.yml"
+  - !include "../.aliae/core.yml"
+  - !include "../.aliae/nav.yml"
+  - !include "../.aliae/git.yml"
+  - !include "../.aliae/ls.yml"
 env:
-  - !include "../.aliae/modules/env.yml"
+  - !include "../.aliae/env.yml"
 script:
-  - !include "../.aliae/modules/scripts.yml"
+  - !include "../.aliae/scripts.yml"
 path:
-#  - !include "../.aliae/platforms/windows/path.yml"
-  - !include "../.aliae/platforms/unix/path.yml"
+  - !include "../.aliae/path.yml"

@@ -1,3 +1,8 @@
+- name: gupdate
+  value: |
+    git pull --recurse-submodules && git submodule update --remote
+  type: function
+
 - name: androidignore
   value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Android.gitignore
 - name: angularignore
@@ -7,9 +12,9 @@
 - name: blenderignore
   value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Blender.gitignore
 - name: csharpignore
-  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/C%23.gitignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/CSharp.gitignore
 - name: cppignore
-  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/C%2B%2B.gitignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/CPP.gitignore
 - name: clionignore
   value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/CLion.gitignore
 - name: clojureignore
@@ -17,7 +22,7 @@
 - name: djangoignore
   value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Django.gitignore
 - name: dotnetignore
-  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/.NET.gitignore
+  value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/NET.gitignore
 - name: electronignore
   value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Electron.gitignore
 - name: eclipseignore
@@ -66,4 +71,3 @@
   value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/VisualStudioCode.gitignore
 - name: wordpressignore
   value: curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/WordPress.gitignore
-

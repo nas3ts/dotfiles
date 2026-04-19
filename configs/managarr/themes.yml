@@ -1,0 +1,186 @@
+- name: default
+  theme:
+    background:
+      color: '#233237'
+      enabled: true
+    awaiting_import:
+      color: '#FFAA42'
+    indeterminate:
+      color: '#FFAA42'
+    default:
+      color: White
+    downloaded:
+      color: Green
+    downloading:
+      color: Magenta
+    failure:
+      color: Red
+    help:
+      color: LightBlue
+    missing:
+      color: Red
+    primary:
+      color: Cyan
+    secondary:
+      color: Yellow
+    success:
+      color: Green
+    system_function:
+      color: Yellow
+    unmonitored:
+      color: Gray
+    unmonitored_missing:
+      color: Yellow
+    unreleased:
+      color: LightCyan
+    warning:
+      color: Magenta
+- name: watermelon-dark
+  theme:
+    background:
+      color: '#233237'
+      enabled: false
+    awaiting_import:
+      color: '#FFAA42'
+    indeterminate:
+      color: '#FFAA42'
+    default:
+      color: '#00FF00'
+    downloaded:
+      color: '#80FFBF'
+    downloading:
+      color: Magenta
+    failure:
+      color: '#FF8080'
+    help:
+      color: LightBlue
+    missing:
+      color: '#FF8080'
+    primary:
+      color: '#FF19D9'
+    secondary:
+      color: '#8C19FF'
+    success:
+      color: Green
+    system_function:
+      color: Yellow
+    unmonitored:
+      color: Gray
+    unmonitored_missing:
+      color: Yellow
+    unreleased:
+      color: LightCyan
+    warning:
+      color: Magenta
+- name: dracula
+  theme:
+    background:
+      color: '#232326'
+      enabled: true
+    awaiting_import:
+      color: '#FFAA42'
+    indeterminate:
+      color: '#FFAA42'
+    default:
+      color: '#F8F8F2'
+    downloaded:
+      color: '#50FA7B'
+    downloading:
+      color: '#F1FA8C'
+    failure:
+      color: '#FF5555'
+    help:
+      color: '#6272A4'
+    missing:
+      color: '#FFB86C'
+    primary:
+      color: '#FF79C6'
+    secondary:
+      color: '#FF79C6'
+    success:
+      color: '#50FA7B'
+    system_function:
+      color: Yellow
+    unmonitored:
+      color: Gray
+    unmonitored_missing:
+      color: '#6272A4'
+    unreleased:
+      color: '#F8F8F2'
+    warning:
+      color: '#F1FA8C'
+- name: kuroi
+  theme:
+    background:
+      color: '#0d0d0d'
+      enabled: false
+    awaiting_import:
+      color: '#f39c12'
+    indeterminate:
+      color: '#f39c12'
+    default:
+      color: '#ffffff'
+    downloaded:
+      color: '#2ecc71'
+    downloading:
+      color: '#3584e4'
+    failure:
+      color: '#e74c3c'
+    help:
+      color: '#7f8c8d'
+    missing:
+      color: '#e74c3c'
+    primary:
+      color: '#3584e4'
+    secondary:
+      color: '#9b59b6'
+    success:
+      color: '#2ecc71'
+    system_function:
+      color: '#3584e4'
+    unmonitored:
+      color: '#7f8c8d'
+    unmonitored_missing:
+      color: '#f39c12'
+    unreleased:
+      color: '#1abc9c'
+    warning:
+      color: '#9b59b6'
+
+- name: eldritch
+  theme:
+    background:
+      color: '#212337'
+      enabled: true
+    awaiting_import:
+      color: '#FFAA42'
+    indeterminate:
+      color: '#FFAA42'
+    default:
+      color: '#EBFAFA'
+    downloaded:
+      color: '#37F499'
+    downloading:
+      color: '#F7C67F'
+    failure:
+      color: '#F16C75'
+    help:
+      color: '#7081D0'
+    missing:
+      color: '#F7C67F'
+    primary:
+      color: '#F265B5'
+    secondary:
+      color: '#04D1F9'
+    success:
+      color: '#37F499'
+    system_function:
+      color: Yellow
+    unmonitored:
+      color: Gray
+    unmonitored_missing:
+      color: '#7081D0'
+    unreleased:
+      color: '#EBFAFA'
+    warning:
+      color: '#F1FC79'

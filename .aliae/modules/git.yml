@@ -1,4 +1,0 @@
-- name: gupdate
-  value: | 
-    git pull --recurse-submodules && git submodule update --remote
-  type: function
