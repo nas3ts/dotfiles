@@ -82,6 +82,8 @@ ensure_tool "zinit" "zinit"
 ensure_tool "fzf" "fzf"
 ensure_tool "glow" "glow"
 ensure_tool "yt-dlp" "yt-dlp"
+
+alias yazi='SWAYSOCK= yazi'
 # ensure_tool "mpv-mpris" "mpv-mpris"
 
 # --- Paths ---
