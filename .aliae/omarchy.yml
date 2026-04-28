@@ -1,0 +1,24 @@
+# Omarchy aliases
+
+- name: oai
+  value: omarchy-pkg-aur-install
+- name: ou
+  value: omarchy-update
+- name: ot
+  value: omarchy-theme-set
+- name: olb
+  value: omarchy-launch-browser
+- name: olt
+  value: omarchy-launch-walker
+- name: ort
+  value: omarchy-restart-terminal
+- name: orw
+  value: omarchy-restart-waybar
+- name: ori
+  value: omarchy-restart-hypridle
+- name: ol
+  value: omarchy-launch-or-focus
+- name: os
+  value: omarchy-toggle-suspend
+- name: onl
+  value: omarchy-toggle-nightlight
