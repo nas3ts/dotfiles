@@ -3,9 +3,9 @@
 - name: c
   value: clear
 - name: v
-  value: vim
-- name: n
   value: nvim
+- name: n
+  value: vim
 - name: g
   value: glow
 - name: jellyfin
@@ -28,6 +28,8 @@
   value: lsblk --output NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL --tree --ascii
 - name: zl
   value: zoxide query --list
+- name: oai
+  value: omarchy-pkg-aur-install
 
 # Linux/Unix only
 - name: tt
