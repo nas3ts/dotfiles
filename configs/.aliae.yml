@@ -3,6 +3,7 @@ alias:
   - !include "../.aliae/nav.yml"
   - !include "../.aliae/git.yml"
   - !include "../.aliae/ls.yml"
+  - !include "../.aliae/omarchy.yml"
 env:
   - !include "../.aliae/env.yml"
 script:
