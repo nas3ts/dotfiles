@@ -1,0 +1,34 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "442d908"
+hash = "77e20b071404f97c09d3f9afdb9482e0"
+
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "406ce6c"
+hash = "f5afc904d5106ee368c8aa2ded43bd74"
+
+[[plugin.deps]]
+use = "nsavvide/duck-radar"
+rev = "c54830c"
+hash = "c553a03f9141cfbfa21027b52dacaca4"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:vcs-files"
+rev = "442d908"
+hash = "6b141fbed3c74b45558fbc7088c805ee"
+
+[[plugin.deps]]
+use = "wylie102/duckdb"
+rev = "3f8c863"
+hash = "87b9233a74325e95011670ed20bbd0d4"
+
+[[plugin.deps]]
+use = "stelcodes/bunny"
+rev = "71b14a3"
+hash = "18a2829738214fe9bca99a2fef19113d"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "0670801"
+hash = "7dfe41c9c3d9be76da8a844263d0bbed"
