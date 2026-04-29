@@ -28,6 +28,8 @@
   value: lsblk --output NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL --tree --ascii
 - name: zl
   value: zoxide query --list
+- name: oc
+  value: opencode
 
 # Linux/Unix only
 - name: tt
