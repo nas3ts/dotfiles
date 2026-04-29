@@ -94,6 +94,14 @@ function yazi-widget() {
 zle -N yazi-widget
 bindkey '^e' yazi-widget
 
+function jfsh-widget() {
+  zle reset-prompt
+  jfsh
+  zle redisplay
+}
+zle -N jfsh-widget
+bindkey '^j' jfsh-widget
+
 # ensure_tool "mpv-mpris" "mpv-mpris"
 
 # --- Paths ---
