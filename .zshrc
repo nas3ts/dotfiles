@@ -84,6 +84,16 @@ ensure_tool "glow" "glow"
 ensure_tool "yt-dlp" "yt-dlp"
 
 alias yazi='SWAYSOCK= yazi'
+
+# Open yazi in current tab with current working directory
+function yazi-widget() {
+  zle reset-prompt
+  yazi
+  zle redisplay
+}
+zle -N yazi-widget
+bindkey '^e' yazi-widget
+
 # ensure_tool "mpv-mpris" "mpv-mpris"
 
 # --- Paths ---
