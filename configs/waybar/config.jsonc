@@ -4,8 +4,8 @@
   "position": "top",
   "spacing": 0,
   "height": 26,
-  "modules-left": ["custom/omarchy", "hyprland/workspaces", "hyprland/window"],
-  "modules-center": [],
+  "modules-left": ["custom/omarchy", "cpu", "memory"],
+  "modules-center": ["hyprland/workspaces"],
   "modules-right": [
     "group/tray-expander",
     "custom/update",
@@ -58,10 +58,16 @@
   },
 
   "cpu": {
-    "interval": 5,
-    "format": "󰍛",
+    "interval": 1,
+    "format": "󰍛 {usage}",
     "on-click": "omarchy-launch-or-focus-tui btop",
     "on-click-right": "alacritty"
+  },
+  "memory": {
+    "interval": 1,
+    "format": "  {percentage}",
+    "on-click": "omarchy-launch-or-focus-tui btop",
+    "max-length": 10
   },
   "clock": {
     "format": "{:%H:%M %B %d}",
