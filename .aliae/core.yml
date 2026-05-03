@@ -37,6 +37,8 @@
   if: eq .Shell "zsh"
 
 # yay aliases
+- name: i
+  value: yay -S
 - name: ys
   value: yay -S
 - name: yss
