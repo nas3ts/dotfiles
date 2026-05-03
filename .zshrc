@@ -89,7 +89,7 @@ alias spf='SWAYSOCK= spf'
 # Open file manager in current tab with current working directory
 function files-widget() {
   zle reset-prompt
-  spf
+yazi
   zle redisplay
 }
 zle -N files-widget

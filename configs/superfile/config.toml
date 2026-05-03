@@ -173,3 +173,4 @@ zoxide_support = true
 #   pdf = "zathura"
 #   conf = "nvim"
 [open_with]
+pdf = "papers"
