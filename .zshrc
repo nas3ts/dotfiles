@@ -82,6 +82,8 @@ ensure_tool "zinit" "zinit"
 ensure_tool "fzf" "fzf"
 ensure_tool "glow" "glow"
 ensure_tool "yt-dlp" "yt-dlp"
+ensure_tool "jfsh" "jfsh"
+ensure_tool "spf" "superfile"
 
 alias yazi='SWAYSOCK= yazi'
 alias spf='SWAYSOCK= spf'
