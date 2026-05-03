@@ -1,1 +1,18 @@
-# Flavor is set via package.toml flavor.deps
+[mgr]
+border_style = { fg = "#313244" }
+border_symbol = "|"
+
+[cmp]
+border = { fg = "#313244" }
+
+[input]
+border = { fg = "#313244" }
+
+[pick]
+border = { fg = "#313244" }
+
+[tasks]
+border = { fg = "#313244" }
+
+[spot]
+border = { fg = "#313244" }
