@@ -84,15 +84,16 @@ ensure_tool "glow" "glow"
 ensure_tool "yt-dlp" "yt-dlp"
 
 alias yazi='SWAYSOCK= yazi'
+alias spf='SWAYSOCK= spf'
 
-# Open yazi in current tab with current working directory
-function yazi-widget() {
+# Open file manager in current tab with current working directory
+function files-widget() {
   zle reset-prompt
-  yazi
+  spf
   zle redisplay
 }
-zle -N yazi-widget
-bindkey '^e' yazi-widget
+zle -N files-widget
+bindkey '^e' files-widget
 
 function jfsh-widget() {
   zle reset-prompt
