@@ -44,17 +44,17 @@ function ensure_tool() {
 
   # Ensure yay (AUR helper) exists
   if ! command -v yay >/dev/null 2>&1; then
-    read "choice?Yay is not installed. It’s required for installing AUR packages. Install yay? (y)es | (n)o: "
+    read "choice?Yay is not installed. It's required for installing AUR packages. Install yay? (y)es | (n)o: "
     case "$choice" in
       y|Y)
         echo "Installing yay..."
-        sudo pacman -S --needed --noconfirm base-devel git || return 1
-        git clone https://aur.archlinux.org/yay.git /tmp/yay || return 1
-        (cd /tmp/yay && makepkg -si --noconfirm) || return 1
+        sudo pacman -S --needed --noconfirm base-devel git || return
+        git clone https://aur.archlinux.org/yay.git /tmp/yay || return
+        (cd /tmp/yay && makepkg -si --noconfirm) || return
         ;;
       *)
         echo "Cannot continue without yay. Skipping."
-        return 1
+        return
         ;;
     esac
   fi
@@ -118,6 +118,9 @@ export TMPDIR=$HOME/.tmp
 source $DOTFILES_DIR/.zsh/inits.zsh
 source $DOTFILES_DIR/.zsh/plugins.zsh
 source $DOTFILES_DIR/.zsh/functions.zsh
+
+# Clear exit code from startup commands so status segment only shows for actual commands
+true
 
 
 
