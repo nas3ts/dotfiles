@@ -154,8 +154,8 @@
     "return-type": "json"
   },
   "custom/idle-indicator": {
-    "on-click": "omarchy-toggle-idle",
-    "exec": "$OMARCHY_PATH/default/waybar/indicators/idle.sh",
+    "on-click": "$DOTFILES_DIR/scripts/idle-toggle",
+    "exec": "$DOTFILES_DIR/configs/waybar/indicators/custom-idle.sh",
     "signal": 9,
     "return-type": "json"
   },

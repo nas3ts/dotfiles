@@ -25,6 +25,11 @@
   opacity: 0.5;
 }
 
+.inactive {
+  color: @foreground;
+  opacity: 0.5;
+}
+
 #workspaces button {
   all: initial;
   padding: 0 6px;
