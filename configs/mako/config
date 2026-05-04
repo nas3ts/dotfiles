@@ -1,6 +1,6 @@
 include=~/.local/share/omarchy/default/mako/core.ini
 
-outer-margin=10
+outer-margin=5
 
 # Kuroi theme colors
 text-color=#ffffff
@@ -11,4 +11,4 @@ background-color=#0d0d0d
 font=JetBrainsMono Nerd Font 12px
 border-size=1
 border-radius=6
-width=280
+width=250
