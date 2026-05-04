@@ -154,8 +154,8 @@
     "return-type": "json"
   },
   "custom/idle-indicator": {
-    "on-click": "$DOTFILES_DIR/scripts/idle-toggle",
-    "exec": "$DOTFILES_DIR/configs/waybar/indicators/custom-idle.sh",
+    "on-click": "$DOTFILES_DIR/scripts/caffeine-toggle",
+    "exec": "$DOTFILES_DIR/configs/waybar/indicators/caffeine.sh",
     "signal": 9,
     "return-type": "json"
   },
