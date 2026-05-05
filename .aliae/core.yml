@@ -49,6 +49,8 @@
   value: yay -Qs
 - name: yi
   value: yay -Si
+- name: u
+  value: yay -Syu --noconfirm
 - name: yu
   value: yay -Syu
 - name: yy
