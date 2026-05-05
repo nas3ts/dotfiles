@@ -30,6 +30,8 @@
   value: zoxide query --list
 - name: oc
   value: opencode
+- name: lhs
+  value: nmap -PR -sP
 
 # Linux/Unix only
 - name: tt
