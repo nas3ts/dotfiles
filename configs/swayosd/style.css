@@ -20,7 +20,7 @@ image {
 }
 
 progressbar {
-  border-radius: 2;
+  border-radius: 3px;
 }
 
 progress {
