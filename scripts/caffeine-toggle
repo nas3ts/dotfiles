@@ -1,4 +1,5 @@
 #!/bin/bash
+# Toggle hypridle
 
 if pgrep -x hypridle >/dev/null; then
   pkill -x hypridle

@@ -1,0 +1,10 @@
+#!/bin/bash
+# Reload hyprland session
+
+output=$(hyprctl reload 2>&1)
+
+if echo "$output" | grep -q "^ok"; then
+  notify-send "Hyprland" "Reloaded Successfully" -i /usr/share/icons/hyprland.png
+else
+  notify-send "Hyprland" "Reload failed: $output" -i error -u critical
+fi
