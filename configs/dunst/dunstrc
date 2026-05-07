@@ -1,0 +1,34 @@
+[global]
+width = (0, 400)
+height = (0, 400)
+offset = (12, 10)
+origin = top-center
+frame_width = 1
+corner_radius = 5
+font = "JetBrains Mono Nerd Font 10"
+background = "#0d0d0dcc"
+foreground = "#ffffff"
+frame_color = "#3584e4"
+timeout = 5
+
+# Icons
+icon_position = left
+enable_recursive_icon_lookup = true
+icon_theme = Adwaita
+
+[urgency_low]
+background = "#0d0d0dcc"
+foreground = "#aaaaaa"
+frame_color = "#1e1e1e"
+
+[urgency_normal]
+background = "#0d0d0dcc"
+foreground = "#ffffff"
+frame_color = "#3584e4ee"
+
+[urgency_critical]
+background = "#d0d0dcc"
+foreground = "#ffffff"
+frame_color = "#ff5555ee"
+frame_width = 5
+timeout = 20
