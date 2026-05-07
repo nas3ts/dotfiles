@@ -1,0 +1,16 @@
+#!/bin/bash
+# Toggle dunst notification do-not-disturb mode
+
+# Check current pause level (0 = all, 3 = none)
+CURRENT=$(dunstctl get-pause-level 2>/dev/null || echo "0")
+
+if [ "$CURRENT" = "3" ]; then
+    # Currently silenced, enable notifications
+    dunstctl set-pause-level 0
+    notify-send "󰂚  Enabled notifications"
+else
+    # Currently enabled, silence notifications
+    dunstctl set-pause-level 3
+    notify-send -u low "󰂛  Silenced notifications"
+fi
+pkill -RTMIN+10 waybar

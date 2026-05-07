@@ -4,7 +4,7 @@
 output=$(hyprctl reload 2>&1)
 
 if echo "$output" | grep -q "^ok"; then
-  notify-send "Hyprland" "Reloaded Successfully" -i /usr/share/icons/hyprland.png
+  notify-send "  Reloaded" -t "1000"
 else
-  notify-send "Hyprland" "Reload failed: $output" -i error -u critical
+  notify-send -u critical "  Reload failed" "$output" -t "1000"
 fi
