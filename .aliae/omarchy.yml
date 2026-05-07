@@ -22,3 +22,7 @@
   value: omarchy-toggle-suspend
 - name: onl
   value: omarchy-toggle-nightlight
+
+# Hyprland
+- name: hr
+  value: hyprctl reload
