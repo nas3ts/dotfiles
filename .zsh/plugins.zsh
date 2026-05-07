@@ -25,4 +25,5 @@ if (( $+functions[zinit] )); then
   )
 
   zinit light zsh-users/zsh-syntax-highlighting
+  zinit light marzocchi/zsh-notify
 fi

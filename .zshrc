@@ -86,6 +86,7 @@ ensure_tool "jfsh" "jfsh"
 ensure_tool "yazi" "yazi"
 ensure_tool "spf" "superfile"
 ensure_tool "dunst" "dunst"
+ensure_tool "xdotool" "xdotool"
 
 alias yazi='SWAYSOCK= yazi'
 alias spf='SWAYSOCK= spf'
@@ -116,6 +117,7 @@ OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
 
 # --- Exports ---
 export GOPROXY=https://proxy.golang.org,direct
+export SUDO_PROMPT=$'\a[sudo] password for %p: '
 export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae.yml"
 export TMPDIR=$HOME/.tmp
 
