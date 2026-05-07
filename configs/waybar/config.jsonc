@@ -160,8 +160,8 @@
     "return-type": "json"
   },
   "custom/notification-silencing-indicator": {
-    "on-click": "omarchy-toggle-notification-silencing",
-    "exec": "$OMARCHY_PATH/default/waybar/indicators/notification-silencing.sh",
+    "on-click": "dnd-toggle",
+    "exec": "$DOTFILES_DIR/configs/waybar/indicators/dnd.sh",
     "signal": 10,
     "return-type": "json"
   },
