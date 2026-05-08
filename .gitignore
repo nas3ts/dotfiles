@@ -3,3 +3,4 @@
 
 # Personal config (manual editing required)
 .zsh/functions.zsh
+.aliae/env.yml
