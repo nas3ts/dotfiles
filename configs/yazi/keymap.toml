@@ -1,4 +1,10 @@
 [[mgr.prepend_keymap]]
+on  = "o"
+run = "open"
+args = ["zathura", "--fork"]
+desc = "Open PDF"
+
+[[mgr.prepend_keymap]]
 on  = "M"
 run = "plugin mount"
 
