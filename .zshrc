@@ -86,6 +86,7 @@ ensure_tool "jfsh" "jfsh"
 ensure_tool "yazi" "yazi"
 ensure_tool "spf" "superfile"
 ensure_tool "dunst" "dunst"
+ensure_tool "zathura" "zathura"
 
 alias yazi='SWAYSOCK= yazi'
 alias spf='SWAYSOCK= spf'
