@@ -43,7 +43,7 @@ if [[ -e /dev/tty ]]; then
   }
 fi
 
-LOGO_PATH="$DOTFILES_DIR/bootstrap-logo.txt"
+LOGO_PATH="$DOTFILES_DIR/logo.txt"
 LOGO_WIDTH=$(awk '{ if (length > max) max = length } END { print max+0 }' "$LOGO_PATH" 2>/dev/null || echo 0)
 LOGO_HEIGHT=$(wc -l <"$LOGO_PATH" 2>/dev/null || echo 0)
 PADDING_LEFT=$(((TERM_WIDTH - LOGO_WIDTH) / 2))
@@ -151,7 +151,7 @@ fi
 echo
 
 # === THEMES (omarchy) ===
-OMARCHY_THEMES_SOURCE="$CONFIG_DIR/omarchy/themes"
+OMARCHY_THEMES_SOURCE="$DOTFILES_DIR/themes/omarchy"
 OMARCHY_THEMES_TARGET="$XDG_CONFIG_HOME/omarchy/themes"
 
 if [[ -d "$OMARCHY_THEMES_SOURCE" ]]; then
