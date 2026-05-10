@@ -13,16 +13,16 @@ cd ~/.dotfiles
 
 > This clones both the main repo and the terminal themes submodule (stored in `themes/terminal/`).
 
-### 2. Run bootstrap
+### 2. Run install
 
 ```bash
-./bootstrap.sh
+./install.sh
 ```
 
 This interactive script:
 - Checks and links config directories in `~/.config/`
-- Prompts for optional qBittorrent credentials (if `tewi` is installed)
-- Saves your answers to `.env` and generates config files from templates
+- Links themes to `~/.config/omarchy/themes/`
+- Requires `gum` (install via `yay -S gum` if missing)
 
 ### 3. Link Zsh config
 
@@ -47,42 +47,22 @@ gupdate
 
 ## Configuration
 
-Personal values are handled by `bootstrap.sh`. Re-run it anytime by deleting the generated files:
+The install script handles symlinking config directories. Re-run it anytime to relink:
 
 ```bash
-rm ~/.dotfiles/.zsh/functions.zsh
-./bootstrap.sh
+./install.sh
 ```
 
-### What bootstrap does
+### What install does
 
 1. **Links configs** — Scans `configs/` and symlinks unlinked dirs into `~/.config/`
-2. **Links themes** — Scans `configs/omarchy/themes/` and symlinks themes into `~/.config/omarchy/themes/`
+2. **Links themes** — Scans `themes/omarchy/` and symlinks themes into `~/.config/omarchy/themes/`
 
 ### Manual configuration
 
 Some config values are personal and require manual editing:
 
-#### qBittorrent functions (`~/.dotfiles/.zsh/functions.zsh`)
-
-If you use `tewi` for qBittorrent TUI, edit the `qti()` and `qui()` functions:
-
-```bash
-nano ~/.dotfiles/.zsh/functions.zsh
-```
-
-Replace the placeholders:
-| Placeholder | What to set |
-|-------------|-------------|
-| `{{ qti_remote_host }}` | Remote qBittorrent host (e.g. `192.168.1.100`) |
-| `{{ qti_remote_port }}` | Remote qBittorrent port (default: `8181`) |
-| `{{ qti_remote_user }}` | Remote username |
-| `{{ qti_remote_pass }}` | Remote password |
-| `{{ qti_local_port }}` | Local port (default: `8080`) |
-| `{{ qti_local_user }}` | Local username |
-| `{{ qti_local_pass }}` | Local password |
-
-#### Other config files
+#### Config files
 
 These files contain settings you may want to adjust manually:
 
@@ -118,7 +98,7 @@ Files in `~/.config/hypr/` (user overrides) take precedence over omarchy default
 ### Shell setup
 
 - **`.zshrc`** — Main Zsh config. Auto-installs required tools on first run (oh-my-posh, aliae, zoxide, lsd, zinit, fzf, etc.)
-- **Aliae** — Alias manager. Configs live in `.aliae/` and are aggregated via `configs/.aliae.yml`. The `ALIAE_CONFIG` env var points to this.
+- **Aliae** — Alias manager. Configs live in `.aliae/` and are aggregated via `~/.dotfiles/configs/.aliae.yml`. The `ALIAE_CONFIG` env var points to this.
 - **zinit** — Plugin manager, bootstrapped in `.zshrc`
 
 ---
@@ -133,6 +113,7 @@ Scripts in `scripts/` are added to PATH via `configs/hypr/envs.conf`. Each is st
 | `dnd-toggle` | Toggles dunst do-not-disturb mode on/off |
 | `caffeine-toggle` | Toggles hypridle (prevents screen sleep) on/off |
 | `waybar-toggle` | Hides/shows waybar and adjusts window gaps accordingly |
+| `playlist-gen` | Generates mpv playlist from directory |
 
 ---
 
