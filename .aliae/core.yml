@@ -32,6 +32,8 @@
   value: opencode
 - name: lhs
   value: nmap -PR -sP
+- name: glow
+  value: glow --all
 
 # Linux/Unix only
 - name: tt
