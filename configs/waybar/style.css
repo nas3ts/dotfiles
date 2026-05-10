@@ -32,8 +32,8 @@
 
 #workspaces button {
   all: initial;
-  padding: 0 6px;
-  margin: 0 1.5px;
+  padding: 0 2px;
+  margin: 0 0.5px;
   min-width: 9px;
 }
 
@@ -137,6 +137,22 @@ tooltip {
   margin: 0 0 0 7.5px;
 }
 
+#custom-music {
+  min-width: 12px;
+  margin: 0 7.5px;
+}
+
 #custom-voxtype.recording {
   color: #a55555;
+}
+
+#custom-weather {
+  margin-left: 7.5px;
+  margin-right: 7.5px;
+}
+
+#custom-weather.unavailable {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
 }
