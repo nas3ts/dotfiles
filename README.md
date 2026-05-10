@@ -115,6 +115,15 @@ Scripts in `scripts/` are added to PATH via `configs/hypr/envs.conf`. Each is st
 | `waybar-toggle` | Hides/shows waybar and adjusts window gaps accordingly |
 | `playlist-gen` | Generates mpv playlist from directory |
 
+### Script details
+
+**`playlist-gen`** - Generates an m3u8 playlist from a directory of audio files.
+```bash
+playlist-gen /path/to/music  # outputs playlist.m3u8 in current directory
+```
+
+**Waybar music indicator** (`configs/waybar/indicators/music.sh`) - Shows current playing track from MPD via rmpc. Click to launch rmpc, right-click to toggle play/pause.
+
 ---
 
 ## Troubleshooting
@@ -136,12 +145,12 @@ If you move the dotfiles repo, update the symlinks in `~/.config/` to point to t
 rm ~/.config/hypr && ln -s ~/.dotfiles/configs/hypr ~/.config/hypr
 ```
 
-### Re-run bootstrap
+### Re-run install
 
 To relink configs (e.g. after a fresh clone):
 
 ```bash
-./bootstrap.sh
+./install.sh
 ```
 
 ### Edit personal config
