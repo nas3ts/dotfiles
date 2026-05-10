@@ -1,5 +1,5 @@
 - value: |
-    {{ .Home }}/.dotfiles/bin/
+    {{ .Home }}/.dotfiles/scripts/
     {{ .Home }}/bin/
     {{ .Home }}/go/bin/
     {{ .Home }}/.cargo/bin/
