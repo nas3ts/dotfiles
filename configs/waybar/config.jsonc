@@ -5,7 +5,7 @@
   "spacing": 0,
   "height": 26,
   "modules-left": ["custom/omarchy", "cpu", "memory"],
-  "modules-center": ["hyprland/workspaces"],
+  "modules-center": ["hyprland/workspaces", "custom/music"],
   "modules-right": [
     "group/tray-expander",
     "custom/update",
@@ -44,6 +44,14 @@
       "4": []
     }
   },
+  "custom/music": {
+    "exec": "~/.config/waybar/indicators/music.sh",
+    "return-type": "json",
+    "interval": 5,
+    "tooltip": true,
+    "on-click": "rmpc &",
+    "on-click-right": "echo -e 'toggle\nclose\n' | nc -U $XDG_RUNTIME_DIR/mpd/socket"
+  },
   "custom/omarchy": {
     "format": "<span font='omarchy'>\ue900</span>",
     "on-click": "omarchy-menu",
@@ -76,6 +84,13 @@
     "format-alt": "{:L%A W%V %Y}",
     "tooltip": false,
     "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select"
+  },
+  "custom/weather": {
+    "exec": "$OMARCHY_PATH/default/waybar/weather.sh",
+    "return-type": "json",
+    "interval": 60,
+    "tooltip": false,
+    "on-click": "notify-send -u low \"$(omarchy-weather-status)\""
   },
   "network": {
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
