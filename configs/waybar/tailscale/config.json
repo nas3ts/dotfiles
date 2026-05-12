@@ -1,0 +1,7 @@
+{
+    "tailscale-up-flags" : [
+	"--accept-routes"
+    ],
+    "display-status-text" : false,
+    "icon-tint-colour": "#000000"
+}
