@@ -120,7 +120,7 @@ tooltip {
   min-width: 12px;
   margin: 0 7.5px; 
   /* font-size: 10px; */
-  padding-bottom: 1px;
+  /* padding-bottom: 0px; */
 }
 
 #custom-screenrecording-indicator.active {

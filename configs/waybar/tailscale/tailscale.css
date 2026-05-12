@@ -1,0 +1,36 @@
+#custom-tailscale {
+   background-repeat: no-repeat;
+   background-size: 15px 15px;
+   margin-left: 10px;
+   color: #fff;
+}
+
+#custom-tailscale.state-1-text {
+    background-image: url("icons/tray-on.png");
+    background-position: right center;
+    padding-right: 25px;
+    margin-right: 5px;
+}
+
+#custom-tailscale.state-0-text {
+    background-image: url("icons/tray-off.png");
+    background-position: right center;
+    padding-right: 25px;
+    margin-right: 5px;
+}
+
+#custom-tailscale.state-1 {
+    background-image: url("icons/tray-on.png"); 
+    background-position: center;
+    background-size: 15px 15px;
+    padding-right: 5px;
+}
+
+#custom-tailscale.state-0 {
+    background-image: url("icons/tray-off.png"); 
+    background-position: center;
+    background-size: 15px 15px;
+    padding-right: 5px;
+}
+
+

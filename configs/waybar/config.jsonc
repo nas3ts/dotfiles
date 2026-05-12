@@ -47,7 +47,7 @@
   "custom/music": {
     "exec": "~/.config/waybar/indicators/music.sh",
     "return-type": "json",
-    "interval": 5,
+    "interval": 0,
     "tooltip": true,
     "on-click": "rmpc &",
     "on-click-right": "echo -e 'toggle\nclose\n' | nc -U $XDG_RUNTIME_DIR/mpd/socket"
@@ -192,6 +192,13 @@
     "tooltip": true,
     "on-click-right": "omarchy-voxtype-config",
     "on-click": "omarchy-voxtype-model"
+  },
+  "custom/tailscale": {
+    "interval" : 0,
+    "exec" : "$DOTFILES_DIR/configs/waybar/tailscale/tailscale.sh status",
+    "return-type": "json",
+    "format" : "{}",
+    "on-click" : "$DOTFILES_DIR/configs/waybar/tailscale/tailscale.sh toggle"
   },
   "tray": {
     "icon-size": 12,

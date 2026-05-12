@@ -1,13 +1,13 @@
 #!/bin/bash
-# Toggle waybar and adjust top gap dynamically
+# Toggle waybar and adjust bottom/top gap dynamically
 
 NORMAL_GAPS="6, 6, 6, 6"
-NO_TOP_GAP="0, 6, 6, 6"
+NO_GAP="0, 6, 6, 6"
 
 if pgrep -x waybar >/dev/null; then
   pkill -x waybar
   hyprctl keyword general:gaps_out "$NORMAL_GAPS"
 else
   uwsm-app -- waybar >/dev/null 2>&1 &
-  hyprctl keyword general:gaps_out "$NO_TOP_GAP"
+  hyprctl keyword general:gaps_out "$NO_GAP"
 fi
