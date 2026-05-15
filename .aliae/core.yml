@@ -7,7 +7,7 @@
 - name: n
   value: vim
 - name: g
-  value: glow
+  value: glow --all
 - name: jellyfin
   value: jfsh
 - name: jlfn
@@ -34,8 +34,16 @@
   value: nmap -PR -sP
 - name: glow
   value: glow --all
+- name: ping
+  value: ping -c 5
+- name: rm
+  value: rm --preserve-root
+- name: mv
+  value: mv -i
+- name: mkdir
+  value: mkdir -p
 
-# Linux/Unix only
+  # Linux/Unix only
 - name: tt
   value: tetriscurses
   if: eq .Shell "zsh"
@@ -43,6 +51,8 @@
 # yay aliases
 - name: i
   value: yay -S
+- name: yayf
+  value: yay -Slq | fzf --multi --preview 'yay -Sii {1}' --preview-window=down:75% | xargs -ro yay -S --noconfirm
 - name: ys
   value: yay -S
 - name: yss

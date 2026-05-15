@@ -11,6 +11,10 @@ My personal [mpv](https://mpv.io/) config.
 
 Use `git clone https://github.com/zydezu/mpvconfig mpv`, and place it in the relevant directory. This will be typically located at `\%APPDATA%\mpv\` on Windows and `~/.config/mpv/` on Linux/MacOS.
 
+### Linux Note
+
+For the clipboard functionality use in `copypaste.lua`, you many need to install the `xclip` or `wl-clipboard` package, depending on your session type.
+
 ### Flatpak Instructions (from https://github.com/zydezu/mpvconfig/issues/21)
 
 Use `mkdir -p ~/.var/app/io.mpv.Mpv/config` to make the mpv configuration directory for the first time
@@ -47,6 +51,56 @@ Please note that many of these scripts have been slightly modified from their in
 | [input.conf](https://github.com/zydezu/mpvconfig/blob/main/input.conf) an input configuration file | **-** - Decrease subtitle font size <br> **+** - Increase subtitle font size <br> **Scroll wheel** - Change volume |
 
 ## Updates
+
+### 2026-04-25
+
+- FIX: removed `detectdualsubs.lua` as it was rarely used
+- FIX: add `screenshot-high-bit-depth=no` to `mpv.conf` to stop huge screenshots being taken (we can add it back in 10 years when HDR screenshots are supported on social media platforms)
+
+### 2026-04-12
+
+- FIX: improve audio track naming in `modernx.lua`
+
+### 2026-04-07
+
+- FIX: add screen=1 to mpv.conf, which fixes autofit sizing calculations
+using the wrong monitor on some linux systems
+
+### 2026-03-23
+
+- FIX: add -map_chatpers -1 to mpvcut.lua
+
+### 2026-03-04
+
+- FIX: fix weird date formats in `modernx.lua`
+
+### 2026-03-02
+
+- FIX: fix cutting videos with no audio in `mpvcut.lua`
+- FIX: optimise `modernx.lua`
+
+### 2026-02-25
+
+- FIX: add information about xclip functionality, change default font (fix CJK)
+- FIX: make `autolyrics.lua` show a message if lyrics not found
+- FIX: add "Picture-in-Picture" to the window title when the window is pinned in `modernx.lua`
+
+### 2026-02-08
+
+- FIX: reduce autofit size
+
+### 2026-02-02
+
+- FEAT: add the ability to change codecs using a keybind in `mpvcut.lua`
+- FIX: add the encoding type to files made by `mpvcut.lua`
+- FEAT: add the webp option to `mpvcut.lua`
+
+### 2026-01-27
+
+- Tweak `input.conf`
+
+### 2026-01-26
+- FIX: fix screenshotting (unpack) on different systems
 
 ### 2026-01-20
 
