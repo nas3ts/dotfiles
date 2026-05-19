@@ -17,8 +17,10 @@ symbols = 1 # providers to be queried by default
 max_results = 256 # 256 should be enough for everyone
 default = [
   "desktopapplications",
-  "websearch",
 ]
+
+[providers.websearch]
+url = "https://www.ecosia.org/search?q=%s"
 
 [[providers.prefixes]]
 prefix = "/"
@@ -43,6 +45,10 @@ provider = "websearch"
 [[providers.prefixes]]
 prefix = "$"
 provider = "clipboard"
+
+[[providers.prefixes]]
+prefix = ">"
+provider = "runner"
 
 [[emergencies]]
 text = "Restart Walker"
