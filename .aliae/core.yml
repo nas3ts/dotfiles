@@ -51,7 +51,7 @@
 # yay aliases
 - name: i
   value: yay -S
-- name: yayf
+- name: ii
   value: yay -Slq | fzf --multi --preview 'yay -Sii {1}' --preview-window=down:75% | xargs -ro yay -S --noconfirm
 - name: ys
   value: yay -S
@@ -62,9 +62,9 @@
 - name: yi
   value: yay -Si
 - name: u
-  value: yay -Syu --noconfirm
+  value: omarchy update && yay -Syu --noconfirm
 - name: yu
-  value: yay -Syu
+  value: yay -Syu --noconfirm
 - name: yy
   value: yay -Syy
 - name: yua
