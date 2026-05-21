@@ -2,7 +2,7 @@ theme: kuroi
 
 radarr:
   - name: Local
-    host: 192.168.1.160
+    host: zimaos
     port: 7878
     api_token: ***REMOVED***
 
@@ -12,7 +12,7 @@ radarr:
 
 sonarr:
   - name: Local
-    host: 192.168.1.160
+    host: zimaos 
     port: 8989
     api_token: ***REMOVED***
 
