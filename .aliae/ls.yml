@@ -9,19 +9,19 @@
 
 # Long list with type indicators & human-readable sizes
 - name: l
-  value: lsd -lAFh --git
+  value: lsd -lAGFh --git --group-directories-first -I '.git'
 
 # One file per line
 - name: l1
-  value: lsd -1
+  value: lsd -1A
 
 # All files (inc. hidden), long format
 - name: la
-  value: lsd -lAFh
+  value: lsd -lAFh --git
 
 # All files alphabetically (with type info)
 - name: labc
-  value: lsd -lap
+  value: lsd -la
 
 # Count lines in file (unix tool)
 - name: lc
