@@ -1,0 +1,96 @@
+{
+  "$schema": "https://opencode.ai/theme.json",
+  "defs": {
+    "blue": "#0070F3",
+    "blueLight": "#52A8FF",
+    "purple": "#BF7AF0",
+    "pink": "#F75590",
+    "green": "#63C46D",
+    "teal": "#0AC7AC",
+    "amber": "#F2A700",
+    "red": "#FF6166",
+    "ink": "#EDEDED",
+    "muted": "#878787",
+    "subtle": "#454545",
+    "tealLight": "#50E3C2"
+  },
+  "theme": {
+    "primary": {
+      "dark": "blue",
+      "light": "blue"
+    },
+    "secondary": {
+      "dark": "blueLight",
+      "light": "blueLight"
+    },
+    "accent": {
+      "dark": "purple",
+      "light": "purple"
+    },
+    "error": {
+      "dark": "red",
+      "light": "red"
+    },
+    "warning": {
+      "dark": "amber",
+      "light": "amber"
+    },
+    "success": {
+      "dark": "green",
+      "light": "green"
+    },
+    "info": {
+      "dark": "blueLight",
+      "light": "blueLight"
+    },
+    "text": {
+      "dark": "ink",
+      "light": "ink"
+    },
+    "textMuted": {
+      "dark": "muted",
+      "light": "muted"
+    },
+    "background": "none",
+    "backgroundPanel": "#0A0A0A",
+    "backgroundElement": "#1A1A1A",
+    "border": "#222222",
+    "borderActive": "#0070F3",
+    "borderSubtle": "#181818",
+    "diffAdded": "green",
+    "diffRemoved": "red",
+    "diffContext": "muted",
+    "diffHunkHeader": "muted",
+    "diffHighlightAdded": "green",
+    "diffHighlightRemoved": "red",
+    "diffAddedBg": "none",
+    "diffRemovedBg": "none",
+    "diffContextBg": "none",
+    "diffLineNumber": "subtle",
+    "diffAddedLineNumberBg": "none",
+    "diffRemovedLineNumberBg": "none",
+    "markdownText": "ink",
+    "markdownHeading": "purple",
+    "markdownLink": "blueLight",
+    "markdownLinkText": "teal",
+    "markdownCode": "green",
+    "markdownBlockQuote": "muted",
+    "markdownEmph": "amber",
+    "markdownStrong": "pink",
+    "markdownHorizontalRule": "subtle",
+    "markdownListItem": "ink",
+    "markdownListEnumeration": "blueLight",
+    "markdownImage": "teal",
+    "markdownImageText": "tealLight",
+    "markdownCodeBlock": "ink",
+    "syntaxComment": "muted",
+    "syntaxKeyword": "pink",
+    "syntaxFunction": "blueLight",
+    "syntaxVariable": "blueLight",
+    "syntaxString": "green",
+    "syntaxNumber": "purple",
+    "syntaxType": "teal",
+    "syntaxOperator": "pink",
+    "syntaxPunctuation": "ink"
+  }
+}

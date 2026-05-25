@@ -234,6 +234,92 @@ if [[ -d "$OMARCHY_THEMES_SOURCE" ]]; then
   echo
 fi
 
+# === THEMES (opencode) ===
+OPENCODE_THEMES_SOURCE="$DOTFILES_DIR/themes/opencode"
+OPENCODE_THEMES_TARGET="$XDG_CONFIG_HOME/opencode/themes"
+
+if [[ -d "$OPENCODE_THEMES_SOURCE" ]]; then
+  gum style --bold --padding "1 0 0 $PADDING_LEFT" "Themes (opencode):"
+
+  mkdir -p "$OPENCODE_THEMES_TARGET"
+
+  oc_theme_existing=()
+  oc_theme_missing=()
+  oc_theme_broken=()
+  oc_theme_conflicts=()
+
+  for theme_file in "$OPENCODE_THEMES_SOURCE"/*.json; do
+    [[ -f "$theme_file" ]] || continue
+    theme_name=$(basename "$theme_file")
+    target="$OPENCODE_THEMES_TARGET/$theme_name"
+
+    check_symlink "$theme_file" "$target"
+    result=$?
+
+    case $result in
+      0) oc_theme_existing+=("$theme_name") ;;
+      1) oc_theme_missing+=("$theme_name") ;;
+      2) oc_theme_broken+=("$theme_name") ;;
+      3) oc_theme_conflicts+=("$theme_name") ;;
+    esac
+  done
+
+  if [[ ${#oc_theme_existing[@]} -gt 0 ]]; then
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "Already linked (${#oc_theme_existing[@]}):"
+    for theme in "${oc_theme_existing[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $theme"
+    done
+  fi
+
+  if [[ ${#oc_theme_conflicts[@]} -gt 0 ]]; then
+    gum style --foreground 1 --padding "0 0 0 $PADDING_LEFT" "Conflicts (${#oc_theme_conflicts[@]}):"
+    for theme in "${oc_theme_conflicts[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $theme"
+    done
+  fi
+
+  if [[ ${#oc_theme_missing[@]} -gt 0 ]]; then
+    gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Need linking (${#oc_theme_missing[@]}):"
+    for theme in "${oc_theme_missing[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $theme"
+    done
+  fi
+
+  if [[ ${#oc_theme_broken[@]} -gt 0 ]]; then
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "Broken links (${#oc_theme_broken[@]}):"
+    for theme in "${oc_theme_broken[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $theme"
+    done
+  fi
+
+  echo
+
+  if [[ ${#oc_theme_missing[@]} -gt 0 ]] || [[ ${#oc_theme_broken[@]} -gt 0 ]]; then
+    if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --default --affirmative "Link themes" --negative "Skip"; then
+      oc_theme_count=0
+
+      for theme in "${oc_theme_missing[@]}" "${oc_theme_broken[@]}"; do
+        source_path="$OPENCODE_THEMES_SOURCE/$theme"
+        target_path="$OPENCODE_THEMES_TARGET/$theme"
+
+        if [[ -L "$target_path" ]]; then
+          rm "$target_path"
+        fi
+
+        ln -s "$source_path" "$target_path"
+        gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Linked $theme"
+        oc_theme_count=$((oc_theme_count + 1))
+      done
+
+      gum style --padding "0 0 0 $PADDING_LEFT" "Linked $oc_theme_count theme(s)."
+    else
+      gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped theme linking."
+    fi
+  fi
+
+  echo
+fi
+
 # Done
 clear_logo
 gum style --foreground 2 --bold --padding "1 0 0 $PADDING_LEFT" "Bootstrap complete!"
