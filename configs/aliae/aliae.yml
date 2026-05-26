@@ -1,0 +1,10 @@
+alias:
+  - !include "./alias/core.yml"
+  - !include "./alias/nav.yml"
+  - !include "./alias/core.yml"
+  - !include "./alias/ls.yml"
+  - !include "./alias/omarchy.yml"
+script:
+  - !include "./scripts.yml"
+path:
+  - !include "./path.yml"
