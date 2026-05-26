@@ -59,13 +59,13 @@ bindkey '^j' jfsh-widget
 # --- Paths ---
 DOTFILES_DIR="$(dirname ${(%):-%N})"  # <- references where this dotfile is
 OMP_CONFIG="$DOTFILES_DIR/themes/terminal/emodipt-custom.omp.yaml"
-ZSH_MODULES="$DOTFILES_DIR/configs/zsh"
+ZSH_MODULES="$DOTFILES_DIR/configs/.zsh/"
 # OMP_CONFIG="~/Dev/terminal-themes/emodipt-custom.omp.yaml"  # <- trial theme config
 
 # --- Exports ---
 export GOPROXY=https://proxy.golang.org,direct
 export SUDO_PROMPT=$'\a[sudo] password for %p: '
-export ALIAE_CONFIG="$DOTFILES_DIR/configs/aliae/aliae.yml"
+export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae/"
 export TMPDIR=$HOME/.tmp
 
 # --- Zsh Modules ---
