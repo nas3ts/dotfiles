@@ -21,6 +21,71 @@ check_symlink() {
   fi
 }
 
+# === RESTORE MODE ===
+if [[ "$1" == "--restore" ]]; then
+  BACKUP_DIR="$XDG_CONFIG_HOME/.backup"
+
+  if ! command -v gum &>/dev/null; then
+    echo "Error: gum is required for restore mode."
+    exit 1
+  fi
+
+  if [[ ! -d "$BACKUP_DIR" ]]; then
+    gum style --foreground 3 "No backups found in $BACKUP_DIR"
+    exit 0
+  fi
+
+  backups=("$BACKUP_DIR"/*)
+  [[ "${backups[0]}" == "$BACKUP_DIR/*" ]] && { gum style --foreground 3 "No backups found."; exit 0; }
+
+  gum style --bold --foreground 2 "Restore backups from $BACKUP_DIR:"
+  for i in "${!backups[@]}"; do
+    name=$(basename "${backups[$i]}")
+    app="${name%.*}"
+    ts="${name##*.}"
+    gum style --padding "0 0 0 2" "  $((i+1))) $app ($ts)"
+  done
+
+  choice=$(gum input --prompt "> " --placeholder "Numbers (e.g. 1,3), 'a' for all, 'n' to skip")
+
+  selected=()
+  case "${choice,,}" in
+    a|all)
+      selected=("${backups[@]}")
+      ;;
+    n|none|"")
+      gum style --foreground 8 "Skipped."
+      exit 0
+      ;;
+    *)
+      IFS=',' read -ra parts <<< "$choice"
+      for part in "${parts[@]}"; do
+        part="${part// /}"
+        idx=$((part - 1))
+        [[ $idx -ge 0 && $idx -lt ${#backups[@]} ]] && selected+=("${backups[$idx]}")
+      done
+      ;;
+  esac
+
+  for backup in "${selected[@]}"; do
+    name=$(basename "$backup")
+    app="${name%.*}"
+    target="$XDG_CONFIG_HOME/$app"
+
+    if [[ -L "$target" ]]; then
+      rm "$target"
+    elif [[ -e "$target" ]]; then
+      gum style --foreground 3 "  $target exists — skipping $app"
+      continue
+    fi
+
+    mv "$backup" "$target"
+    gum style --foreground 2 "  Restored $app"
+  done
+
+  exit 0
+fi
+
 # Ensure gum is available
 if ! command -v gum &>/dev/null; then
   gum style --foreground 3 "Installing gum..."
@@ -145,6 +210,50 @@ if [[ ${#missing_links[@]} -gt 0 ]] || [[ ${#broken_links[@]} -gt 0 ]]; then
     gum style --padding "1 0 0 $PADDING_LEFT" "Linked $symlink_count config(s)."
   else
     gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped symlinking."
+  fi
+fi
+
+# === CONFLICT HANDLING ===
+if [[ ${#conflicting[@]} -gt 0 ]]; then
+  BACKUP_DIR="$XDG_CONFIG_HOME/.backup"
+  echo
+  gum style --bold --foreground 3 --padding "1 0 0 $PADDING_LEFT" "Conflicting configs (${#conflicting[@]}):"
+  for i in "${!conflicting[@]}"; do
+    gum style --padding "0 0 0 $PADDING_LEFT" "  $((i+1))) ${conflicting[$i]}"
+  done
+  gum style --padding "0 0 0 $PADDING_LEFT" ""
+
+  choice=$(gum input --prompt "> " --placeholder "Numbers (e.g. 1,3), 'a' for all, 'n' to skip")
+
+  selected=()
+  case "${choice,,}" in
+    a|all)
+      selected=("${conflicting[@]}")
+      ;;
+    n|none|"")
+      gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped all conflicts."
+      ;;
+    *)
+      IFS=',' read -ra parts <<< "$choice"
+      for part in "${parts[@]}"; do
+        part="${part// /}"
+        idx=$((part - 1))
+        [[ $idx -ge 0 && $idx -lt ${#conflicting[@]} ]] && selected+=("${conflicting[$idx]}")
+      done
+      ;;
+  esac
+
+  if [[ ${#selected[@]} -gt 0 ]]; then
+    for app in "${selected[@]}"; do
+      source_path="$CONFIG_DIR/$app"
+      target_path="$XDG_CONFIG_HOME/$app"
+      timestamp=$(date +%Y%m%d-%H%M%S)
+      mkdir -p "$BACKUP_DIR"
+      mv "$target_path" "$BACKUP_DIR/$app.$timestamp"
+      ln -s "$source_path" "$target_path"
+      gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Backed up $app → .backup/$app.$timestamp & linked"
+    done
+    gum style --foreground 2 --padding "1 0 0 $PADDING_LEFT" "Linked ${#selected[@]} conflict(s)."
   fi
 fi
 
