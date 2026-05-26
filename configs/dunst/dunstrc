@@ -1,7 +1,7 @@
 [global]
 width = (0, 400)
 height = (0, 400)
-offset = (0, -10)
+offset = (0, 5)
 origin = top-center
 frame_width = 1
 corner_radius = 5

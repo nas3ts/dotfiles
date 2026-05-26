@@ -5,7 +5,7 @@
   "spacing": 0,
   "height": 26,
   "modules-left": ["custom/omarchy", "custom/walker"],
-  "modules-center": [],
+  "modules-center": ["hyprland/workspaces"],
   "modules-right": [
     "group/tray-expander",
     "custom/update",
