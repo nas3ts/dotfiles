@@ -29,8 +29,9 @@ This interactive script:
 
 ```bash
 ln -s ~/.dotfiles/.zshrc ~/.zshrc
-ln -s ~/.dotfiles/.zsh ~/.zsh
 ```
+
+> The `.zsh/` and `.aliae/` config folders are dot-folders inside `configs/` — they're sourced directly from the repository via `.zshrc` and don't need symlinks. The install script skips hidden directories automatically.
 
 ### 4. Update submodules later
 
@@ -39,7 +40,7 @@ git pull --recurse-submodules
 git submodule update --remote
 ```
 
-Or use the `gupdate` alias (defined in `~/.dotfiles/.aliae/core.yml`):
+Or use the `gupdate` alias (defined in `~/.dotfiles/configs/.aliae/alias/git.yml`):
 ```bash
 gupdate
 ```
@@ -62,7 +63,7 @@ The install script handles symlinking config directories. Re-run it anytime to r
 
 ### Configs
 
-Every directory in `configs/` is symlinked to `~/.config/<name>`:
+Every non-hidden directory in `configs/` is symlinked to `~/.config/<name>`. Hidden directories (starting with `.`) are skipped by the install script — they're sourced directly from the repo instead.
 
 | Dir | App | Configures |
 |-----|-----|------------|
@@ -80,8 +81,6 @@ Every directory in `configs/` is symlinked to `~/.config/<name>`:
 | `swayosd/` | SwayOSD | On-screen display for volume/brightness, custom CSS |
 | `managarr/` | Managarr | Radarr/Sonarr host and API config |
 | `glow/` | Glow | Markdown renderer style and pager width |
-| `.mako/` | Mako | Notification daemon colors, font, border radius |
-| `.aliae.yml` | Aliae | Aggregator pointing to `.aliae/` files |
 | `mimeapps.list` | System | Default apps (nvim for text, mpv for video, zen-browser for http, imv for images, zathura for PDF) |
 
 ### Restore backups
@@ -139,25 +138,26 @@ Files in `~/.dotfiles/`:
 | File | Purpose |
 |------|---------|
 | `.zshrc` | Main Zsh config — auto-installs tools on first run, sets history opts, vi mode keybinds, env vars |
-| `.zsh/plugins.zsh` | Zinit plugin loader — `zsh-autosuggestions`, `zsh-syntax-highlighting` with custom highlight styles |
-| `.zsh/inits.zsh` | Shell init — `eval "$(aliae init)"`, `eval "$(zoxide init zsh)"`, oh-my-posh prompt, fzf, completion config |
-| `.zsh/functions.zsh` | Personal functions — `ytm` (YouTube MP3), `qti`/`qui` (qBittorrent TUI) |
-| `.aliae/` | Alias manager — organized by domain (see below) |
+| `configs/.zsh/plugins.zsh` | Zinit plugin loader — `zsh-autosuggestions`, `zsh-syntax-highlighting` with custom highlight styles |
+| `configs/.zsh/inits.zsh` | Shell init — `eval "$(aliae init)"`, `eval "$(zoxide init zsh)"`, oh-my-posh prompt, fzf, completion config |
+| `configs/.zsh/functions.zsh` | Personal functions — `ytm` (YouTube MP3), `qti`/`qui` (qBittorrent TUI) |
+| `configs/.aliae/` | Alias manager — organized by domain (see below) |
 
 **Key environment variables** set in `.zshrc`:
 `ALIAE_CONFIG`, `OMP_CONFIG`, `GOPROXY`, `SUDO_PROMPT`, `TMPDIR`
 
 **Zsh keybindings**: vi mode (`bindkey -v`), `^W`/`^S` for history search, `^E` opens yazi widget, `^J` opens jfsh widget
 
-**Aliae** — Alias manager. Configs in `.aliae/` are organized by domain and aggregated via `~/.dotfiles/configs/.aliae.yml`:
+**Aliae** — Alias manager. Configs in `configs/.aliae/` are organized by domain and aggregated via `~/.dotfiles/configs/.aliae/aliae.yml`:
 
 | File | Covers |
 |------|--------|
-| `core.yml` | Shell shortcuts (`c`=clear, `v`=nvim, `x`=exit), yay aliases, `ff`=fastfetch, `top`=btop, `dsks`=lsblk |
-| `git.yml` | `gupdate` (pull+submodules), 30+ `*ignore` aliases for gitignore templates |
-| `ls.yml` | 25+ lsd aliases — `l`, `la`, `ll`, tree (`lt`), `lr`, `ld`, `lk`, `lz`, `ldot` |
-| `nav.yml` | `..`/`...`/`....`/`.....` dir nav, `dot`/`dev`/`doc`/`vid`/`pic`/`dow`/`des`/`mus` quick-jumps |
-| `omarchy.yml` | `oai` (AUR install), `ou` (update), `ot` (theme), `hr` (hyprctl reload), `orw` (restart waybar), etc. |
+| `aliae.yml` | Top-level aggregator — includes all files below |
+| `alias/core.yml` | Shell shortcuts (`c`=clear, `v`=nvim, `x`=exit), yay aliases, `ff`=fastfetch, `top`=btop, `dsks`=lsblk |
+| `alias/git.yml` | `gupdate` (pull+submodules), 30+ `*ignore` aliases for gitignore templates |
+| `alias/ls.yml` | 25+ lsd aliases — `l`, `la`, `ll`, tree (`lt`), `lr`, `ld`, `lk`, `lz`, `ldot` |
+| `alias/nav.yml` | `..`/`...`/`....`/`.....` dir nav, `dot`/`dev`/`doc`/`vid`/`pic`/`dow`/`des`/`mus` quick-jumps |
+| `alias/omarchy.yml` | `oai` (AUR install), `ou` (update), `ot` (theme), `hr` (hyprctl reload), `orw` (restart waybar), etc. |
 | `path.yml` | Adds `~/.dotfiles/scripts`, `~/bin`, `~/go/bin`, `~/.cargo/bin` to PATH |
 | `scripts.yml` | Aliases for scripts in `scripts/` |
 | `completions/zsh` | Shell completions for the `aliae` command |
@@ -229,7 +229,7 @@ To relink configs (e.g. after a fresh clone):
 To update qBittorrent credentials:
 
 ```bash
-nano ~/.dotfiles/.zsh/functions.zsh
+nano ~/.dotfiles/configs/.zsh/functions.zsh
 ```
 
 Then reload your shell: `exec zsh`

@@ -65,7 +65,7 @@ ZSH_MODULES="$DOTFILES_DIR/configs/.zsh/"
 # --- Exports ---
 export GOPROXY=https://proxy.golang.org,direct
 export SUDO_PROMPT=$'\a[sudo] password for %p: '
-export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae/"
+export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae/aliae.yml"
 export TMPDIR=$HOME/.tmp
 
 # --- Zsh Modules ---
