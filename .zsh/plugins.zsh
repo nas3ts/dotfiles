@@ -24,5 +24,6 @@ if (( $+functions[zinit] )); then
     'unknown-command'     'fg=#E06C75'           # Red for unknown commands
   )
 
+  zinit ice wait'!0' lucid
   zinit light zsh-users/zsh-syntax-highlighting
 fi

@@ -320,6 +320,43 @@ if [[ -d "$OPENCODE_THEMES_SOURCE" ]]; then
   echo
 fi
 
+# === DEPENDENCIES ===
+deps=(
+  "oh-my-posh:oh-my-posh"
+  "aliae:aliae"
+  "zoxide:zoxide"
+  "lsd:lsd"
+  "zinit:zinit"
+  "fzf:fzf"
+  "glow:glow"
+  "yt-dlp:yt-dlp"
+  "jfsh:jfsh"
+  "yazi:yazi"
+  "spf:superfile"
+  "dunst:dunst"
+  "zathura:zathura"
+)
+
+gum style --bold --padding "1 0 0 $PADDING_LEFT" "Dependencies:"
+missing=()
+for entry in "${deps[@]}"; do
+  cmd="${entry%%:*}"
+  if ! command -v "$cmd" &>/dev/null; then
+    missing+=("${entry##*:}")
+  fi
+done
+
+if [[ ${#missing[@]} -gt 0 ]]; then
+  gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "Missing (${#missing[@]}): ${missing[*]}"
+  if gum confirm --padding "0 0 0 $PADDING_LEFT" "Install missing tools?"; then
+    yay -S --noconfirm "${missing[@]}"
+  fi
+else
+  gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "All tools already installed."
+fi
+
+echo
+
 # Done
 clear_logo
 gum style --foreground 2 --bold --padding "1 0 0 $PADDING_LEFT" "Bootstrap complete!"
