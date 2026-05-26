@@ -21,6 +21,7 @@ cd ~/.dotfiles
 
 This interactive script:
 - Checks and links config directories in `~/.config/`
+- Handles conflicts — existing configs are listed and you can choose which to back up to `~/.config/.backup/` and link from dotfiles
 - Links themes to `~/.config/omarchy/themes/`
 - Requires `gum` (install via `yay -S gum` if missing)
 
@@ -56,6 +57,7 @@ The install script handles symlinking config directories. Re-run it anytime to r
 ### What install does
 
 1. **Links configs** — Scans `configs/` and symlinks unlinked dirs into `~/.config/`
+   - **Conflicts** (existing real files/dirs at target): listed with numbers — pick which to back up to `~/.config/.backup/<app>.<timestamp>` and symlink
 2. **Links themes** — Scans `themes/omarchy/` and symlinks themes into `~/.config/omarchy/themes/`
 
 ### Manual configuration
@@ -68,6 +70,7 @@ These files contain settings you may want to adjust manually:
 
 | File | What to change |
 |------|----------------|
+| `configs/git/config` | `user.name` and `user.email` if you use different credentials |
 | `configs/hypr/envs.conf` | Cursor theme (`XCURSOR_THEME`), cursor size, display scale (`GDK_SCALE`) |
 | `configs/hypr/monitors.conf` | Monitor resolution, position, and scale. See [Hyprland wiki](https://wiki.hyprland.org/Configuring/Monitors/) for syntax |
 
@@ -144,6 +147,16 @@ If you move the dotfiles repo, update the symlinks in `~/.config/` to point to t
 ```bash
 rm ~/.config/hypr && ln -s ~/.dotfiles/configs/hypr ~/.config/hypr
 ```
+
+### Restore backups
+
+Backed-up configs can be restored from `~/.config/.backup/`:
+
+```bash
+./restore.sh
+```
+
+Lists all backups with numbers — choose which to restore. The script removes the symlink and moves the backup back to its original location.
 
 ### Re-run install
 
