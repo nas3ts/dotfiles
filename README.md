@@ -60,6 +60,16 @@ The install script handles symlinking config directories. Re-run it anytime to r
    - **Conflicts** (existing real files/dirs at target): listed with numbers — pick which to back up to `~/.config/.backup/<app>.<timestamp>` and symlink
 2. **Links themes** — Scans `themes/omarchy/` and symlinks themes into `~/.config/omarchy/themes/`
 
+### Restore backups
+
+If you backed up existing configs during install (they go to `~/.config/.backup/`), restore them with:
+
+```bash
+./restore.sh
+```
+
+Lists all backups with numbers — pick which to restore. The script removes the symlink and moves the backup back to its original location.
+
 ### Manual configuration
 
 Some config values are personal and require manual editing:
@@ -147,16 +157,6 @@ If you move the dotfiles repo, update the symlinks in `~/.config/` to point to t
 ```bash
 rm ~/.config/hypr && ln -s ~/.dotfiles/configs/hypr ~/.config/hypr
 ```
-
-### Restore backups
-
-Backed-up configs can be restored from `~/.config/.backup/`:
-
-```bash
-./restore.sh
-```
-
-Lists all backups with numbers — choose which to restore. The script removes the symlink and moves the backup back to its original location.
 
 ### Re-run install
 
