@@ -56,9 +56,33 @@ The install script handles symlinking config directories. Re-run it anytime to r
 
 ### What install does
 
-1. **Links configs** — Scans `configs/` and symlinks unlinked dirs into `~/.config/`
-   - **Conflicts** (existing real files/dirs at target): listed with numbers — pick which to back up to `~/.config/.backup/<app>.<timestamp>` and symlink
-2. **Links themes** — Scans `themes/omarchy/` and symlinks themes into `~/.config/omarchy/themes/`
+1. **Links configs** — Scans `configs/` and symlinks dirs into `~/.config/`
+   - **Conflicts** (existing files/dirs): listed with numbers — pick which to back up to `~/.config/.backup/` and symlink
+2. **Links themes** — Scans `themes/omarchy/` and symlinks into `~/.config/omarchy/themes/`
+
+### Configs
+
+Every directory in `configs/` is symlinked to `~/.config/<name>`:
+
+| Dir | App | Configures |
+|-----|-----|------------|
+| `git/` | Git | Aliases, diff algorithm, pull/push behavior, rerere, user identity |
+| `hypr/` | Hyprland | WM settings, keybindings, autostart, monitors, input, idle/lock, window rules, XDPH, night light |
+| `waybar/` | Waybar | Status bar modules (workspaces, music, clock, weather, network, battery, tray, tailscale, caffeine/dnd indicators) |
+| `dunst/` | Dunst | Notification daemon appearance and behavior |
+| `kitty/` | Kitty | Terminal emulator font, colors, layout, keybindings |
+| `walker/` | Walker | Application launcher providers, prefixes, custom Kuroi theme |
+| `yazi/` | Yazi | File manager keymap, theme, 7 plugins, catppuccin-mocha flavor |
+| `superfile/` | Superfile | File manager config, hotkeys, custom Kuroi theme |
+| `mpv/` | mpv | Video player — GPU decode, profiles, 14 Lua scripts (sponsorblock, modernx OSC, autolyrics, thumbfast, etc.) |
+| `zellij/` | Zellij | Terminal multiplexer layout and keybindings |
+| `rmpc/` | rmpc | MPD client layout, album art, tabs |
+| `swayosd/` | SwayOSD | On-screen display for volume/brightness, custom CSS |
+| `managarr/` | Managarr | Radarr/Sonarr host and API config |
+| `glow/` | Glow | Markdown renderer style and pager width |
+| `.mako/` | Mako | Notification daemon colors, font, border radius |
+| `.aliae.yml` | Aliae | Aggregator pointing to `.aliae/` files |
+| `mimeapps.list` | System | Default apps (nvim for text, mpv for video, zen-browser for http, imv for images, zathura for PDF) |
 
 ### Restore backups
 
@@ -110,9 +134,33 @@ Files in `~/.config/hypr/` (user overrides) take precedence over omarchy default
 
 ### Shell setup
 
-- **`.zshrc`** — Main Zsh config. Auto-installs required tools on first run (oh-my-posh, aliae, zoxide, lsd, zinit, fzf, etc.)
-- **Aliae** — Alias manager. Configs live in `.aliae/` and are aggregated via `~/.dotfiles/configs/.aliae.yml`. The `ALIAE_CONFIG` env var points to this.
-- **zinit** — Plugin manager, bootstrapped in `.zshrc`
+Files in `~/.dotfiles/`:
+
+| File | Purpose |
+|------|---------|
+| `.zshrc` | Main Zsh config — auto-installs tools on first run, sets history opts, vi mode keybinds, env vars |
+| `.zsh/plugins.zsh` | Zinit plugin loader — `zsh-autosuggestions`, `zsh-syntax-highlighting` with custom highlight styles |
+| `.zsh/inits.zsh` | Shell init — `eval "$(aliae init)"`, `eval "$(zoxide init zsh)"`, oh-my-posh prompt, fzf, completion config |
+| `.zsh/functions.zsh` | Personal functions — `ytm` (YouTube MP3), `qti`/`qui` (qBittorrent TUI) |
+| `.aliae/` | Alias manager — organized by domain (see below) |
+
+**Key environment variables** set in `.zshrc`:
+`ALIAE_CONFIG`, `OMP_CONFIG`, `GOPROXY`, `SUDO_PROMPT`, `TMPDIR`
+
+**Zsh keybindings**: vi mode (`bindkey -v`), `^W`/`^S` for history search, `^E` opens yazi widget, `^J` opens jfsh widget
+
+**Aliae** — Alias manager. Configs in `.aliae/` are organized by domain and aggregated via `~/.dotfiles/configs/.aliae.yml`:
+
+| File | Covers |
+|------|--------|
+| `core.yml` | Shell shortcuts (`c`=clear, `v`=nvim, `x`=exit), yay aliases, `ff`=fastfetch, `top`=btop, `dsks`=lsblk |
+| `git.yml` | `gupdate` (pull+submodules), 30+ `*ignore` aliases for gitignore templates |
+| `ls.yml` | 25+ lsd aliases — `l`, `la`, `ll`, tree (`lt`), `lr`, `ld`, `lk`, `lz`, `ldot` |
+| `nav.yml` | `..`/`...`/`....`/`.....` dir nav, `dot`/`dev`/`doc`/`vid`/`pic`/`dow`/`des`/`mus` quick-jumps |
+| `omarchy.yml` | `oai` (AUR install), `ou` (update), `ot` (theme), `hr` (hyprctl reload), `orw` (restart waybar), etc. |
+| `path.yml` | Adds `~/.dotfiles/scripts`, `~/bin`, `~/go/bin`, `~/.cargo/bin` to PATH |
+| `scripts.yml` | Aliases for scripts in `scripts/` |
+| `completions/zsh` | Shell completions for the `aliae` command |
 
 ---
 
@@ -126,6 +174,8 @@ Scripts in `scripts/` are added to PATH via `configs/hypr/envs.conf`. Each is st
 | `dnd-toggle` | Toggles dunst do-not-disturb mode on/off |
 | `caffeine-toggle` | Toggles hypridle (prevents screen sleep) on/off |
 | `waybar-toggle` | Hides/shows waybar and adjusts window gaps accordingly |
+| `workspace-osd` | Listens on Hyprland socket and shows workspace changes via dunstify |
+| `virtmon-toggle` | Creates a headless monitor + starts wayvnc VNC server for remote access |
 | `playlist-gen` | Generates mpv playlist from directory |
 
 ### Script details
@@ -135,7 +185,15 @@ Scripts in `scripts/` are added to PATH via `configs/hypr/envs.conf`. Each is st
 playlist-gen /path/to/music  # outputs playlist.m3u8 in current directory
 ```
 
-**Waybar music indicator** (`configs/waybar/indicators/music.sh`) - Shows current playing track from MPD via rmpc. Click to launch rmpc, right-click to toggle play/pause.
+**`workspace-osd`** - Background daemon that listens on the Hyprland socket and shows workspace switch notifications via dunstify.
+
+**Waybar indicators** (`configs/waybar/indicators/`) — Shell scripts used by waybar modules:
+
+| Indicator | Shows |
+|-----------|-------|
+| `music.sh` | Current MPD track via rmpc — click to launch rmpc, right-click play/pause |
+| `caffeine.sh` | Caffeine (hypridle) on/off status |
+| `dnd.sh` | Do-not-disturb on/off status |
 
 ---
 
@@ -178,6 +236,18 @@ Then reload your shell: `exec zsh`
 
 ---
 
+## Themes
+
+This repo includes the **Kuroi** theme for omarchy:
+
+| Component | Location |
+|-----------|----------|
+| omarchy theme | `themes/omarchy/kuroi/` — colors, backgrounds, cursor/icons theme, Neovim colorscheme, Walker launcher CSS |
+| opencode theme | `themes/opencode/kuroi.json` — syntax highlighting, markdown, diff colors |
+| terminal themes | `themes/terminal/` — git submodule, terminal emulator colorschemes |
+
+---
+
 ## Prerequisites
 
 These tools are required for the desktop environment to work. Most are auto-installed by `.zshrc` on first run, but install manually if needed.
@@ -187,19 +257,25 @@ These tools are required for the desktop environment to work. Most are auto-inst
 | [Hyprland](https://hyprland.org/) | Wayland compositor / window manager |
 | [uwsm](https://github.com/Vladimir-csp/uwsm) | Wayland session manager |
 | [waybar](https://github.com/Alexays/Waybar) | Status bar |
-| [dunst](https://github.com/dunst-project/dunst) | Notification daemon |
+| [dunst](https://github.com/dunst-project/dunst) / [mako](https://github.com/emersion/mako) | Notification daemon |
 | [hypridle](https://github.com/hyprland/hypridle) | Idle management |
 | [hyprlock](https://github.com/hyprland/hyprlock) | Screen locker |
+| [hyprsunset](https://github.com/hyprland/hyprsunset) | Blue light filter / night light |
 | [omarchy](https://github.com/jL城外/omarchy) | Desktop environment framework |
 | [fcitx5](https://fcitx-im.org/) | Input method |
 | [Alacritty](https://alacritty.org/) / [Kitty](https://sw.kovidgoyal.net/kitty/) / [Ghostty](https://ghostty.org/) | Terminal emulator |
 | [yazi](https://github.com/sxyazi/yazi) / [superfile](https://github.com/MHNightCat/superfile) | Terminal file managers |
 | [zellij](https://zellij.dev/) | Terminal multiplexer |
-| [mpv](https://mpv.io/) | Video player |
+| [mpv](https://mpv.io/) | Video player (+ [SponsorBlock](https://github.com/po5/mpv_sponsorblock) script) |
+| [rmpc](https://github.com/weirdraworld/rmpc) | MPD client |
+| [swayosd](https://github.com/ErikReider/SwayOSD) | On-screen display |
+| [walker](https://github.com/abenz1267/walker) | Application launcher |
+| [glow](https://github.com/charmbracelet/glow) | Markdown renderer |
 | [jfsh](https://github.com/ApexAllMonitor/jfsh) | Jellyfin TUI |
 | [managarr](https://github.com/j-morano/managarr) | Arr media manager TUI |
+| [zathura](https://pwmt.org/projects/zathura/) | PDF viewer |
 
-Install all required AUR packages:
+Install all AUR packages:
 ```bash
-yay -S hyprland uwsm waybar hypridle hyprlock omarchy fcitx5 fcitx5-rime alacritty kitty ghostty yazi superfile zellij mpv jfsh managarr
+yay -S hyprland uwsm waybar dunst mako hypridle hyprlock hyprsunset omarchy fcitx5 fcitx5-rime kitty yazi superfile zellij mpv rmpc swayosd walker glow jfsh managarr zathura
 ```
