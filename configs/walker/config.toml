@@ -16,7 +16,7 @@ symbols = 1 # providers to be queried by default
 [providers]
 max_results = 256 # 256 should be enough for everyone
 default = [
-  "desktopapplications",
+  "desktopapplications"
 ]
 
 [providers.websearch]
@@ -49,6 +49,10 @@ provider = "clipboard"
 [[providers.prefixes]]
 prefix = ">"
 provider = "runner"
+
+[[providers.prefixes]]
+prefix = "£"
+provider = "menus:lutrisGames"
 
 [[emergencies]]
 text = "Restart Walker"

@@ -4,7 +4,7 @@
   "position": "top",
   "spacing": 0,
   "height": 26,
-  "modules-left": ["custom/omarchy", "custom/walker"],
+  "modules-left": ["custom/omarchy", "cpu", "memory"],
   "modules-center": ["hyprland/workspaces"],
   "modules-right": [
     "group/tray-expander",
