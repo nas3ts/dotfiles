@@ -11,6 +11,7 @@
     "custom/update",
     "custom/voxtype", 
     "custom/screenrecording-indicator",
+    "bluetooth",
     "network",
     "battery",
     "clock",
@@ -131,7 +132,7 @@
   "bluetooth": {
     "format": "",
     "format-off": "󰂲",
-    "format-disabled": "󰂲",
+    "format-disabled": "",
     "format-connected": "󰂱",
     "format-no-controller": "",
     "tooltip-format": "Devices connected: {num_connections}",
@@ -156,7 +157,7 @@
       "transition-duration": 600,
       "children-class": "tray-group-item"
     },
-    "modules": ["custom/expand-icon", "tray", "bluetooth", "pulseaudio"]
+    "modules": ["custom/expand-icon", "tray", "pulseaudio"]
   },
   "custom/expand-icon": {
     "format": "",
