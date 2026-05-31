@@ -278,6 +278,90 @@ if [[ -d "$OMARCHY_THEMES_SOURCE" ]]; then
   echo
 fi
 
+# === OMARCHY HOOKS ===
+OMARCHY_HOOKS_SOURCE="$DOTFILES_DIR/configs/omarchy/hooks"
+OMARCHY_HOOKS_TARGET="$XDG_CONFIG_HOME/omarchy/hooks"
+
+if [[ -d "$OMARCHY_HOOKS_SOURCE" ]]; then
+  gum style --bold --padding "1 0 0 $PADDING_LEFT" "Omarchy hooks:"
+
+  hook_existing=()
+  hook_missing=()
+  hook_broken=()
+  hook_conflicts=()
+
+  for hook_file in "$OMARCHY_HOOKS_SOURCE"/*; do
+    [[ -f "$hook_file" ]] || continue
+    hook_name=$(basename "$hook_file")
+    target="$OMARCHY_HOOKS_TARGET/$hook_name"
+
+    check_symlink "$hook_file" "$target"
+    result=$?
+
+    case $result in
+      0) hook_existing+=("$hook_name") ;;
+      1) hook_missing+=("$hook_name") ;;
+      2) hook_broken+=("$hook_name") ;;
+      3) hook_conflicts+=("$hook_name") ;;
+    esac
+  done
+
+  if [[ ${#hook_existing[@]} -gt 0 ]]; then
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "Already linked (${#hook_existing[@]}):"
+    for hook in "${hook_existing[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $hook"
+    done
+  fi
+
+  if [[ ${#hook_conflicts[@]} -gt 0 ]]; then
+    gum style --foreground 1 --padding "0 0 0 $PADDING_LEFT" "Conflicts (${#hook_conflicts[@]}):"
+    for hook in "${hook_conflicts[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $hook"
+    done
+  fi
+
+  if [[ ${#hook_missing[@]} -gt 0 ]]; then
+    gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Need linking (${#hook_missing[@]}):"
+    for hook in "${hook_missing[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $hook"
+    done
+  fi
+
+  if [[ ${#hook_broken[@]} -gt 0 ]]; then
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "Broken links (${#hook_broken[@]}):"
+    for hook in "${hook_broken[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $hook"
+    done
+  fi
+
+  echo
+
+  if [[ ${#hook_missing[@]} -gt 0 ]] || [[ ${#hook_broken[@]} -gt 0 ]]; then
+    if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --default --affirmative "Link hooks" --negative "Skip"; then
+      hook_count=0
+
+      for hook in "${hook_missing[@]}" "${hook_broken[@]}"; do
+        source_path="$OMARCHY_HOOKS_SOURCE/$hook"
+        target_path="$OMARCHY_HOOKS_TARGET/$hook"
+
+        if [[ -L "$target_path" ]]; then
+          rm "$target_path"
+        fi
+
+        ln -s "$source_path" "$target_path"
+        gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Linked $hook"
+        hook_count=$((hook_count + 1))
+      done
+
+      gum style --padding "0 0 0 $PADDING_LEFT" "Linked $hook_count hook(s)."
+    else
+      gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped hook linking."
+    fi
+  fi
+
+  echo
+fi
+
 # === THEMES (opencode) ===
 OPENCODE_THEMES_SOURCE="$DOTFILES_DIR/themes/opencode"
 OPENCODE_THEMES_TARGET="$XDG_CONFIG_HOME/opencode/themes"
