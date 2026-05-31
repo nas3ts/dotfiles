@@ -1,4 +1,7 @@
 [opener]
+epuppy = [
+    { run = "epuppy %s", block = true, desc = "Epuppy", for = "unix" },
+]
 glow = [
     { run = "glow -p %s", block = true, desc = "Glow", for = "unix" },
 ]
@@ -8,5 +11,6 @@ edit = [
 
 [open]
 prepend_rules = [
+    { url = "*.epub", use = ["epuppy"] },
     { url = "*.md", use = ["glow", "edit", "reveal"] },
 ]
