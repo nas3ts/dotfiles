@@ -362,6 +362,90 @@ if [[ -d "$OMARCHY_HOOKS_SOURCE" ]]; then
   echo
 fi
 
+# === OMARCHY THEMED TEMPLATES ===
+OMARCHY_THEMED_SOURCE="$DOTFILES_DIR/configs/omarchy/themed"
+OMARCHY_THEMED_TARGET="$XDG_CONFIG_HOME/omarchy/themed"
+
+if [[ -d "$OMARCHY_THEMED_SOURCE" ]]; then
+  gum style --bold --padding "1 0 0 $PADDING_LEFT" "Omarchy themed templates:"
+
+  themed_existing=()
+  themed_missing=()
+  themed_broken=()
+  themed_conflicts=()
+
+  for tpl_file in "$OMARCHY_THEMED_SOURCE"/*; do
+    [[ -f "$tpl_file" ]] || continue
+    tpl_name=$(basename "$tpl_file")
+    target="$OMARCHY_THEMED_TARGET/$tpl_name"
+
+    check_symlink "$tpl_file" "$target"
+    result=$?
+
+    case $result in
+      0) themed_existing+=("$tpl_name") ;;
+      1) themed_missing+=("$tpl_name") ;;
+      2) themed_broken+=("$tpl_name") ;;
+      3) themed_conflicts+=("$tpl_name") ;;
+    esac
+  done
+
+  if [[ ${#themed_existing[@]} -gt 0 ]]; then
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "Already linked (${#themed_existing[@]}):"
+    for tpl in "${themed_existing[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $tpl"
+    done
+  fi
+
+  if [[ ${#themed_conflicts[@]} -gt 0 ]]; then
+    gum style --foreground 1 --padding "0 0 0 $PADDING_LEFT" "Conflicts (${#themed_conflicts[@]}):"
+    for tpl in "${themed_conflicts[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $tpl"
+    done
+  fi
+
+  if [[ ${#themed_missing[@]} -gt 0 ]]; then
+    gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Need linking (${#themed_missing[@]}):"
+    for tpl in "${themed_missing[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $tpl"
+    done
+  fi
+
+  if [[ ${#themed_broken[@]} -gt 0 ]]; then
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "Broken links (${#themed_broken[@]}):"
+    for tpl in "${themed_broken[@]}"; do
+      gum style --padding "0 0 0 $PADDING_LEFT" "  $tpl"
+    done
+  fi
+
+  echo
+
+  if [[ ${#themed_missing[@]} -gt 0 ]] || [[ ${#themed_broken[@]} -gt 0 ]]; then
+    if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --default --affirmative "Link themed templates" --negative "Skip"; then
+      themed_count=0
+
+      for tpl in "${themed_missing[@]}" "${themed_broken[@]}"; do
+        source_path="$OMARCHY_THEMED_SOURCE/$tpl"
+        target_path="$OMARCHY_THEMED_TARGET/$tpl"
+
+        if [[ -L "$target_path" ]]; then
+          rm "$target_path"
+        fi
+
+        ln -s "$source_path" "$target_path"
+        gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Linked $tpl"
+        themed_count=$((themed_count + 1))
+      done
+
+      gum style --padding "0 0 0 $PADDING_LEFT" "Linked $themed_count themed template(s)."
+    else
+      gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped themed template linking."
+    fi
+  fi
+
+  echo
+fi
+
 # === THEMES (opencode) ===
 OPENCODE_THEMES_SOURCE="$DOTFILES_DIR/themes/opencode"
 OPENCODE_THEMES_TARGET="$XDG_CONFIG_HOME/opencode/themes"
