@@ -20,6 +20,7 @@ else
 fi
 
 if command -v fzf >/dev/null 2>&1; then			# <- fuzzy finder
+	export FZF_DEFAULT_OPTS="--exact"
 	eval "$(fzf --zsh)"
 else
 	echo "fzf is not installed. Skipping fzf init."
