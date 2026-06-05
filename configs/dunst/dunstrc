@@ -11,15 +11,14 @@ foreground = "#ffffff"
 frame_color = "#3584e4"
 timeout = 5
 
-# Icons
 icon_position = left
 enable_recursive_icon_lookup = true
 icon_theme = Yamis
 
 [urgency_low]
 background = "#0d0d0dcc"
-foreground = "#aaaaaa"
-frame_color = "#1e1e1e"
+foreground = "#7f8c8d"
+frame_color = "#1a1a1a"
 
 [urgency_normal]
 background = "#0d0d0dcc"
@@ -27,8 +26,8 @@ foreground = "#ffffff"
 frame_color = "#3584e4ee"
 
 [urgency_critical]
-background = "#d0d0dcc"
+background = "#0d0d0dcc"
 foreground = "#ffffff"
-frame_color = "#ff5555ee"
+frame_color = "#e74c3cee"
 frame_width = 5
 timeout = 20
