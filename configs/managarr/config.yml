@@ -4,18 +4,18 @@ radarr:
   - name: Local
     host: zimaos
     port: 7878
-    api_token: ***REMOVED***
+    api_token: ${RADARR_API_TOKEN}
 
   - name: Remote
     uri: http://zimaos:7878
-    api_token: ***REMOVED***
+    api_token: ${RADARR_API_TOKEN}
 
 sonarr:
   - name: Local
-    host: zimaos 
+    host: zimaos
     port: 8989
-    api_token: ***REMOVED***
+    api_token: ${SONARR_API_TOKEN}
 
   - name: Remote
     uri: http://zimaos:8989
-    api_token: ***REMOVED***
+    api_token: ${SONARR_API_TOKEN}

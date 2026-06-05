@@ -1,8 +1,10 @@
 # Secrets (never commit)
 .env
 
-# Personal config (manual editing required)
-.zsh/functions.zsh
+# Personal config (manual editing required).
+# Note: gitignore only affects untracked files. If a file listed here is
+# already tracked, run `git rm --cached <path>` to stop tracking it; the
+# entry then prevents accidental re-adding.
 .aliae/env.yml
 
 # Templated by install.sh (per-user paths)

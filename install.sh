@@ -118,6 +118,45 @@ else
   echo
 fi
 
+# === SECRETS FILE ===
+# The repo's per-user secret files (configs/.zsh/functions.zsh,
+# configs/managarr/config.yml) reference env vars defined in a separate
+# runtime file. This file is gitignored, chmod 600, and sourced from the
+# sanitized functions.zsh.
+SECRETS_DIR="$HOME/.local/share/dotfiles-secrets"
+SECRETS_FILE="$SECRETS_DIR/env.sh"
+
+if [[ -f "$SECRETS_FILE" ]]; then
+  perms=$(stat -c '%a' "$SECRETS_FILE" 2>/dev/null || stat -f '%A' "$SECRETS_FILE" 2>/dev/null)
+  if [[ "$perms" != "600" ]]; then
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  ! $SECRETS_FILE exists but is mode $perms (expected 600), tightening"
+    chmod 600 "$SECRETS_FILE"
+  else
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Secrets file present: $SECRETS_FILE (mode 600)"
+  fi
+else
+  if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Create" --negative "Skip" "Create secrets file at $SECRETS_FILE?"; then
+    mkdir -p "$SECRETS_DIR"
+    cat > "$SECRETS_FILE" <<'SECRETS_TEMPLATE'
+# dotfiles per-user secrets — chmod 600, gitignored.
+# Fill in the values for the services you use; leave empty to skip.
+# qBittorrent on zimaos (used by `qti` in configs/.zsh/functions.zsh)
+export QBIT_ZIMA_PASS=""
+# qBittorrent on localhost  (used by `qui` in configs/.zsh/functions.zsh)
+export QBIT_LOCAL_PASS=""
+# Radarr API key (Settings > General > API Key)
+export RADARR_API_TOKEN=""
+# Sonarr API key (Settings > General > API Key)
+export SONARR_API_TOKEN=""
+SECRETS_TEMPLATE
+    chmod 600 "$SECRETS_FILE"
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Created $SECRETS_FILE (mode 600) — populate before using qti/qui/managarr"
+  else
+    gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "  Skipped secrets file. functions.zsh and managarr will fail until you create $SECRETS_FILE"
+  fi
+fi
+echo
+
 # Find configs that need symlinking
 missing_links=()
 broken_links=()

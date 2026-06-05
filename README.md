@@ -22,6 +22,7 @@ cd ~/.dotfiles
 This interactive script:
 - Runs preflight checks for `omarchy`, `~/.config/omarchy/current/theme/`, and the package manager
 - Asks to add `source ~/.dotfiles/.zshrc` to your `~/.zshrc` (idempotent — safe to re-run)
+- Asks to create a secrets file at `~/.local/share/dotfiles-secrets/env.sh` (chmod 600) — see [Secrets](#secrets)
 - Checks and links config directories in `~/.config/`
 - Handles conflicts — existing configs are listed and you can choose which to back up to `~/.config/.backup/` and link from dotfiles
 - Links themes to `~/.config/omarchy/themes/`
@@ -42,6 +43,35 @@ Or use the `gupdate` alias (defined in `~/.dotfiles/configs/.aliae/alias/git.yml
 ```bash
 gupdate
 ```
+
+---
+
+## Secrets
+
+Some config files reference per-user credentials via shell environment variables rather than committing plaintext secrets to git. The committed versions of these files are templates; the actual values live in a separate runtime file.
+
+**Canonical location:** `~/.local/share/dotfiles-secrets/env.sh` (chmod 600, gitignored)
+
+**Variables consumed:**
+
+| Variable | Used by |
+|---|---|
+| `QBIT_ZIMA_PASS` | `qti` in `configs/.zsh/functions.zsh` (remote qBittorrent on `zimaos`) |
+| `QBIT_LOCAL_PASS` | `qui` in `configs/.zsh/functions.zsh` (local qBittorrent) |
+| `RADARR_API_TOKEN` | `configs/managarr/config.yml` (Radarr API key) |
+| `SONARR_API_TOKEN` | `configs/managarr/config.yml` (Sonarr API key) |
+
+**Setup:**
+- `install.sh` will offer to create a starter `env.sh` with empty values; chmod 600 is applied automatically.
+- `configs/.zsh/functions.zsh` sources the secrets file when loaded. The `qti` and `qui` functions fail with a clear error pointing to the missing variable if the file is absent.
+- If managarr supports env-var interpolation in YAML (it does), the `${VAR}` placeholders in `config.yml` are expanded by managarr at load time. No install-time templating needed.
+
+**Important:** the committed files are sanitized, but the original plaintext values are still present in this repo's git history. After installing from a fresh clone of someone else's published copy (or after rotating credentials for any reason), regenerate all four values:
+- Reset the admin password on the zimaos qBittorrent
+- Reset your user password on the local qBittorrent
+- Regenerate the Radarr API key (Settings → General)
+- Regenerate the Sonarr API key (Settings → General)
+- Update `~/.local/share/dotfiles-secrets/env.sh` with the new values
 
 ---
 

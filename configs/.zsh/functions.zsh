@@ -1,4 +1,10 @@
 # --- Custom functions/aliae ---
+# Credentials are loaded from ~/.local/share/dotfiles-secrets/env.sh
+# (created by install.sh, chmod 600, gitignored). If unset, the affected
+# functions error with "parameter not set or null" pointing to the
+# missing variable name.
+[[ -f "$HOME/.local/share/dotfiles-secrets/env.sh" ]] && source "$HOME/.local/share/dotfiles-secrets/env.sh"
+
 function ytm() {
 	local url="$1"
 
@@ -23,7 +29,7 @@ function qti() {
     --host zimaos \
     --port 8181 \
     --username admin \
-    --password ***REMOVED*** \
+    --password "${QBIT_ZIMA_PASS:?QBIT_ZIMA_PASS not set — populate ~/.local/share/dotfiles-secrets/env.sh}" \
     --view-mode oneline
 }
 
@@ -32,6 +38,6 @@ function qui() {
     --client-type qbittorrent \
     --port 8080 \
     --username nas3ts \
-    --password ***REMOVED*** \
+    --password "${QBIT_LOCAL_PASS:?QBIT_LOCAL_PASS not set — populate ~/.local/share/dotfiles-secrets/env.sh}" \
     --view-mode oneline
 }
