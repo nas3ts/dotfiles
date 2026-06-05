@@ -5,3 +5,6 @@
 .zsh/functions.zsh
 .aliae/env.yml
 
+# Templated by install.sh (per-user paths)
+configs/gtk-3.0/bookmarks
+

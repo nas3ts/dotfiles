@@ -32,6 +32,18 @@ if ! command -v gum &>/dev/null; then
   fi
 fi
 
+# === PRE-FLIGHT CHECKS ===
+preflight_warnings=()
+if [[ ! -d "$HOME/.local/share/omarchy" ]]; then
+  preflight_warnings+=("omarchy not found at ~/.local/share/omarchy — omarchy-* commands and themed templates won't work")
+fi
+if [[ -d "$HOME/.local/share/omarchy" ]] && [[ ! -d "$XDG_CONFIG_HOME/omarchy/current/theme" ]]; then
+  preflight_warnings+=("omarchy is installed but no theme is set — run 'omarchy theme-set <name>' after install")
+fi
+if ! command -v yay &>/dev/null && ! command -v pacman &>/dev/null; then
+  preflight_warnings+=("neither yay nor pacman found — dependency installs will be skipped")
+fi
+
 # Terminal sizing (from omarchy)
 TERM_WIDTH=80
 TERM_HEIGHT=24
@@ -60,14 +72,60 @@ gum style --padding "1 0 0 $PADDING_LEFT" "Welcome to dotfiles bootstrap!"
 gum style --foreground 8 --padding "1 0 0 $PADDING_LEFT" "This will link your config directories."
 echo
 
+# Show preflight warnings
+if [[ ${#preflight_warnings[@]} -gt 0 ]]; then
+  gum style --bold --foreground 3 --padding "1 0 0 $PADDING_LEFT" "Pre-flight warnings:"
+  for w in "${preflight_warnings[@]}"; do
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  ! $w"
+  done
+  echo
+fi
+
+# === AUTO-SOURCE .ZSHRC ===
+# Ensures the user's ~/.zshrc picks up dotfiles/.zshrc, so a fresh install works
+# without manual symlinking.
+ZSHRC_TARGET="$HOME/.zshrc"
+ZSHRC_SOURCE_LINE="source $DOTFILES_DIR/.zshrc"
+
+if [[ ! -f "$DOTFILES_DIR/.zshrc" ]]; then
+  gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "Skipped zshrc: $DOTFILES_DIR/.zshrc not found"
+else
+  zshrc_already_sources=false
+  if [[ -f "$ZSHRC_TARGET" ]] && grep -qF "$ZSHRC_SOURCE_LINE" "$ZSHRC_TARGET" 2>/dev/null; then
+    zshrc_already_sources=true
+  fi
+
+  if $zshrc_already_sources; then
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "~/.zshrc already sources dotfiles"
+  else
+    if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Add source line" --negative "Skip" "Add 'source $ZSHRC_SOURCE_LINE' to ~/.zshrc?"; then
+      mkdir -p "$(dirname "$ZSHRC_TARGET")"
+      if [[ -f "$ZSHRC_TARGET" ]]; then
+        # Append, with a leading newline if the file doesn't end with one
+        if [[ -s "$ZSHRC_TARGET" ]] && [[ "$(tail -c1 "$ZSHRC_TARGET")" != $'\n' ]]; then
+          printf '\n%s\n' "$ZSHRC_SOURCE_LINE" >> "$ZSHRC_TARGET"
+        else
+          printf '%s\n' "$ZSHRC_SOURCE_LINE" >> "$ZSHRC_TARGET"
+        fi
+      else
+        printf '%s\n' "$ZSHRC_SOURCE_LINE" > "$ZSHRC_TARGET"
+      fi
+      gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Added source line to ~/.zshrc"
+    else
+      gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped zshrc. Run manually: ln -s $DOTFILES_DIR/.zshrc ~/.zshrc"
+    fi
+  fi
+  echo
+fi
+
 # Find configs that need symlinking
 missing_links=()
 broken_links=()
 existing_links=()
 conflicting=()
 
-# Skip folders that shouldn't be symlinked
-skip_dirs=("omarchy")
+# Skip folders that shouldn't be symlinked (handled by separate copy/template steps)
+skip_dirs=("omarchy" "vicinae" "gtk-3.0")
 is_skip() {
   for skip in "${skip_dirs[@]}"; do
     [[ "$1" == "$skip" ]] && return 0
@@ -532,6 +590,58 @@ if [[ -d "$OPENCODE_THEMES_SOURCE" ]]; then
   echo
 fi
 
+# === COPY + TEMPLATE USER-SPECIFIC DIRS ===
+# Some config dirs (vicinae, gtk-3.0) contain files with __HOME__ sentinels that
+# must be templated per-user. Symlinks can't templated, so these dirs are copied
+# as real directories instead of symlinked.
+copy_dirs=("vicinae" "gtk-3.0")
+copy_needed=()
+for dir in "${copy_dirs[@]}"; do
+  src="$CONFIG_DIR/$dir"
+  target="$XDG_CONFIG_HOME/$dir"
+  if [[ ! -d "$src" ]]; then continue; fi
+  # Need to copy if target is a symlink (from a prior symlink-based install) or missing
+  if [[ -L "$target" ]] || [[ ! -e "$target" ]]; then
+    copy_needed+=("$dir")
+  fi
+done
+
+if [[ ${#copy_needed[@]} -gt 0 ]]; then
+  gum style --bold --padding "1 0 0 $PADDING_LEFT" "Copying user-specific config dirs:"
+  for dir in "${copy_needed[@]}"; do
+    src="$CONFIG_DIR/$dir"
+    target="$XDG_CONFIG_HOME/$dir"
+
+    # Remove any existing symlink or stale real dir
+    rm -rf "$target"
+    mkdir -p "$target"
+    cp -r "$src"/. "$target"/
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Copied $dir (real, not symlinked)"
+  done
+  echo
+fi
+
+# Template any files inside the copy-dirs that still contain __HOME__ sentinels.
+# (Re-runs are safe: files that were already templated won't match the grep.)
+template_files=()
+for dir in "${copy_dirs[@]}"; do
+  target="$XDG_CONFIG_HOME/$dir"
+  [[ -d "$target" ]] || continue
+  while IFS= read -r -d '' f; do
+    template_files+=("$f")
+  done < <(grep -l -z '__HOME__' "$target" 2>/dev/null || true)
+done
+
+if [[ ${#template_files[@]} -gt 0 ]]; then
+  gum style --bold --padding "1 0 0 $PADDING_LEFT" "Templating per-user paths:"
+  for f in "${template_files[@]}"; do
+    sed -i "s|__HOME__|$HOME|g; s|__DOTFILES_DIR__|$DOTFILES_DIR|g" "$f"
+    rel_path="${f#$XDG_CONFIG_HOME/}"
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Templated $rel_path"
+  done
+  echo
+fi
+
 # === DEPENDENCIES ===
 deps=(
   "oh-my-posh:oh-my-posh"
@@ -568,6 +678,21 @@ else
 fi
 
 echo
+
+# === TRIGGER INITIAL THEME-SET (if omarchy is present) ===
+# This regenerates per-theme files (kitty-tab-colors.conf, dunst/dunstrc,
+# vicinae/themes/kuroi.toml) so they're in sync with the linked theme.
+if [[ -d "$HOME/.local/share/omarchy" ]] && command -v omarchy-theme-set &>/dev/null; then
+  echo
+  if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Set kuroi" --negative "Skip" "Run 'omarchy theme-set kuroi' to generate per-theme files?"; then
+    omarchy-theme-set kuroi 2>&1 | gum style --padding "0 0 0 $PADDING_LEFT" --foreground 8
+    if [[ $? -eq 0 ]]; then
+      gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Theme kuroi applied"
+    else
+      gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  Theme-set failed — run 'omarchy theme-set kuroi' manually"
+    fi
+  fi
+fi
 
 # Done
 clear_logo

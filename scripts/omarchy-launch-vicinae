@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# omarchy-launch-vicinae — vicinae launcher for omarchy module menus
+# Replaces walker-based module menus (themes, backgrounds, unlocks) with vicinae dmenu
+
+VICINAE="/usr/bin/vicinae"
+OMARCHY_PATH="$HOME/.local/share/omarchy"
+
+cmd_themes() {
+  local entries
+  entries=$(omarchy theme list 2>/dev/null) || exit
+  local selection
+  selection=$(echo "$entries" | "$VICINAE" dmenu -p "Select theme..." --no-section --no-footer --no-metadata 2>/dev/null)
+  [[ -n $selection ]] && omarchy-theme-set "$selection"
+}
+
+cmd_backgrounds() {
+  local theme_name dirs files selection
+  theme_name=$(cat ~/.config/omarchy/current/theme.name 2>/dev/null)
+  dirs=(~/.config/omarchy/current/theme/backgrounds/)
+  [[ -n $theme_name ]] && dirs+=(~/.config/omarchy/backgrounds/"$theme_name"/)
+  files=$(find "${dirs[@]}" -maxdepth 1 -type f \( -name '*.jpg' -o -name '*.jpeg' -o -name '*.png' -o -name '*.gif' -o -name '*.bmp' -o -name '*.webp' \) 2>/dev/null | sort)
+  selection=$(echo "$files" | "$VICINAE" dmenu -p "Select background..." --no-section --no-footer --no-metadata 2>/dev/null)
+  [[ -n $selection ]] && omarchy-theme-bg-set "$selection"
+}
+
+cmd_unlocks() {
+  local entries=() names=() selection raw_name i display name dir
+  entries+=("Default")
+  names+=("Default")
+  while IFS= read -r dir; do
+    name=$(basename "$dir")
+    if [[ -f "$dir/preview-unlock.png" ]]; then
+      display=$(echo "$name" | sed -E 's/(^|-)([a-z])/\1\u\2/g; s/-/ /g')
+      entries+=("$display")
+      names+=("$name")
+    fi
+  done < <(find ~/.config/omarchy/themes "$OMARCHY_PATH/themes" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort -u)
+
+  selection=$(printf '%s\n' "${entries[@]}" | "$VICINAE" dmenu -p "Select unlock..." --no-section --no-footer --no-metadata 2>/dev/null)
+  [[ -z $selection ]] && exit
+
+  for i in "${!entries[@]}"; do
+    if [[ ${entries[$i]} == "$selection" ]]; then
+      raw_name="${names[$i]}"
+      break
+    fi
+  done
+
+  if [[ $raw_name == "Default" ]]; then
+    omarchy-launch-floating-terminal-with-presentation "omarchy-plymouth-reset"
+  else
+    omarchy-launch-floating-terminal-with-presentation "omarchy-plymouth-set-by-theme $raw_name"
+  fi
+}
+
+cmd_dmenu() {
+  local args=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dmenu) ;;
+      --width|-w) shift; args+=(-W "$1") ;;
+      --minheight|--maxheight) shift; ;;
+      -p) shift; args+=(-p "$1") ;;
+      -c) shift; ;;
+      *) args+=("$1") ;;
+    esac
+    shift
+  done
+  exec "$VICINAE" dmenu "${args[@]}"
+}
+
+case "${1:-}" in
+  theme|themes) shift; cmd_themes "$@" ;;
+  background|backgrounds|bg) shift; cmd_backgrounds "$@" ;;
+  unlock|unlocks) shift; cmd_unlocks "$@" ;;
+  dmenu) shift; cmd_dmenu "$@" ;;
+  *) exec "$VICINAE" toggle ;;
+esac

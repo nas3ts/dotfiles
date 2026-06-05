@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# omarchy-restart-vicinae — restart the vicinae daemon
+# Used after editing vicinae config / theme to pick up changes.
+
+VICINAE="/usr/bin/vicinae"
+
+if ! command -v vicinae &>/dev/null; then
+  echo "vicinae not found in PATH" >&2
+  exit 1
+fi
+
+"$VICINAE" server --replace

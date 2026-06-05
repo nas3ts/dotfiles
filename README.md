@@ -20,20 +20,18 @@ cd ~/.dotfiles
 ```
 
 This interactive script:
+- Runs preflight checks for `omarchy`, `~/.config/omarchy/current/theme/`, and the package manager
+- Asks to add `source ~/.dotfiles/.zshrc` to your `~/.zshrc` (idempotent — safe to re-run)
 - Checks and links config directories in `~/.config/`
 - Handles conflicts — existing configs are listed and you can choose which to back up to `~/.config/.backup/` and link from dotfiles
 - Links themes to `~/.config/omarchy/themes/`
+- Templates per-user files (`vicinae/settings.json`, `gtk-3.0/bookmarks`) by replacing `__HOME__` with your actual `$HOME`
+- Asks to run `omarchy theme-set kuroi` at the end to generate per-theme files (kitty tab colors, dunstrc, vicinae theme)
 - Requires `gum` (install via `yay -S gum` if missing)
-
-### 3. Link Zsh config
-
-```bash
-ln -s ~/.dotfiles/.zshrc ~/.zshrc
-```
 
 > The `.zsh/` and `.aliae/` config folders are dot-folders inside `configs/` — they're sourced directly from the repository via `.zshrc` and don't need symlinks. The install script skips hidden directories automatically.
 
-### 4. Update submodules later
+### 3. Update submodules later
 
 ```bash
 git pull --recurse-submodules
