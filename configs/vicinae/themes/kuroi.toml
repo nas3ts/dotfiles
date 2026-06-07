@@ -62,10 +62,10 @@ foreground = "#ffffff"
 secondary_foreground = "#7f8c8d"
 
 [colors.list.item.selection]
-background = "#3584e4"
-foreground = "#0d0d0d"
-secondary_background = "#3584e4"
-secondary_foreground = "#0d0d0d"
+background = "#1a1a1a"
+foreground = "#ffffff"
+secondary_background = "#1a1a1a"
+secondary_foreground = "#ffffff"
 
 [colors.grid.item]
 background = "#1a1a1a"

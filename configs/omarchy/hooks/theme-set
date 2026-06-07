@@ -106,10 +106,10 @@ foreground = \"$FG\"
 secondary_foreground = \"$C8\"
 
 [colors.list.item.selection]
-background = \"$SB\"
-foreground = \"$SF\"
-secondary_background = \"$SB\"
-secondary_foreground = \"$SF\"
+background = \"$C0\"
+foreground = \"$FG\"
+secondary_background = \"$C0\"
+secondary_foreground = \"$FG\"
 
 [colors.grid.item]
 background = \"$C0\"
