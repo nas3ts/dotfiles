@@ -1,0 +1,30 @@
+background = #1a1a1a
+background-opacity = 0.7
+split-divider-color = #3f3f3f
+clipboard-trim-trailing-spaces = true
+clipboard-paste-protection = false
+copy-on-select = clipboard
+cursor-click-to-move = true
+cursor-style = block
+cursor-style-blink = false
+font-family = "SF Mono"
+font-size = 12
+font-thicken = true
+foreground = #ffffff
+keybind = shift+enter=text:\x1b\r
+macos-option-as-alt = false
+macos-titlebar-style = tabs
+macos-icon = retro
+mouse-hide-while-typing = true
+selection-background = #3d5c7c
+selection-foreground = #ffffff
+shell-integration-features = ssh-env,no-cursor,title
+focus-follows-mouse = true
+
+window-padding-balance = true
+window-padding-x = 15
+window-padding-y = 0
+window-position-x = 50
+window-position-y = 50
+window-width = 200
+window-height = 200

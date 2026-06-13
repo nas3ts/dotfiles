@@ -163,23 +163,13 @@ with the duplicate `window-height` key removed (L22: `30` was overridden by L31:
 **Install:** Symlinked to `~/Library/Application Support/com.mitchellh.ghostty/config` on macOS.
 **Why:** Ghostty is the macOS terminal emulator (analogous to kitty on Linux).
 
-### 2b. `zellij/config.kdl` — Fix copy command
-
-**File:** `configs/zellij/config.kdl:370`
-**Change:** Keep `copy_command "wl-copy"` active on Linux, but install script or
-manual step switches to `copy_command "pbcopy"` on macOS.
-**Issue:** `wl-copy` is Wayland-only. macOS uses `pbcopy`. Ghostty has built-in OSC 52
-support, but Zellij's `copy_command` is a fallback for terminals that don't.
-**Note:** This may need to be a host-level override rather than a shared config change,
-since Zellij doesn't support conditions.
-
-### 2c. `mpv/mpv.conf` — Guard `screen-name`
+### 2b. `mpv/mpv.conf` — Guard `screen-name`
 
 **File:** `configs/mpv/mpv.conf:25`
 **Change:** Comment out `screen-name=DP-1` on macOS, or wrap in a profile condition.
 **Why:** `DP-1` is a Linux display port name. macOS display names differ (e.g. `NSGlobal`).
 
-### 2d. `superfile/config.toml` — Guard PDF viewer
+### 2c. `superfile/config.toml` — Guard PDF viewer
 
 **File:** `configs/superfile/config.toml:175`
 **Change:** `pdf = "zathura"` → conditional or per-platform.
@@ -212,5 +202,5 @@ since Zellij doesn't support conditions.
 - Linux deps (via `yay`): oh-my-posh, aliae, zoxide, lsd, zinit, fzf, glow, yt-dlp,
   jfsh, yazi, superfile, dunst, zathura
 - macOS deps (via `brew`): oh-my-posh, aliae, zoxide, lsd, fzf, glow, yt-dlp,
-  jfsh, yazi, superfile, ghostty, mpv, zellij
+  jfsh, yazi, superfile, ghostty, mpv
 - (Note: dunst, zathura are Linux-only; ghostty is macOS-only)

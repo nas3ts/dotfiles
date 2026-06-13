@@ -104,7 +104,6 @@ Every non-hidden directory in `configs/` is symlinked to `~/.config/<name>`. Hid
 | `yazi/` | Yazi | File manager keymap, theme, 7 plugins, catppuccin-mocha flavor |
 | `superfile/` | Superfile | File manager config, hotkeys, custom Kuroi theme |
 | `mpv/` | mpv | Video player — GPU decode, profiles, 14 Lua scripts (sponsorblock, modernx OSC, autolyrics, thumbfast, etc.) |
-| `zellij/` | Zellij | Terminal multiplexer layout and keybindings |
 | `rmpc/` | rmpc | MPD client layout, album art, tabs |
 | `swayosd/` | SwayOSD | On-screen display for volume/brightness, custom CSS |
 | `managarr/` | Managarr | Radarr/Sonarr host and API config |
@@ -293,7 +292,6 @@ These tools are required for the desktop environment to work. Most are auto-inst
 | [fcitx5](https://fcitx-im.org/) | Input method |
 | [Alacritty](https://alacritty.org/) / [Kitty](https://sw.kovidgoyal.net/kitty/) / [Ghostty](https://ghostty.org/) | Terminal emulator |
 | [yazi](https://github.com/sxyazi/yazi) / [superfile](https://github.com/MHNightCat/superfile) | Terminal file managers |
-| [zellij](https://zellij.dev/) | Terminal multiplexer |
 | [mpv](https://mpv.io/) | Video player (+ [SponsorBlock](https://github.com/po5/mpv_sponsorblock) script) |
 | [rmpc](https://github.com/weirdraworld/rmpc) | MPD client |
 | [swayosd](https://github.com/ErikReider/SwayOSD) | On-screen display |
@@ -305,5 +303,5 @@ These tools are required for the desktop environment to work. Most are auto-inst
 
 Install all AUR packages:
 ```bash
-yay -S hyprland uwsm waybar dunst mako hypridle hyprlock hyprsunset omarchy fcitx5 fcitx5-rime kitty yazi superfile zellij mpv rmpc swayosd walker glow jfsh managarr zathura
+yay -S hyprland uwsm waybar dunst mako hypridle hyprlock hyprsunset omarchy fcitx5 fcitx5-rime kitty yazi superfile mpv rmpc swayosd walker glow jfsh managarr zathura
 ```
