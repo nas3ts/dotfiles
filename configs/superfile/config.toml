@@ -172,4 +172,5 @@ zoxide_support = true
 #   png = "feh"
 #   conf = "nvim"
 [open_with]
-pdf = "zathura"
+# pdf = "zathura"    # linux
+# pdf = "open"       # macos (uses default PDF viewer)
