@@ -1,0 +1,23 @@
+# Homebrew aliases (macOS only)
+
+- name: bi
+  value: brew install
+  if: eq .OS "darwin"
+- name: brm
+  value: brew uninstall
+  if: eq .OS "darwin"
+- name: bse
+  value: brew search
+  if: eq .OS "darwin"
+- name: bin
+  value: brew info
+  if: eq .OS "darwin"
+- name: bls
+  value: brew list
+  if: eq .OS "darwin"
+- name: bup
+  value: brew update && brew upgrade && brew cleanup
+  if: eq .OS "darwin"
+- name: bc
+  value: brew doctor
+  if: eq .OS "darwin"

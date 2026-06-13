@@ -4,6 +4,7 @@ alias:
   - !include "./alias/core.yml"
   - !include "./alias/ls.yml"
   - !include "./alias/omarchy.yml"
+  - !include "./alias/brew.yml"
 script:
   - !include "./scripts.yml"
 path:

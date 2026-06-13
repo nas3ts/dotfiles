@@ -25,7 +25,11 @@
 - name: top
   value: btop
 - name: dsks
+  value: diskutil list
+  if: eq .OS "darwin"
+- name: dsks
   value: lsblk --output NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL --tree --ascii
+  if: eq .OS "linux"
 - name: zl
   value: zoxide query --list
 - name: oc
@@ -37,7 +41,11 @@
 - name: ping
   value: ping -c 5
 - name: rm
+  value: rm -i
+  if: eq .OS "darwin"
+- name: rm
   value: rm --preserve-root
+  if: eq .OS "linux"
 - name: mv
   value: mv -i
 - name: mkdir
@@ -48,38 +56,55 @@
   value: tetriscurses
   if: eq .Shell "zsh"
 
-# yay aliases
+# yay aliases (Arch Linux only)
 - name: i
   value: yay -S
+  if: eq .OS "linux"
 - name: ii
   value: yay -Slq | fzf --multi --preview 'yay -Sii {1}' --preview-window=down:75% | xargs -ro yay -S --noconfirm
+  if: eq .OS "linux"
 - name: ir
   value: yay -Qeq | fzf --multi --preview 'yay -Qi {1}' --preview-window=down:75% | xargs -ro yay -Rns --noconfirm
+  if: eq .OS "linux"
 - name: ys
   value: yay -S
+  if: eq .OS "linux"
 - name: yss
   value: yay -Ss
+  if: eq .OS "linux"
 - name: yq
   value: yay -Qs
+  if: eq .OS "linux"
 - name: yi
   value: yay -Si
+  if: eq .OS "linux"
 - name: u
   value: omarchy update && yay -Syu --noconfirm
+  if: eq .OS "linux"
 - name: yu
   value: yay -Syu --noconfirm
+  if: eq .OS "linux"
 - name: yy
   value: yay -Syy
+  if: eq .OS "linux"
 - name: yua
   value: yay -Sua
+  if: eq .OS "linux"
 - name: yr
   value: yay -R
+  if: eq .OS "linux"
 - name: yrc
   value: yay -Rcs
+  if: eq .OS "linux"
 - name: ycl
   value: yay -Sc
+  if: eq .OS "linux"
 - name: yclr
   value: yay -Scc
+  if: eq .OS "linux"
 - name: ycf
   value: yay -Cf
+  if: eq .OS "linux"
 - name: yown
   value: yay -Qi | grep -i packager
+  if: eq .OS "linux"

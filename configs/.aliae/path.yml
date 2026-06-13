@@ -4,3 +4,11 @@
     {{ .Home }}/go/bin/
     {{ .Home }}/.cargo/bin/
   if: eq .OS "linux"
+
+- value: |
+    {{ .Home }}/.dotfiles/scripts/
+    /opt/homebrew/bin/
+    /opt/homebrew/sbin/
+    {{ .Home }}/go/bin/
+    {{ .Home }}/.cargo/bin/
+  if: eq .OS "darwin"

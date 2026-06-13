@@ -2,27 +2,37 @@
 
 - name: oai
   value: omarchy-pkg-aur-install
+  if: eq .OS "linux"
 - name: ou
   value: omarchy-update
+  if: eq .OS "linux"
 - name: ot
   value: omarchy-theme-set
+  if: eq .OS "linux"
 - name: olb
   value: omarchy-launch-browser
+  if: eq .OS "linux"
 - name: olt
   value: omarchy-launch-walker
+  if: eq .OS "linux"
 - name: ort
   value: omarchy-restart-terminal
+  if: eq .OS "linux"
 - name: orw
   value: omarchy-restart-waybar
+  if: eq .OS "linux"
 - name: ori
   value: omarchy-restart-hypridle
+  if: eq .OS "linux"
 - name: ol
   value: omarchy-launch-or-focus
+  if: eq .OS "linux"
 - name: os
   value: omarchy-toggle-suspend
+  if: eq .OS "linux"
 - name: onl
   value: omarchy-toggle-nightlight
-
-# Hyprland
+  if: eq .OS "linux"
 - name: hr
   value: hyprctl reload
+  if: eq .OS "linux"

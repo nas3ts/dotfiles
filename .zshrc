@@ -34,8 +34,7 @@ autoload -Uz tetriscurses
 autoload -Uz compinit
 compinit -C
 
-alias yazi='SWAYSOCK= yazi'
-alias spf='SWAYSOCK= spf'
+[[ $OSTYPE == linux-* ]] && alias yazi='SWAYSOCK= yazi' && alias spf='SWAYSOCK= spf'
 
 # Open file manager in current tab with current working directory
 function files-widget() {
