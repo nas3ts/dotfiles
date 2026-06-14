@@ -22,8 +22,8 @@ shell-integration-features = ssh-env,no-cursor,title
 focus-follows-mouse = true
 
 window-padding-balance = true
-window-padding-x = 15
-window-padding-y = 0
+window-padding-x = 10
+window-padding-y = 10
 window-position-x = 50
 window-position-y = 50
 window-width = 200
