@@ -4,6 +4,14 @@ DOTFILES_DIR="$HOME/.dotfiles"
 CONFIG_DIR="$DOTFILES_DIR/configs"
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
+# Detect platform
+OS="$(uname -s)"
+case "$OS" in
+  Darwin)  PLATFORM="macos"  ;;
+  Linux)   PLATFORM="linux"  ;;
+  *)       PLATFORM="unknown" ;;
+esac
+
 check_symlink() {
   local source="$1"
   local target="$2"
@@ -23,25 +31,31 @@ check_symlink() {
 
 # Ensure gum is available
 if ! command -v gum &>/dev/null; then
-  gum style --foreground 3 "Installing gum..."
-  if command -v yay &>/dev/null; then
+  echo "Installing gum..."
+  if [[ "$PLATFORM" == "macos" ]] && command -v brew &>/dev/null; then
+    brew install gum
+  elif command -v yay &>/dev/null; then
     yay -S gum --noconfirm
   else
-    gum style --foreground 1 "Error: gum is required but not installed. Install it first."
+    echo "Error: gum is required but not installed. Install it first."
+    echo "  macOS: brew install gum"
+    echo "  Arch:  yay -S gum"
     exit 1
   fi
 fi
 
 # === PRE-FLIGHT CHECKS ===
 preflight_warnings=()
-if [[ ! -d "$HOME/.local/share/omarchy" ]]; then
-  preflight_warnings+=("omarchy not found at ~/.local/share/omarchy — omarchy-* commands and themed templates won't work")
-fi
-if [[ -d "$HOME/.local/share/omarchy" ]] && [[ ! -d "$XDG_CONFIG_HOME/omarchy/current/theme" ]]; then
-  preflight_warnings+=("omarchy is installed but no theme is set — run 'omarchy theme-set <name>' after install")
-fi
-if ! command -v yay &>/dev/null && ! command -v pacman &>/dev/null; then
-  preflight_warnings+=("neither yay nor pacman found — dependency installs will be skipped")
+if [[ "$PLATFORM" == "linux" ]]; then
+  if [[ ! -d "$HOME/.local/share/omarchy" ]]; then
+    preflight_warnings+=("omarchy not found at ~/.local/share/omarchy — omarchy-* commands and themed templates won't work")
+  fi
+  if [[ -d "$HOME/.local/share/omarchy" ]] && [[ ! -d "$XDG_CONFIG_HOME/omarchy/current/theme" ]]; then
+    preflight_warnings+=("omarchy is installed but no theme is set — run 'omarchy theme-set <name>' after install")
+  fi
+  if ! command -v yay &>/dev/null && ! command -v pacman &>/dev/null; then
+    preflight_warnings+=("neither yay nor pacman found — dependency installs will be skipped")
+  fi
 fi
 
 # Terminal sizing (from omarchy)
@@ -163,8 +177,17 @@ broken_links=()
 existing_links=()
 conflicting=()
 
-# Skip folders that shouldn't be symlinked (handled by separate copy/template steps)
+# Platform-specific dir lists
+linux_only_dirs=("hypr" "waybar" "dunst" "swayosd" "walker" "omarchy" "vicinae" ".mako" "gtk-3.0" "gtk-4.0")
+macos_only_dirs=("ghostty")
+
+# Skip folders that are platform-specific or handled by separate copy/template steps
 skip_dirs=("omarchy" "vicinae" "gtk-3.0")
+if [[ "$PLATFORM" == "macos" ]]; then
+  skip_dirs+=("${linux_only_dirs[@]}")
+elif [[ "$PLATFORM" == "linux" ]]; then
+  skip_dirs+=("${macos_only_dirs[@]}")
+fi
 is_skip() {
   for skip in "${skip_dirs[@]}"; do
     [[ "$1" == "$skip" ]] && return 0
@@ -291,11 +314,32 @@ fi
 
 echo
 
+# === GHOSTTY (macOS specific path) ===
+if [[ "$PLATFORM" == "macos" ]]; then
+  GHOSTTY_SOURCE="$CONFIG_DIR/ghostty"
+  GHOSTTY_TARGET="$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+
+  if [[ -d "$GHOSTTY_SOURCE" ]] && [[ ! -e "$GHOSTTY_TARGET" ]]; then
+    if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --default --affirmative "Link ghostty" --negative "Skip" "Link ghostty config to macOS path?"; then
+      mkdir -p "$(dirname "$GHOSTTY_TARGET")"
+      ln -s "$GHOSTTY_SOURCE" "$GHOSTTY_TARGET"
+      gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Linked ghostty to macOS path"
+    else
+      gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "  Skipped ghostty symlink"
+    fi
+  elif [[ -L "$GHOSTTY_TARGET" ]]; then
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  ghostty already linked"
+  elif [[ -e "$GHOSTTY_TARGET" ]]; then
+    gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "  ghostty target exists (not a symlink)"
+  fi
+  echo
+fi
+
 # === THEMES (omarchy) ===
 OMARCHY_THEMES_SOURCE="$DOTFILES_DIR/themes/omarchy"
 OMARCHY_THEMES_TARGET="$XDG_CONFIG_HOME/omarchy/themes"
 
-if [[ -d "$OMARCHY_THEMES_SOURCE" ]]; then
+if [[ "$PLATFORM" == "linux" ]] && [[ -d "$OMARCHY_THEMES_SOURCE" ]]; then
   gum style --bold --padding "1 0 0 $PADDING_LEFT" "Themes (omarchy):"
 
   theme_existing=()
@@ -379,7 +423,7 @@ fi
 OMARCHY_HOOKS_SOURCE="$DOTFILES_DIR/configs/omarchy/hooks"
 OMARCHY_HOOKS_TARGET="$XDG_CONFIG_HOME/omarchy/hooks"
 
-if [[ -d "$OMARCHY_HOOKS_SOURCE" ]]; then
+if [[ "$PLATFORM" == "linux" ]] && [[ -d "$OMARCHY_HOOKS_SOURCE" ]]; then
   gum style --bold --padding "1 0 0 $PADDING_LEFT" "Omarchy hooks:"
 
   hook_existing=()
@@ -463,7 +507,7 @@ fi
 OMARCHY_THEMED_SOURCE="$DOTFILES_DIR/configs/omarchy/themed"
 OMARCHY_THEMED_TARGET="$XDG_CONFIG_HOME/omarchy/themed"
 
-if [[ -d "$OMARCHY_THEMED_SOURCE" ]]; then
+if [[ "$PLATFORM" == "linux" ]] && [[ -d "$OMARCHY_THEMED_SOURCE" ]]; then
   gum style --bold --padding "1 0 0 $PADDING_LEFT" "Omarchy themed templates:"
 
   themed_existing=()
@@ -633,7 +677,10 @@ fi
 # Some config dirs (vicinae, gtk-3.0) contain files with __HOME__ sentinels that
 # must be templated per-user. Symlinks can't templated, so these dirs are copied
 # as real directories instead of symlinked.
-copy_dirs=("vicinae" "gtk-3.0")
+copy_dirs=("vicinae" "gtk-3.0" "gtk-4.0")
+if [[ "$PLATFORM" == "macos" ]]; then
+  copy_dirs=()
+fi
 copy_needed=()
 for dir in "${copy_dirs[@]}"; do
   src="$CONFIG_DIR/$dir"
@@ -682,27 +729,55 @@ if [[ ${#template_files[@]} -gt 0 ]]; then
 fi
 
 # === DEPENDENCIES ===
-deps=(
-  "oh-my-posh:oh-my-posh"
-  "aliae:aliae"
-  "zoxide:zoxide"
-  "lsd:lsd"
-  "zinit:zinit"
-  "fzf:fzf"
-  "glow:glow"
-  "yt-dlp:yt-dlp"
-  "jfsh:jfsh"
-  "yazi:yazi"
-  "spf:superfile"
-  "dunst:dunst"
-  "zathura:zathura"
-)
+if [[ "$PLATFORM" == "macos" ]]; then
+  deps=(
+    "oh-my-posh:oh-my-posh"
+    "aliae:aliae"
+    "zoxide:zoxide"
+    "lsd:lsd"
+    "zinit:zinit"
+    "fzf:fzf"
+    "glow:glow"
+    "yt-dlp:yt-dlp"
+    "yazi:yazi"
+    "spf:superfile"
+  )
+else
+  deps=(
+    "oh-my-posh:oh-my-posh"
+    "aliae:aliae"
+    "zoxide:zoxide"
+    "lsd:lsd"
+    "zinit:zinit"
+    "fzf:fzf"
+    "glow:glow"
+    "yt-dlp:yt-dlp"
+    "jfsh:jfsh"
+    "yazi:yazi"
+    "spf:superfile"
+    "dunst:dunst"
+    "zathura:zathura"
+  )
+fi
+
+check_tool() {
+  local cmd="$1" pkg="$2"
+  if [[ "$cmd" == "zinit" ]]; then
+    [[ -f /opt/homebrew/opt/zinit/zinit.zsh ]] || [[ -f /usr/share/zinit/zinit.zsh ]]
+    return $?
+  fi
+  command -v "$cmd" &>/dev/null && return 0
+  if [[ "$PLATFORM" == "macos" ]] && command -v brew &>/dev/null; then
+    brew list "$pkg" &>/dev/null && return 0
+  fi
+  return 1
+}
 
 gum style --bold --padding "1 0 0 $PADDING_LEFT" "Dependencies:"
 missing=()
 for entry in "${deps[@]}"; do
   cmd="${entry%%:*}"
-  if ! command -v "$cmd" &>/dev/null; then
+  if ! check_tool "$cmd" "${entry##*:}"; then
     missing+=("${entry##*:}")
   fi
 done
@@ -710,7 +785,11 @@ done
 if [[ ${#missing[@]} -gt 0 ]]; then
   gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "Missing (${#missing[@]}): ${missing[*]}"
   if gum confirm --padding "0 0 0 $PADDING_LEFT" "Install missing tools?"; then
-    yay -S --noconfirm "${missing[@]}"
+    if [[ "$PLATFORM" == "macos" ]]; then
+      brew install "${missing[@]}"
+    else
+      yay -S --noconfirm "${missing[@]}"
+    fi
   fi
 else
   gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "All tools already installed."
@@ -721,7 +800,7 @@ echo
 # === TRIGGER INITIAL THEME-SET (if omarchy is present) ===
 # This regenerates per-theme files (kitty-tab-colors.conf, dunst/dunstrc,
 # vicinae/themes/kuroi.toml) so they're in sync with the linked theme.
-if [[ -d "$HOME/.local/share/omarchy" ]] && command -v omarchy-theme-set &>/dev/null; then
+if [[ "$PLATFORM" == "linux" ]] && [[ -d "$HOME/.local/share/omarchy" ]] && command -v omarchy-theme-set &>/dev/null; then
   echo
   if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Set kuroi" --negative "Skip" "Run 'omarchy theme-set kuroi' to generate per-theme files?"; then
     omarchy-theme-set kuroi 2>&1 | gum style --padding "0 0 0 $PADDING_LEFT" --foreground 8

@@ -202,5 +202,29 @@ with the duplicate `window-height` key removed (L22: `30` was overridden by L31:
 - Linux deps (via `yay`): oh-my-posh, aliae, zoxide, lsd, zinit, fzf, glow, yt-dlp,
   jfsh, yazi, superfile, dunst, zathura
 - macOS deps (via `brew`): oh-my-posh, aliae, zoxide, lsd, fzf, glow, yt-dlp,
-  jfsh, yazi, superfile, ghostty, mpv
-- (Note: dunst, zathura are Linux-only; ghostty is macOS-only)
+  yazi, superfile
+- (Note: dunst, zathura, jfsh are Linux-only; ghostty config is symlinked separately)
+
+---
+
+## Follow-ups
+
+- [ ] `brew install aliae` on macOS
+- [ ] Fix duplicate `!include "./alias/core.yml"` in `aliae.yml:4` (lines 2 and 4)
+- [ ] `install.sh`: add brew alias `--f` (force) flag handling or skip already-installed
+- [ ] Add `configs/.mako/` Linux-only dir to install skip list if created later
+
+Phases 1-3 complete. `install.sh` detects OS and adapts every section.
+
+---
+
+## Branch Strategy
+
+Use a **single branch** with OS checks inline (`[[ "$PLATFORM" == "linux" ]]`, etc.).
+Platform-specific files live in the same repo (e.g. `configs/ghostty/`, `configs/hypr/`)
+and are selected at install time via `install.sh` skip lists.
+
+Four branches (lin/mac/win + cross-platform) was considered and rejected — too much
+maintenance overhead for every change.
+
+---
