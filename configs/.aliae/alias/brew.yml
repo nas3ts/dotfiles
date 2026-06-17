@@ -1,6 +1,6 @@
 # Homebrew aliases (macOS only)
 
-- name: bi
+- name: i
   value: brew install
   if: eq .OS "darwin"
 - name: brm
