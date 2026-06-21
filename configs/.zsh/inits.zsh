@@ -1,3 +1,6 @@
+# Zinit (plugin manager)
+source /Users/nas3ts/homebrew/opt/zinit/zinit.zsh
+
 # Conditional Inits
 if command -v oh-my-posh >/dev/null 2>&1; then		# <- custom shell theme
 	eval "$(oh-my-posh init zsh --config $OMP_CONFIG)"
