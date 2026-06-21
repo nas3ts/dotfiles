@@ -108,3 +108,4 @@
 - name: yown
   value: yay -Qi | grep -i packager
   if: eq .OS "linux"
+

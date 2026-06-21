@@ -1,7 +1,10 @@
 # Homebrew aliases (macOS only)
 
-- name: i
+- name: bi
   value: brew install
+  if: eq .OS "darwin"
+- name: bii
+  value: (brew formulae; brew casks) | sort | fzf --multi --preview 'brew info {1}' --preview-window=down:75% | xargs -ro brew install
   if: eq .OS "darwin"
 - name: brm
   value: brew uninstall
