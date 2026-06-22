@@ -1,5 +1,5 @@
 # Zinit (plugin manager)
-source /Users/nas3ts/homebrew/opt/zinit/zinit.zsh
+source /usr/local/opt/zinit/zinit.zsh
 
 # Conditional Inits
 if command -v oh-my-posh >/dev/null 2>&1; then		# <- custom shell theme
