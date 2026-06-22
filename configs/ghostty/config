@@ -7,9 +7,9 @@ copy-on-select = clipboard
 cursor-click-to-move = true
 cursor-style = block
 cursor-style-blink = false
-font-family = "SF Mono"
-font-size = 12
-font-thicken = true
+font-family = "Agave Nerd Font"
+font-size = 14
+font-thicken = false
 foreground = #ffffff
 keybind = shift+enter=text:\x1b\r
 macos-option-as-alt = false
