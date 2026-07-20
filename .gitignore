@@ -13,3 +13,6 @@ configs/gtk-3.0/bookmarks
 # Yazi plugins (managed by ya pkg, updated frequently)
 configs/yazi/plugins/
 
+# Ghostty shaders (third-party repo, only cursor_tail.glsl is tracked)
+configs/ghostty/shaders/
+
