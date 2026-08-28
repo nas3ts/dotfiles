@@ -153,7 +153,7 @@ Hyprland, waybar, etc.    ← Apps running on the desktop
 
 Hyprland loads configs in this order (defined in `~/.config/hypr/hyprland.conf`):
 
-1. **Omarchy defaults** — `~/.local/share/omarchy/default/hypr/` — base config from the DE framework
+1. **Omarchy defaults** — `/usr/share/omarchy/default/hypr/` — base config from the DE framework
 2. **Theme overrides** — `~/.config/omarchy/current/theme/hyprland.conf` — theme-specific settings
 3. **User overrides** — `~/.config/hypr/` — your personal settings (envs, bindings, autostart, etc.)
 
@@ -185,7 +185,6 @@ Files in `~/.dotfiles/`:
 | `alias/git.yml` | `gupdate` (pull+submodules), 30+ `*ignore` aliases for gitignore templates |
 | `alias/ls.yml` | 25+ lsd aliases — `l`, `la`, `ll`, tree (`lt`), `lr`, `ld`, `lk`, `lz`, `ldot` |
 | `alias/nav.yml` | `..`/`...`/`....`/`.....` dir nav, `dot`/`dev`/`doc`/`vid`/`pic`/`dow`/`des`/`mus` quick-jumps |
-| `alias/omarchy.yml` | `oai` (AUR install), `ou` (update), `ot` (theme), `hr` (hyprctl reload), `orw` (restart waybar), etc. |
 | `path.yml` | Adds `~/.dotfiles/scripts`, `~/bin`, `~/go/bin`, `~/.cargo/bin` to PATH |
 | `scripts.yml` | Aliases for scripts in `scripts/` |
 | `completions/zsh` | Shell completions for the `aliae` command |

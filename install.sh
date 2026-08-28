@@ -34,10 +34,10 @@ fi
 
 # === PRE-FLIGHT CHECKS ===
 preflight_warnings=()
-if [[ ! -d "$HOME/.local/share/omarchy" ]]; then
-  preflight_warnings+=("omarchy not found at ~/.local/share/omarchy — omarchy-* commands and themed templates won't work")
+if ! command -v omarchy &>/dev/null; then
+  preflight_warnings+=("omarchy not found (command 'omarchy' missing) — omarchy-* commands and themed templates won't work")
 fi
-if [[ -d "$HOME/.local/share/omarchy" ]] && [[ ! -d "$XDG_CONFIG_HOME/omarchy/current/theme" ]]; then
+if command -v omarchy &>/dev/null && [[ ! -d "$XDG_CONFIG_HOME/omarchy/current/theme" ]]; then
   preflight_warnings+=("omarchy is installed but no theme is set — run 'omarchy theme-set <name>' after install")
 fi
 if ! command -v yay &>/dev/null && ! command -v pacman &>/dev/null; then

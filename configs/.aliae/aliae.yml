@@ -1,9 +1,8 @@
 alias:
   - !include "./alias/core.yml"
   - !include "./alias/nav.yml"
-  - !include "./alias/core.yml"
   - !include "./alias/ls.yml"
-  - !include "./alias/omarchy.yml"
+  - !include "./alias/git.yml"
 script:
   - !include "./scripts.yml"
 path:
