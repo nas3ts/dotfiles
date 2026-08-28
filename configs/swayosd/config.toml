@@ -1,4 +1,0 @@
-[server]
-show_percentage = true
-max_volume = 200
-style = "~/.config/swayosd/style.css"
