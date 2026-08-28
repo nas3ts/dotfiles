@@ -647,29 +647,30 @@ if [[ -d "$OPENCODE_THEMES_SOURCE" ]]; then
 fi
 
 # === TOP-LEVEL DOTFILES ===
-# Link top-level dotfiles that live directly in $HOME (not under ~/.config).
-top_level_links=(".vimrc")
-for tl in "${top_level_links[@]}"; do
-  source_path="$DOTFILES_DIR/$tl"
-  target_path="$HOME/$tl"
-  [[ -e "$source_path" ]] || continue
+# Link top-level dotfiles from the repo into their machine locations.
+link_dotfile() {
+  local source_path="$1" target_path="$2"
+  [[ -e "$source_path" ]] || return 0
 
   check_symlink "$source_path" "$target_path"
-  result=$?
+  local result=$?
 
   if [[ $result -eq 0 ]]; then
-    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  $tl already linked"
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  $(basename "$source_path") already linked"
   elif [[ $result -eq 1 ]]; then
     ln -s "$source_path" "$target_path"
-    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Linked $tl → $target_path"
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Linked $(basename "$source_path") → $target_path"
   elif [[ $result -eq 2 ]]; then
-    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  $tl link broken; relinking"
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  $(basename "$source_path") link broken; relinking"
     rm -f "$target_path"
     ln -s "$source_path" "$target_path"
   elif [[ $result -eq 3 ]]; then
-    gum style --foreground 1 --padding "0 0 0 $PADDING_LEFT" "  $tl exists (not a link) — skipping"
+    gum style --foreground 1 --padding "0 0 0 $PADDING_LEFT" "  $(basename "$source_path") exists (not a link) — skipping"
   fi
-done
+}
+
+link_dotfile "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
+link_dotfile "$DOTFILES_DIR/AGENTS.md" "$XDG_CONFIG_HOME/AGENTS.md"
 echo
 
 # === DEPENDENCIES ===
