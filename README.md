@@ -1,6 +1,6 @@
 # dotfiles
 
-My Hyprland-based desktop environment dotfiles. Includes Hyprland window manager config, Zsh shell setup with Aliae alias management, waybar status bar, dunst notifications, and various terminal app configs.
+My Hyprland-based desktop environment dotfiles. Includes Hyprland window manager config, Zsh shell setup with Aliae alias management, dunst notifications, and various terminal app configs.
 
 ## Installation
 
@@ -26,7 +26,7 @@ This interactive script:
 - Checks and links config directories in `~/.config/`
 - Handles conflicts — existing configs are listed and you can choose which to back up to `~/.config/.backup/` and link from dotfiles
 - Links themes to `~/.config/omarchy/themes/`
-- Templates per-user files (`vicinae/settings.json`, `gtk-3.0/bookmarks`) by replacing `__HOME__` with your actual `$HOME`
+- Templates per-user files (`vicinae/settings.json`) by replacing `__HOME__` with your actual `$HOME`
 - Asks to run `omarchy theme-set kuroi` at the end to generate per-theme files (kitty tab colors, dunstrc, vicinae theme)
 - Requires `gum` (install via `yay -S gum` if missing)
 
@@ -97,16 +97,12 @@ Every non-hidden directory in `configs/` is symlinked to `~/.config/<name>`. Hid
 |-----|-----|------------|
 | `git/` | Git | Aliases, diff algorithm, pull/push behavior, rerere, user identity |
 | `hypr/` | Hyprland | WM settings, keybindings, autostart, monitors, input, idle/lock, window rules, XDPH, night light |
-| `waybar/` | Waybar | Status bar modules (workspaces, music, clock, weather, network, battery, tray, tailscale, caffeine/dnd indicators) |
 | `dunst/` | Dunst | Notification daemon appearance and behavior |
 | `kitty/` | Kitty | Terminal emulator font, colors, layout, keybindings |
-| `walker/` | Walker | Application launcher providers, prefixes, custom Kuroi theme |
 | `yazi/` | Yazi | File manager keymap, theme, 7 plugins, catppuccin-mocha flavor |
 | `superfile/` | Superfile | File manager config, hotkeys, custom Kuroi theme |
 | `mpv/` | mpv | Video player — GPU decode, profiles, 14 Lua scripts (sponsorblock, modernx OSC, autolyrics, thumbfast, etc.) |
-| `zellij/` | Zellij | Terminal multiplexer layout and keybindings |
 | `rmpc/` | rmpc | MPD client layout, album art, tabs |
-| `swayosd/` | SwayOSD | On-screen display for volume/brightness, custom CSS |
 | `managarr/` | Managarr | Radarr/Sonarr host and API config |
 | `glow/` | Glow | Markdown renderer style and pager width |
 | `mimeapps.list` | System | Default apps (nvim for text, mpv for video, zen-browser for http, imv for images, zathura for PDF) |
@@ -213,14 +209,6 @@ playlist-gen /path/to/music  # outputs playlist.m3u8 in current directory
 ```
 
 **`workspace-osd`** - Background daemon that listens on the Hyprland socket and shows workspace switch notifications via dunstify.
-
-**Waybar indicators** (`configs/waybar/indicators/`) — Shell scripts used by waybar modules:
-
-| Indicator | Shows |
-|-----------|-------|
-| `music.sh` | Current MPD track via rmpc — click to launch rmpc, right-click play/pause |
-| `caffeine.sh` | Caffeine (hypridle) on/off status |
-| `dnd.sh` | Do-not-disturb on/off status |
 
 ---
 
