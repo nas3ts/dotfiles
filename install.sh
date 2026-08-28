@@ -163,11 +163,24 @@ broken_links=()
 existing_links=()
 conflicting=()
 
-# Skip folders that shouldn't be symlinked (handled by separate copy/template steps)
-skip_dirs=("omarchy" "vicinae" "gtk-3.0")
+# Config dirs that must NOT be symlinked via the generic loop:
+#  - omarchy: handled by the special themes/hooks/themed linking below
+#  - git: omarchy manages ~/.config/git/config; our copy would clobber it
+skip_dirs=("omarchy" "git")
+
+# Apps whose configs are owned by omarchy (regenerated on theme-set). If a copy
+# of one of these ever appears in configs/, skip it and warn instead of
+# overwriting the omarchy-managed file in ~/.config.
+omarchy_managed=("kitty" "hypr" "git" "foot" "ghostty" "alacritty" "tmux" "lazygit" "btop" "obsidian" "imv" "herdr" "wireplumber" "xournalpp" "chromium" "fcitx5")
 is_skip() {
   for skip in "${skip_dirs[@]}"; do
     [[ "$1" == "$skip" ]] && return 0
+  done
+  return 1
+}
+is_omarchy_managed() {
+  for app in "${omarchy_managed[@]}"; do
+    [[ "$1" == "$app" ]] && return 0
   done
   return 1
 }
@@ -178,6 +191,10 @@ for app_dir in "$CONFIG_DIR"/*; do
   target="$XDG_CONFIG_HOME/$app_name"
 
   is_skip "$app_name" && continue
+  if is_omarchy_managed "$app_name"; then
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  Skipped $app_name (omarchy-managed; would conflict with built-in config)"
+    continue
+  fi
 
   check_symlink "$app_dir" "$target"
   result=$?
@@ -629,57 +646,31 @@ if [[ -d "$OPENCODE_THEMES_SOURCE" ]]; then
   echo
 fi
 
-# === COPY + TEMPLATE USER-SPECIFIC DIRS ===
-# Some config dirs (vicinae, gtk-3.0) contain files with __HOME__ sentinels that
-# must be templated per-user. Symlinks can't templated, so these dirs are copied
-# as real directories instead of symlinked.
-copy_dirs=("vicinae" "gtk-3.0")
-copy_needed=()
-for dir in "${copy_dirs[@]}"; do
-  src="$CONFIG_DIR/$dir"
-  target="$XDG_CONFIG_HOME/$dir"
-  if [[ ! -d "$src" ]]; then continue; fi
-  # Need to copy if target is a symlink (from a prior symlink-based install) or missing
-  if [[ -L "$target" ]] || [[ ! -e "$target" ]]; then
-    copy_needed+=("$dir")
+# === TOP-LEVEL DOTFILES ===
+# Link top-level dotfiles that live directly in $HOME (not under ~/.config).
+top_level_links=(".vimrc")
+for tl in "${top_level_links[@]}"; do
+  source_path="$DOTFILES_DIR/$tl"
+  target_path="$HOME/$tl"
+  [[ -e "$source_path" ]] || continue
+
+  check_symlink "$source_path" "$target_path"
+  result=$?
+
+  if [[ $result -eq 0 ]]; then
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  $tl already linked"
+  elif [[ $result -eq 1 ]]; then
+    ln -s "$source_path" "$target_path"
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Linked $tl → $target_path"
+  elif [[ $result -eq 2 ]]; then
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  $tl link broken; relinking"
+    rm -f "$target_path"
+    ln -s "$source_path" "$target_path"
+  elif [[ $result -eq 3 ]]; then
+    gum style --foreground 1 --padding "0 0 0 $PADDING_LEFT" "  $tl exists (not a link) — skipping"
   fi
 done
-
-if [[ ${#copy_needed[@]} -gt 0 ]]; then
-  gum style --bold --padding "1 0 0 $PADDING_LEFT" "Copying user-specific config dirs:"
-  for dir in "${copy_needed[@]}"; do
-    src="$CONFIG_DIR/$dir"
-    target="$XDG_CONFIG_HOME/$dir"
-
-    # Remove any existing symlink or stale real dir
-    rm -rf "$target"
-    mkdir -p "$target"
-    cp -r "$src"/. "$target"/
-    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Copied $dir (real, not symlinked)"
-  done
-  echo
-fi
-
-# Template any files inside the copy-dirs that still contain __HOME__ sentinels.
-# (Re-runs are safe: files that were already templated won't match the grep.)
-template_files=()
-for dir in "${copy_dirs[@]}"; do
-  target="$XDG_CONFIG_HOME/$dir"
-  [[ -d "$target" ]] || continue
-  while IFS= read -r -d '' f; do
-    template_files+=("$f")
-  done < <(grep -l -z '__HOME__' "$target" 2>/dev/null || true)
-done
-
-if [[ ${#template_files[@]} -gt 0 ]]; then
-  gum style --bold --padding "1 0 0 $PADDING_LEFT" "Templating per-user paths:"
-  for f in "${template_files[@]}"; do
-    sed -i "s|__HOME__|$HOME|g; s|__DOTFILES_DIR__|$DOTFILES_DIR|g" "$f"
-    rel_path="${f#$XDG_CONFIG_HOME/}"
-    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Templated $rel_path"
-  done
-  echo
-fi
+echo
 
 # === DEPENDENCIES ===
 deps=(
