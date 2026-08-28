@@ -11,7 +11,7 @@
 -- display-hidpi-scale is not available at script load (the window hasn't mapped
 -- yet and it reads -1), so we skip until it holds a real value and re-apply
 -- whenever the window maps (osd-dimensions) or the scale changes (monitor move).
-local BASE = 1.5      -- overall multiplier on top of display scale (tune down if too big)
+local BASE = 1.0      -- overall multiplier on top of display scale (2x on a 4K @ scale-2 monitor)
 local MIN, MAX = 1.0, 6.0
 
 local function current_scale()
