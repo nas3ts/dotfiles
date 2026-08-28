@@ -4,6 +4,15 @@ DOTFILES_DIR="$HOME/.dotfiles"
 CONFIG_DIR="$DOTFILES_DIR/configs"
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
+# --link-only: apply config symlinks only. Non-interactive: skips dependency
+# installs, zshrc/secrets setup, omarchy theme/hook/themed linking, and the
+# theme-set prompt. Before linking it runs an omavault snapshot (if available)
+# and auto-backups conflicting configs to ~/.config/.backup.
+LINK_ONLY=0
+for arg in "$@"; do
+  [[ "$arg" == "--link-only" ]] && LINK_ONLY=1
+done
+
 check_symlink() {
   local source="$1"
   local target="$2"
@@ -22,7 +31,9 @@ check_symlink() {
 }
 
 # Ensure gum is available
-if ! command -v gum &>/dev/null; then
+if [[ $LINK_ONLY -eq 1 ]]; then
+  :
+elif ! command -v gum &>/dev/null; then
   gum style --foreground 3 "Installing gum..."
   if command -v yay &>/dev/null; then
     yay -S gum --noconfirm
@@ -84,38 +95,42 @@ fi
 # === AUTO-SOURCE .ZSHRC ===
 # Ensures the user's ~/.zshrc picks up dotfiles/.zshrc, so a fresh install works
 # without manual symlinking.
-ZSHRC_TARGET="$HOME/.zshrc"
-ZSHRC_SOURCE_LINE="source $DOTFILES_DIR/.zshrc"
-
-if [[ ! -f "$DOTFILES_DIR/.zshrc" ]]; then
-  gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "Skipped zshrc: $DOTFILES_DIR/.zshrc not found"
+if [[ $LINK_ONLY -eq 1 ]]; then
+  gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped zshrc setup (link-only mode)"
 else
-  zshrc_already_sources=false
-  if [[ -f "$ZSHRC_TARGET" ]] && grep -qF "$ZSHRC_SOURCE_LINE" "$ZSHRC_TARGET" 2>/dev/null; then
-    zshrc_already_sources=true
-  fi
+  ZSHRC_TARGET="$HOME/.zshrc"
+  ZSHRC_SOURCE_LINE="source $DOTFILES_DIR/.zshrc"
 
-  if $zshrc_already_sources; then
-    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "~/.zshrc already sources dotfiles"
+  if [[ ! -f "$DOTFILES_DIR/.zshrc" ]]; then
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "Skipped zshrc: $DOTFILES_DIR/.zshrc not found"
   else
-    if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Add source line" --negative "Skip" "Add 'source $ZSHRC_SOURCE_LINE' to ~/.zshrc?"; then
-      mkdir -p "$(dirname "$ZSHRC_TARGET")"
-      if [[ -f "$ZSHRC_TARGET" ]]; then
-        # Append, with a leading newline if the file doesn't end with one
-        if [[ -s "$ZSHRC_TARGET" ]] && [[ "$(tail -c1 "$ZSHRC_TARGET")" != $'\n' ]]; then
-          printf '\n%s\n' "$ZSHRC_SOURCE_LINE" >> "$ZSHRC_TARGET"
-        else
-          printf '%s\n' "$ZSHRC_SOURCE_LINE" >> "$ZSHRC_TARGET"
-        fi
-      else
-        printf '%s\n' "$ZSHRC_SOURCE_LINE" > "$ZSHRC_TARGET"
-      fi
-      gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Added source line to ~/.zshrc"
-    else
-      gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped zshrc. Run manually: ln -s $DOTFILES_DIR/.zshrc ~/.zshrc"
+    zshrc_already_sources=false
+    if [[ -f "$ZSHRC_TARGET" ]] && grep -qF "$ZSHRC_SOURCE_LINE" "$ZSHRC_TARGET" 2>/dev/null; then
+      zshrc_already_sources=true
     fi
+
+    if $zshrc_already_sources; then
+      gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "~/.zshrc already sources dotfiles"
+    else
+      if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Add source line" --negative "Skip" "Add 'source $ZSHRC_SOURCE_LINE' to ~/.zshrc?"; then
+        mkdir -p "$(dirname "$ZSHRC_TARGET")"
+        if [[ -f "$ZSHRC_TARGET" ]]; then
+          # Append, with a leading newline if the file doesn't end with one
+          if [[ -s "$ZSHRC_TARGET" ]] && [[ "$(tail -c1 "$ZSHRC_TARGET")" != $'\n' ]]; then
+            printf '\n%s\n' "$ZSHRC_SOURCE_LINE" >> "$ZSHRC_TARGET"
+          else
+            printf '%s\n' "$ZSHRC_SOURCE_LINE" >> "$ZSHRC_TARGET"
+          fi
+        else
+          printf '%s\n' "$ZSHRC_SOURCE_LINE" > "$ZSHRC_TARGET"
+        fi
+        gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Added source line to ~/.zshrc"
+      else
+        gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped zshrc. Run manually: ln -s $DOTFILES_DIR/.zshrc ~/.zshrc"
+      fi
+    fi
+    echo
   fi
-  echo
 fi
 
 # === SECRETS FILE ===
@@ -123,21 +138,24 @@ fi
 # configs/managarr/config.yml) reference env vars defined in a separate
 # runtime file. This file is gitignored, chmod 600, and sourced from the
 # sanitized functions.zsh.
-SECRETS_DIR="$HOME/.local/share/dotfiles-secrets"
-SECRETS_FILE="$SECRETS_DIR/env.sh"
-
-if [[ -f "$SECRETS_FILE" ]]; then
-  perms=$(stat -c '%a' "$SECRETS_FILE" 2>/dev/null || stat -f '%A' "$SECRETS_FILE" 2>/dev/null)
-  if [[ "$perms" != "600" ]]; then
-    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  ! $SECRETS_FILE exists but is mode $perms (expected 600), tightening"
-    chmod 600 "$SECRETS_FILE"
-  else
-    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Secrets file present: $SECRETS_FILE (mode 600)"
-  fi
+if [[ $LINK_ONLY -eq 1 ]]; then
+  gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped secrets file setup (link-only mode)"
 else
-  if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Create" --negative "Skip" "Create secrets file at $SECRETS_FILE?"; then
-    mkdir -p "$SECRETS_DIR"
-    cat > "$SECRETS_FILE" <<'SECRETS_TEMPLATE'
+  SECRETS_DIR="$HOME/.local/share/dotfiles-secrets"
+  SECRETS_FILE="$SECRETS_DIR/env.sh"
+
+  if [[ -f "$SECRETS_FILE" ]]; then
+    perms=$(stat -c '%a' "$SECRETS_FILE" 2>/dev/null || stat -f '%A' "$SECRETS_FILE" 2>/dev/null)
+    if [[ "$perms" != "600" ]]; then
+      gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  ! $SECRETS_FILE exists but is mode $perms (expected 600), tightening"
+      chmod 600 "$SECRETS_FILE"
+    else
+      gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Secrets file present: $SECRETS_FILE (mode 600)"
+    fi
+  else
+    if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Create" --negative "Skip" "Create secrets file at $SECRETS_FILE?"; then
+      mkdir -p "$SECRETS_DIR"
+      cat > "$SECRETS_FILE" <<'SECRETS_TEMPLATE'
 # dotfiles per-user secrets — chmod 600, gitignored.
 # Fill in the values for the services you use; leave empty to skip.
 # qBittorrent on zimaos (used by `qti` in configs/.zsh/functions.zsh)
@@ -149,10 +167,11 @@ export RADARR_API_TOKEN=""
 # Sonarr API key (Settings > General > API Key)
 export SONARR_API_TOKEN=""
 SECRETS_TEMPLATE
-    chmod 600 "$SECRETS_FILE"
-    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Created $SECRETS_FILE (mode 600) — populate before using qti/qui/managarr"
-  else
-    gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "  Skipped secrets file. functions.zsh and managarr will fail until you create $SECRETS_FILE"
+      chmod 600 "$SECRETS_FILE"
+      gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Created $SECRETS_FILE (mode 600) — populate before using qti/qui/managarr"
+    else
+      gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "  Skipped secrets file. functions.zsh and managarr will fail until you create $SECRETS_FILE"
+    fi
   fi
 fi
 echo
@@ -238,9 +257,24 @@ fi
 
 echo
 
+# === OMAVAULT BACKUP (safety net) ===
+# If omavault is present, snapshot the current machine configs into
+# ~/omarchy-vault before any config is replaced by a symlink. This captures the
+# originals (e.g. gtk-3.0/gtk-4.0) before we link over them. Non-destructive,
+# no root; only runs when vault.py exists.
+OMA_VAULT_PY="$XDG_CONFIG_HOME/omarchy/plugins/io.github.mutahir.omavault/vault.py"
+if [[ -f "$OMA_VAULT_PY" ]]; then
+  gum style --foreground 3 --padding "1 0 0 $PADDING_LEFT" "Omavault snapshot (pre-link safety net)..."
+  python3 "$OMA_VAULT_PY" snapshot
+  echo
+else
+  gum style --foreground 8 --padding "1 0 0 $PADDING_LEFT" "Omavault not found — skipping pre-link snapshot."
+  echo
+fi
+
 # Ask about symlinking
 if [[ ${#missing_links[@]} -gt 0 ]] || [[ ${#broken_links[@]} -gt 0 ]]; then
-  if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --default --affirmative "Link configs" --negative "Skip"; then
+  if [[ $LINK_ONLY -eq 1 ]] || gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --default --affirmative "Link configs" --negative "Skip"; then
     symlink_count=0
 
     for app in "${missing_links[@]}" "${broken_links[@]}"; do
@@ -272,25 +306,30 @@ if [[ ${#conflicting[@]} -gt 0 ]]; then
   done
   gum style --padding "0 0 0 $PADDING_LEFT" ""
 
-  choice=$(gum input --prompt "> " --placeholder "Numbers (e.g. 1,3), 'a' for all, 'n' to skip")
+  if [[ $LINK_ONLY -eq 1 ]]; then
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  (link-only: backing up all conflicts automatically)"
+    selected=("${conflicting[@]}")
+  else
+    choice=$(gum input --prompt "> " --placeholder "Numbers (e.g. 1,3), 'a' for all, 'n' to skip")
 
-  selected=()
-  case "${choice,,}" in
-    a|all)
-      selected=("${conflicting[@]}")
-      ;;
-    n|none|"")
-      gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped all conflicts."
-      ;;
-    *)
-      IFS=',' read -ra parts <<< "$choice"
-      for part in "${parts[@]}"; do
-        part="${part// /}"
-        idx=$((part - 1))
-        [[ $idx -ge 0 && $idx -lt ${#conflicting[@]} ]] && selected+=("${conflicting[$idx]}")
-      done
-      ;;
-  esac
+    selected=()
+    case "${choice,,}" in
+      a|all)
+        selected=("${conflicting[@]}")
+        ;;
+      n|none|"")
+        gum style --foreground 8 --padding "0 0 0 $PADDING_LEFT" "Skipped all conflicts."
+        ;;
+      *)
+        IFS=',' read -ra parts <<< "$choice"
+        for part in "${parts[@]}"; do
+          part="${part// /}"
+          idx=$((part - 1))
+          [[ $idx -ge 0 && $idx -lt ${#conflicting[@]} ]] && selected+=("${conflicting[$idx]}")
+        done
+        ;;
+    esac
+  fi
 
   if [[ ${#selected[@]} -gt 0 ]]; then
     for app in "${selected[@]}"; do
@@ -309,6 +348,9 @@ fi
 echo
 
 # === THEMES (omarchy) ===
+# The omarchy/openCode theme, hook, and themed-template linking below only runs
+# in interactive (non-link-only) mode — link-only applies plain config symlinks.
+if [[ $LINK_ONLY -eq 0 ]]; then
 OMARCHY_THEMES_SOURCE="$DOTFILES_DIR/themes/omarchy"
 OMARCHY_THEMES_TARGET="$XDG_CONFIG_HOME/omarchy/themes"
 
@@ -645,6 +687,7 @@ if [[ -d "$OPENCODE_THEMES_SOURCE" ]]; then
 
   echo
 fi
+fi
 
 # === TOP-LEVEL DOTFILES ===
 # Link top-level dotfiles from the repo into their machine locations.
@@ -674,6 +717,7 @@ link_dotfile "$DOTFILES_DIR/AGENTS.md" "$XDG_CONFIG_HOME/AGENTS.md"
 echo
 
 # === DEPENDENCIES ===
+if [[ $LINK_ONLY -eq 0 ]]; then
 deps=(
   "oh-my-posh:oh-my-posh"
   "aliae:aliae"
@@ -709,11 +753,12 @@ else
 fi
 
 echo
+fi
 
 # === TRIGGER INITIAL THEME-SET (if omarchy is present) ===
 # This regenerates per-theme files (kitty-tab-colors.conf, dunst/dunstrc,
 # vicinae/themes/kuroi.toml) so they're in sync with the linked theme.
-if [[ -d "$HOME/.local/share/omarchy" ]] && command -v omarchy-theme-set &>/dev/null; then
+if [[ $LINK_ONLY -eq 0 ]] && [[ -d "$HOME/.local/share/omarchy" ]] && command -v omarchy-theme-set &>/dev/null; then
   echo
   if gum confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Set kuroi" --negative "Skip" "Run 'omarchy theme-set kuroi' to generate per-theme files?"; then
     omarchy-theme-set kuroi 2>&1 | gum style --padding "0 0 0 $PADDING_LEFT" --foreground 8
