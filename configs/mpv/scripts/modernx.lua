@@ -3244,6 +3244,14 @@ local function osc_init()
         scale = user_opts.scale_windowed
     end
 
+    -- Scale the bar with the monitor's HiDPI scale so it stays consistent across
+    -- displays of different scale factors (e.g. 2x on a 4K @ scale-2 monitor, 1x
+    -- on a 1080p @ scale-1 monitor). user_opts scale_* is the fixed baseline.
+    local hidpi = mp.get_property_number("display-hidpi-scale", 1) or 1
+    if hidpi > 0 then
+        scale = scale * hidpi
+    end
+
     if user_opts.vid_scale then
         osc_param.unscaled_y = baseResY
     else
