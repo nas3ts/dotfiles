@@ -7,5 +7,8 @@
 # entry then prevents accidental re-adding.
 .aliae/env.yml
 
+# Yazi plugins (installed by ya pkg install)
+configs/yazi/plugins/
+
 # Templated by install.sh (per-user paths)
 

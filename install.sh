@@ -755,6 +755,17 @@ fi
 echo
 fi
 
+# === YAZI PACKAGES ===
+if [[ $LINK_ONLY -eq 0 ]] && command -v ya &>/dev/null && [[ -f "$XDG_CONFIG_HOME/yazi/package.toml" ]]; then
+  gum style --bold --padding "1 0 0 $PADDING_LEFT" "Yazi packages:"
+  if ya pkg install 2>&1 | gum style --padding "0 0 0 $PADDING_LEFT" --foreground 8; then
+    gum style --foreground 2 --padding "0 0 0 $PADDING_LEFT" "  Yazi packages installed"
+  else
+    gum style --foreground 3 --padding "0 0 0 $PADDING_LEFT" "  Yazi package install failed — run 'ya pkg install' manually"
+  fi
+  echo
+fi
+
 # === TRIGGER INITIAL THEME-SET (if omarchy is present) ===
 # This regenerates per-theme files (kitty-tab-colors.conf, dunst/dunstrc,
 # vicinae/themes/kuroi.toml) so they're in sync with the linked theme.
