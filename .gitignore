@@ -10,5 +10,10 @@
 # Yazi plugins (installed by ya pkg install)
 configs/yazi/plugins/
 
+# Test/utility files in mpv (not part of config)
+configs/mpv/test*.py
+configs/mpv/updatefiles.bat
+configs/mpv/update.sh
+
 # Templated by install.sh (per-user paths)
 

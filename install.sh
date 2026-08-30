@@ -346,6 +346,13 @@ skip_dirs=("omarchy" "git")
 # Apps whose configs are owned by omarchy (regenerated on theme-set). If a copy
 # of one of these ever appears in configs/, skip it and warn instead of
 # overwriting the omarchy-managed file in ~/.config.
+#   kitty, hypr, foot, ghostty, alacritty — terminal emulators
+#   git — omarchy manages ~/.config/git/config
+#   tmux, lazygit, btop — terminal UIs
+#   obsidian, imv, herdr — productivity/media apps
+#   wireplumber — audio pipewire session manager
+#   xournalpp — note-taking app
+#   chromium, fcitx5 — browser and input method
 omarchy_managed=("kitty" "hypr" "git" "foot" "ghostty" "alacritty" "tmux" "lazygit" "btop" "obsidian" "imv" "herdr" "wireplumber" "xournalpp" "chromium" "fcitx5")
 is_skip() {
   for skip in "${skip_dirs[@]}"; do
