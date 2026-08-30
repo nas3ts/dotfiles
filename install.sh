@@ -348,12 +348,12 @@ skip_dirs=("omarchy" "git")
 # overwriting the omarchy-managed file in ~/.config.
 #   kitty, hypr, foot, ghostty, alacritty — terminal emulators
 #   git — omarchy manages ~/.config/git/config
-#   tmux, lazygit, btop — terminal UIs
+#   tmux, lazygit, lazydocker, btop — terminal UIs
 #   obsidian, imv, herdr — productivity/media apps
 #   wireplumber — audio pipewire session manager
 #   xournalpp — note-taking app
 #   chromium, fcitx5 — browser and input method
-omarchy_managed=("kitty" "hypr" "git" "foot" "ghostty" "alacritty" "tmux" "lazygit" "btop" "obsidian" "imv" "herdr" "wireplumber" "xournalpp" "chromium" "fcitx5")
+omarchy_managed=("kitty" "hypr" "git" "foot" "ghostty" "alacritty" "tmux" "lazygit" "lazydocker" "btop" "obsidian" "imv" "herdr" "wireplumber" "xournalpp" "chromium" "fcitx5")
 is_skip() {
   for skip in "${skip_dirs[@]}"; do
     [[ "$1" == "$skip" ]] && return 0
