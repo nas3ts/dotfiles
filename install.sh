@@ -285,8 +285,8 @@ else
         msg_color 8 --padding "0 0 0 $PADDING_LEFT" "Skipped zshrc. Run manually: ln -s $DOTFILES_DIR/.zshrc ~/.zshrc"
       fi
     fi
-    echo
-  fi
+echo
+fi
 fi
 
 # === SECRETS FILE ===
@@ -971,6 +971,31 @@ else
 fi
 
 echo
+fi
+
+# === DEFAULT SHELL ===
+if [[ $LINK_ONLY -eq 0 ]]; then
+  ZSH_PATH=$(command -v zsh 2>/dev/null || true)
+  CURRENT_SHELL=$(getent passwd "$USER" | cut -d: -f7)
+
+  if [[ -n "$ZSH_PATH" ]]; then
+    if [[ "$CURRENT_SHELL" != "$ZSH_PATH" ]]; then
+      msg --bold --padding "1 0 0 $PADDING_LEFT" "Default shell:"
+      if [[ $DRY_RUN -eq 1 ]]; then
+        msg_color 8 --padding "0 0 0 $PADDING_LEFT" "(dry-run) Would change default shell to $ZSH_PATH"
+      elif confirm --padding "0 0 0 $PADDING_LEFT" "Change default shell to zsh?"; then
+        chsh -s "$ZSH_PATH" && msg_color 2 --padding "0 0 0 $PADDING_LEFT" "  Default shell set to $ZSH_PATH" \
+          || msg_color 3 --padding "0 0 0 $PADDING_LEFT" "  Failed to change shell — run 'chsh -s $ZSH_PATH' manually"
+      else
+        msg_color 8 --padding "0 0 0 $PADDING_LEFT" "Skipped. Run 'chsh -s $ZSH_PATH' to set later."
+      fi
+    else
+      msg_color 2 --padding "0 0 0 $PADDING_LEFT" "Default shell is already zsh"
+    fi
+  else
+    msg_color 3 --padding "0 0 0 $PADDING_LEFT" "zsh not found — install zsh first"
+  fi
+  echo
 fi
 
 # === YAZI PACKAGES ===
