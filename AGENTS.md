@@ -39,6 +39,8 @@ AGENTS.md files add scoped rules and take precedence — follow them when presen
 - DRY, but avoid premature abstraction — duplicate until a pattern is proven.
 - Separate concerns: data access, business logic, presentation.
 - Use framework idioms (e.g. server vs client components, hooks).
+- Whenever a component to be created is (or is likely to be) reused, always
+  suggest making it reusable instead of one-off.
 
 ## 4. Error handling
 - Handle errors at boundaries; never silently swallow exceptions.
