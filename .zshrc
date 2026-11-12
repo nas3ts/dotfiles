@@ -68,12 +68,7 @@ export SUDO_PROMPT=$'\a[sudo] password for %p: '
 export ALIAE_CONFIG="$DOTFILES_DIR/configs/.aliae/aliae.yml"
 export TMPDIR=$HOME/.tmp
 
-# --- Omarchy environment ---
-# omarchy 4 ships a bash stack (default/bash/*) but zsh is our login shell. PAM
-# normally injects OMARCHY_PATH + the mise/.local/bin PATH entries; replicate them
-# here so non-PAM shells (ssh -c, zsh -c, cron) get the same environment.
-: "${OMARCHY_PATH:=/usr/share/omarchy}"
-export OMARCHY_PATH
+# --- Local paths ---
 case ":$PATH:" in
   *":$HOME/.local/share/mise/shims:"*) ;;
   *) PATH="${PATH:+$PATH:}$HOME/.local/share/mise/shims" ;;

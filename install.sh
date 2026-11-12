@@ -145,17 +145,11 @@ dry_run_guard() {
 
 # === PRE-FLIGHT CHECKS ===
 preflight_warnings=()
-if ! command -v omarchy &>/dev/null; then
-  preflight_warnings+=("omarchy not found (command 'omarchy' missing) — omarchy-* commands and themed templates won't work")
-fi
-if command -v omarchy &>/dev/null && [[ ! -d "$XDG_CONFIG_HOME/omarchy/current/theme" ]]; then
-  preflight_warnings+=("omarchy is installed but no theme is set — run 'omarchy theme-set <name>' after install")
-fi
 if ! command -v yay &>/dev/null && ! command -v pacman &>/dev/null; then
   preflight_warnings+=("neither yay nor pacman found — dependency installs will be skipped")
 fi
 
-# Terminal sizing (from omarchy)
+# Terminal sizing
 TERM_WIDTH=80
 TERM_HEIGHT=24
 
@@ -339,30 +333,12 @@ existing_links=()
 conflicting=()
 
 # Config dirs that must NOT be symlinked via the generic loop:
-#  - omarchy: handled by the special themes/hooks/themed linking below
-#  - git: omarchy manages ~/.config/git/config; our copy would clobber it
-skip_dirs=("omarchy" "git")
+#  - git: keep local git config untouched
+skip_dirs=("git")
 
-# Apps whose configs are owned by omarchy (regenerated on theme-set). If a copy
-# of one of these ever appears in configs/, skip it and warn instead of
-# overwriting the omarchy-managed file in ~/.config.
-#   kitty, hypr, foot, ghostty, alacritty — terminal emulators
-#   git — omarchy manages ~/.config/git/config
-#   tmux, lazygit, lazydocker, btop — terminal UIs
-#   obsidian, imv, herdr — productivity/media apps
-#   wireplumber — audio pipewire session manager
-#   xournalpp — note-taking app
-#   chromium, fcitx5 — browser and input method
-omarchy_managed=("kitty" "hypr" "git" "foot" "ghostty" "alacritty" "tmux" "lazygit" "lazydocker" "btop" "obsidian" "imv" "herdr" "wireplumber" "xournalpp" "chromium" "fcitx5")
 is_skip() {
   for skip in "${skip_dirs[@]}"; do
     [[ "$1" == "$skip" ]] && return 0
-  done
-  return 1
-}
-is_omarchy_managed() {
-  for app in "${omarchy_managed[@]}"; do
-    [[ "$1" == "$app" ]] && return 0
   done
   return 1
 }
@@ -373,10 +349,6 @@ for app_dir in "$CONFIG_DIR"/*; do
   target="$XDG_CONFIG_HOME/$app_name"
 
   is_skip "$app_name" && continue
-  if is_omarchy_managed "$app_name"; then
-    msg_color 3 --padding "0 0 0 $PADDING_LEFT" "  Skipped $app_name (omarchy-managed; would conflict with built-in config)"
-    continue
-  fi
 
   if check_symlink "$app_dir" "$target"; then
     result=0
@@ -428,20 +400,6 @@ if [[ ${#missing_links[@]} -gt 0 || ${#broken_links[@]} -gt 0 || ${#conflicting[
   pre_install_snapshot
 fi
 
-# === OMAVAULT BACKUP (safety net) ===
-# If omavault is present, snapshot the current machine configs into
-# ~/omarchy-vault before any config is replaced by a symlink. This captures the
-# originals (e.g. gtk-3.0/gtk-4.0) before we link over them. Non-destructive,
-# no root; only runs when vault.py exists.
-OMA_VAULT_PY="$XDG_CONFIG_HOME/omarchy/plugins/io.github.mutahir.omavault/vault.py"
-if [[ -f "$OMA_VAULT_PY" ]]; then
-  msg_color 3 --padding "1 0 0 $PADDING_LEFT" "Omavault snapshot (pre-link safety net)..."
-  python3 "$OMA_VAULT_PY" snapshot || true
-  echo
-else
-  msg_color 8 --padding "1 0 0 $PADDING_LEFT" "Omavault not found — skipping pre-link snapshot."
-  echo
-fi
 
 # Ask about symlinking
 if [[ ${#missing_links[@]} -gt 0 ]] || [[ ${#broken_links[@]} -gt 0 ]]; then
@@ -532,278 +490,6 @@ fi
 
 echo
 
-# === THEMES (omarchy) ===
-# The omarchy/openCode theme, hook, and themed-template linking below only runs
-# in interactive (non-link-only) mode — link-only applies plain config symlinks.
-if [[ $LINK_ONLY -eq 0 ]]; then
-OMARCHY_THEMES_SOURCE="$DOTFILES_DIR/themes/omarchy"
-OMARCHY_THEMES_TARGET="$XDG_CONFIG_HOME/omarchy/themes"
-
-if [[ -d "$OMARCHY_THEMES_SOURCE" ]]; then
-  msg --bold --padding "1 0 0 $PADDING_LEFT" "Themes (omarchy):"
-
-  theme_existing=()
-  theme_missing=()
-  theme_broken=()
-  theme_conflicts=()
-
-  for theme_dir in "$OMARCHY_THEMES_SOURCE"/*; do
-    [[ -d "$theme_dir" ]] || continue
-    theme_name=$(basename "$theme_dir")
-    target="$OMARCHY_THEMES_TARGET/$theme_name"
-
-    if check_symlink "$theme_dir" "$target"; then
-      result=0
-    else
-      result=$?
-    fi
-
-    case $result in
-      0) theme_existing+=("$theme_name") ;;
-      1) theme_missing+=("$theme_name") ;;
-      2) theme_broken+=("$theme_name") ;;
-      3) theme_conflicts+=("$theme_name") ;;
-    esac
-  done
-
-  if [[ ${#theme_existing[@]} -gt 0 ]]; then
-    msg_color 2 --padding "0 0 0 $PADDING_LEFT" "Already linked (${#theme_existing[@]}):"
-    for theme in "${theme_existing[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $theme"
-    done
-  fi
-
-  if [[ ${#theme_conflicts[@]} -gt 0 ]]; then
-    msg_color 1 --padding "0 0 0 $PADDING_LEFT" "Conflicts (${#theme_conflicts[@]}):"
-    for theme in "${theme_conflicts[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $theme"
-    done
-  fi
-
-  if [[ ${#theme_missing[@]} -gt 0 ]]; then
-    msg_color 8 --padding "0 0 0 $PADDING_LEFT" "Need linking (${#theme_missing[@]}):"
-    for theme in "${theme_missing[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $theme"
-    done
-  fi
-
-  if [[ ${#theme_broken[@]} -gt 0 ]]; then
-    msg_color 3 --padding "0 0 0 $PADDING_LEFT" "Broken links (${#theme_broken[@]}):"
-    for theme in "${theme_broken[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $theme"
-    done
-  fi
-
-  echo
-
-  if [[ ${#theme_missing[@]} -gt 0 ]] || [[ ${#theme_broken[@]} -gt 0 ]]; then
-    if confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --default --affirmative "Link themes" --negative "Skip"; then
-      theme_count=0
-
-      for theme in "${theme_missing[@]}" "${theme_broken[@]}"; do
-        source_path="$OMARCHY_THEMES_SOURCE/$theme"
-        target_path="$OMARCHY_THEMES_TARGET/$theme"
-
-        if dry_run_guard "Would link theme $theme"; then
-          if [[ -L "$target_path" ]]; then
-            rm "$target_path"
-          fi
-
-          ln -s "$source_path" "$target_path"
-          _LINKED_DURING_RUN+=("$theme")
-          msg_color 2 --padding "0 0 0 $PADDING_LEFT" "  Linked $theme"
-          theme_count=$((theme_count + 1))
-        fi
-      done
-
-      msg --padding "0 0 0 $PADDING_LEFT" "Linked $theme_count theme(s)."
-    else
-      msg_color 8 --padding "0 0 0 $PADDING_LEFT" "Skipped theme linking."
-    fi
-  fi
-
-  echo
-fi
-
-# === OMARCHY HOOKS ===
-OMARCHY_HOOKS_SOURCE="$DOTFILES_DIR/configs/omarchy/hooks"
-OMARCHY_HOOKS_TARGET="$XDG_CONFIG_HOME/omarchy/hooks"
-
-if [[ -d "$OMARCHY_HOOKS_SOURCE" ]]; then
-  msg --bold --padding "1 0 0 $PADDING_LEFT" "Omarchy hooks:"
-
-  hook_existing=()
-  hook_missing=()
-  hook_broken=()
-  hook_conflicts=()
-
-  for hook_file in "$OMARCHY_HOOKS_SOURCE"/*; do
-    [[ -f "$hook_file" ]] || continue
-    hook_name=$(basename "$hook_file")
-    target="$OMARCHY_HOOKS_TARGET/$hook_name"
-
-    if check_symlink "$hook_file" "$target"; then
-      result=0
-    else
-      result=$?
-    fi
-
-    case $result in
-      0) hook_existing+=("$hook_name") ;;
-      1) hook_missing+=("$hook_name") ;;
-      2) hook_broken+=("$hook_name") ;;
-      3) hook_conflicts+=("$hook_name") ;;
-    esac
-  done
-
-  if [[ ${#hook_existing[@]} -gt 0 ]]; then
-    msg_color 2 --padding "0 0 0 $PADDING_LEFT" "Already linked (${#hook_existing[@]}):"
-    for hook in "${hook_existing[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $hook"
-    done
-  fi
-
-  if [[ ${#hook_conflicts[@]} -gt 0 ]]; then
-    msg_color 1 --padding "0 0 0 $PADDING_LEFT" "Conflicts (${#hook_conflicts[@]}):"
-    for hook in "${hook_conflicts[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $hook"
-    done
-  fi
-
-  if [[ ${#hook_missing[@]} -gt 0 ]]; then
-    msg_color 8 --padding "0 0 0 $PADDING_LEFT" "Need linking (${#hook_missing[@]}):"
-    for hook in "${hook_missing[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $hook"
-    done
-  fi
-
-  if [[ ${#hook_broken[@]} -gt 0 ]]; then
-    msg_color 3 --padding "0 0 0 $PADDING_LEFT" "Broken links (${#hook_broken[@]}):"
-    for hook in "${hook_broken[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $hook"
-    done
-  fi
-
-  echo
-
-  if [[ ${#hook_missing[@]} -gt 0 ]] || [[ ${#hook_broken[@]} -gt 0 ]]; then
-    if confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --default --affirmative "Link hooks" --negative "Skip"; then
-      hook_count=0
-
-      for hook in "${hook_missing[@]}" "${hook_broken[@]}"; do
-        source_path="$OMARCHY_HOOKS_SOURCE/$hook"
-        target_path="$OMARCHY_HOOKS_TARGET/$hook"
-
-        if dry_run_guard "Would link hook $hook"; then
-          if [[ -L "$target_path" ]]; then
-            rm "$target_path"
-          fi
-
-          ln -s "$source_path" "$target_path"
-          _LINKED_DURING_RUN+=("$hook")
-          msg_color 2 --padding "0 0 0 $PADDING_LEFT" "  Linked $hook"
-          hook_count=$((hook_count + 1))
-        fi
-      done
-
-      msg --padding "0 0 0 $PADDING_LEFT" "Linked $hook_count hook(s)."
-    else
-      msg_color 8 --padding "0 0 0 $PADDING_LEFT" "Skipped hook linking."
-    fi
-  fi
-
-  echo
-fi
-
-# === OMARCHY THEMED TEMPLATES ===
-OMARCHY_THEMED_SOURCE="$DOTFILES_DIR/configs/omarchy/themed"
-OMARCHY_THEMED_TARGET="$XDG_CONFIG_HOME/omarchy/themed"
-
-if [[ -d "$OMARCHY_THEMED_SOURCE" ]]; then
-  msg --bold --padding "1 0 0 $PADDING_LEFT" "Omarchy themed templates:"
-
-  themed_existing=()
-  themed_missing=()
-  themed_broken=()
-  themed_conflicts=()
-
-  for tpl_file in "$OMARCHY_THEMED_SOURCE"/*; do
-    [[ -f "$tpl_file" ]] || continue
-    tpl_name=$(basename "$tpl_file")
-    target="$OMARCHY_THEMED_TARGET/$tpl_name"
-
-    if check_symlink "$tpl_file" "$target"; then
-      result=0
-    else
-      result=$?
-    fi
-
-    case $result in
-      0) themed_existing+=("$tpl_name") ;;
-      1) themed_missing+=("$tpl_name") ;;
-      2) themed_broken+=("$tpl_name") ;;
-      3) themed_conflicts+=("$tpl_name") ;;
-    esac
-  done
-
-  if [[ ${#themed_existing[@]} -gt 0 ]]; then
-    msg_color 2 --padding "0 0 0 $PADDING_LEFT" "Already linked (${#themed_existing[@]}):"
-    for tpl in "${themed_existing[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $tpl"
-    done
-  fi
-
-  if [[ ${#themed_conflicts[@]} -gt 0 ]]; then
-    msg_color 1 --padding "0 0 0 $PADDING_LEFT" "Conflicts (${#themed_conflicts[@]}):"
-    for tpl in "${themed_conflicts[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $tpl"
-    done
-  fi
-
-  if [[ ${#themed_missing[@]} -gt 0 ]]; then
-    msg_color 8 --padding "0 0 0 $PADDING_LEFT" "Need linking (${#themed_missing[@]}):"
-    for tpl in "${themed_missing[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $tpl"
-    done
-  fi
-
-  if [[ ${#themed_broken[@]} -gt 0 ]]; then
-    msg_color 3 --padding "0 0 0 $PADDING_LEFT" "Broken links (${#themed_broken[@]}):"
-    for tpl in "${themed_broken[@]}"; do
-      msg --padding "0 0 0 $PADDING_LEFT" "  $tpl"
-    done
-  fi
-
-  echo
-
-  if [[ ${#themed_missing[@]} -gt 0 ]] || [[ ${#themed_broken[@]} -gt 0 ]]; then
-    if confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --default --affirmative "Link themed templates" --negative "Skip"; then
-      themed_count=0
-
-      for tpl in "${themed_missing[@]}" "${themed_broken[@]}"; do
-        source_path="$OMARCHY_THEMED_SOURCE/$tpl"
-        target_path="$OMARCHY_THEMED_TARGET/$tpl"
-
-        if dry_run_guard "Would link themed template $tpl"; then
-          if [[ -L "$target_path" ]]; then
-            rm "$target_path"
-          fi
-
-          ln -s "$source_path" "$target_path"
-          _LINKED_DURING_RUN+=("$tpl")
-          msg_color 2 --padding "0 0 0 $PADDING_LEFT" "  Linked $tpl"
-          themed_count=$((themed_count + 1))
-        fi
-      done
-
-      msg --padding "0 0 0 $PADDING_LEFT" "Linked $themed_count themed template(s)."
-    else
-      msg_color 8 --padding "0 0 0 $PADDING_LEFT" "Skipped themed template linking."
-    fi
-  fi
-
-  echo
-fi
 
 # === THEMES (opencode) ===
 OPENCODE_THEMES_SOURCE="$DOTFILES_DIR/themes/opencode"
@@ -1024,7 +710,6 @@ if [[ $DRY_RUN -eq 0 ]]; then
     target="$XDG_CONFIG_HOME/$app_name"
 
     is_skip "$app_name" && continue
-    is_omarchy_managed "$app_name" && continue
 
     if [[ -L "$target" ]]; then
       link_target=$(readlink "$target")
@@ -1055,24 +740,4 @@ if [[ $DRY_RUN -eq 0 ]]; then
   echo
 fi
 
-# === TRIGGER INITIAL THEME-SET (if omarchy is present) ===
-# This regenerates per-theme files (kitty-tab-colors.conf, dunst/dunstrc,
-# vicinae/themes/kuroi.toml) so they're in sync with the linked theme.
-if [[ $LINK_ONLY -eq 0 ]] && [[ -d "$HOME/.local/share/omarchy" ]] && command -v omarchy-theme-set &>/dev/null; then
-  echo
-  if [[ $DRY_RUN -eq 1 ]]; then
-    msg_color 8 --padding "0 0 0 $PADDING_LEFT" "(dry-run) Would run 'omarchy theme-set kuroi'"
-  elif confirm --padding "0 0 0 $PADDING_LEFT" --show-help=false --affirmative "Set kuroi" --negative "Skip" "Run 'omarchy theme-set kuroi' to generate per-theme files?"; then
-    if omarchy-theme-set kuroi 2>&1 | (if [[ $HAS_GUM -eq 1 ]]; then gum style --padding "0 0 0 $PADDING_LEFT" --foreground 8; else cat; fi); then
-      msg_color 2 --padding "0 0 0 $PADDING_LEFT" "  Theme kuroi applied"
-    else
-      msg_color 3 --padding "0 0 0 $PADDING_LEFT" "  Theme-set failed — run 'omarchy theme-set kuroi' manually"
-    fi
-  fi
-fi
-
 # Done
-clear_logo
-msg_color 2 --bold --padding "1 0 0 $PADDING_LEFT" "Bootstrap complete!"
-msg --padding "1 0 0 $PADDING_LEFT" "Config directories and themes have been linked."
-msg --padding "1 0 0 $PADDING_LEFT" "See the README for manual config steps."
